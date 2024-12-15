@@ -1,63 +1,76 @@
-import { StyleSheet, View, TextInput, FlatList } from 'react-native';
-
+import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from 'react';
+import { Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
-export default function TabTwoScreen() {
-  const insets = useSafeAreaInsets();
+export default function HomeScreen() {
 
   return (
-    <View style={{ flex: 1, paddingTop: insets.top + 20 }}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Profil</ThemedText>
-      </ThemedView>
+    <ScrollView style={styles.container}>
+      <ThemedText type="title">Login</ThemedText>
 
-      <ThemedText>Username</ThemedText>
-      <TextInput style={{ backgroundColor: "white" }} />
-      <ThemedText>Password</ThemedText>
-      <TextInput style={{ backgroundColor: "white" }} />
+      <Card style={{ gap: 16 }}>
+        <View>
+          <ThemedText>E-Mail</ThemedText>
+          <TextInput
+            placeholder='E-Mail Address'
+            placeholderTextColor={"#cecece"}
+            style={styles.input}
+          />
+        </View>
+        <View>
+          <ThemedText>Password</ThemedText>
+          <TextInput
+            placeholder='Password'
+            placeholderTextColor={"#cecece"}
+            style={styles.input}
+          />
+        </View>
+        <ThemedText type='link'>Forgot password?</ThemedText>
+        <CustomButton title="Sign in"
+        />
+        <CustomButton title="Sign Up"
+        />
 
-      <FlatList
-        data={[
-          { key: 'Devin' },
-          { key: 'Dan' },
-          { key: 'Dominic' },
-          { key: 'Jackson' },
-          { key: 'James' },
-          { key: 'Joel' },
-          { key: 'John' },
-          { key: 'Jillian' },
-          { key: 'Jimmy' },
-          { key: 'Julie' },
-        ]}
-        renderItem={({ item }) => <ThemedText style={styles.item}>{item.key}</ThemedText>} />
-
-    </View>
+      </Card>
+    </ScrollView >
   );
 }
 
+function CustomButton({ title, ...rest }: { title: string; } & TouchableOpacityProps) {
+  return <TouchableOpacity
+    style={{
+      backgroundColor: "#2c2c2c",
+      padding: 8,
+      borderRadius: 6,
+      alignItems: 'center'
+    }}
+    {...rest}
+  >
+    <ThemedText style={{ color: '#fff' }}>{title}</ThemedText>
+  </TouchableOpacity>;
+
+}
+
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  input: {
+    backgroundColor: "#ffffff",
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#cecece",
+    borderRadius: 4,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  button: {
+    backgroundColor: "#ffffff",
+    padding: 8,
+    borderWidth: 1,
+    borderColor: "#cecece",
+    borderRadius: 4,
   },
   container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    marginTop: 40,
-    padding: 20,
+    padding: 16,
   },
-
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
-  }
+  cardList: {
+    gap: 8,
+  },
 });
