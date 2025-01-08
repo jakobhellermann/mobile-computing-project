@@ -9,6 +9,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState<AutocompleteDropdownItem[]>([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  console.log('Testtest');
 
   const getSuggestions = useCallback((q: string) => {
     setSuggestionsList([{
