@@ -16,4 +16,5 @@ npm run dev # in watch mode
 
 ### Test HTTP
 
+There's a swagger UI available at `/api/docs`.
 There are some `.http` files in `./dev/api/` which can be executed using the [httpYac](https://httpyac.github.io/) extension.
