@@ -1,4 +1,4 @@
-import { Coupon, DiscountType } from 'web-shop-shared';
+import { Coupon, DiscountType } from 'shared';
 import { CouponRow } from '../database/rows';
 import { UnknownDiscountTypeError } from '../errors/coupon';
 

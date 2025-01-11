@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import ProductService from './product';
-import { Rating, UserRating } from 'web-shop-shared';
+import { Rating, UserRating } from 'shared';
 import {
     RatingNotFoundError,
     RatingUserAlreadyRatedError,

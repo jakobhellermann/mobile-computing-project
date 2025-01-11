@@ -1,4 +1,4 @@
-import { Address } from 'web-shop-shared';
+import { Address } from 'shared';
 import { AddressRow } from '../database/rows';
 
 /**

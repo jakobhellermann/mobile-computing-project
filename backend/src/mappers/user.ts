@@ -1,4 +1,4 @@
-import { User } from 'web-shop-shared';
+import { User } from 'shared';
 import { UserRow } from '../database/rows';
 
 /**
@@ -10,8 +10,6 @@ export function toUser(row: UserRow): User {
     return {
         id: row.id,
         email: row.email,
-        name: row.name,
-        firstName: row.first_name,
         isAdmin: row.is_admin === 1,
     };
 }

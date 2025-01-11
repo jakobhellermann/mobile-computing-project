@@ -1,4 +1,4 @@
-import { Product, Rating, UserRating } from 'web-shop-shared';
+import { Product, Rating, UserRating } from 'shared';
 import { RatingRow } from '../database/rows';
 
 /**

@@ -1,4 +1,4 @@
-import { Product } from 'web-shop-shared';
+import { Product } from 'shared';
 import {
     ProductImageRow,
     ProductRatingRow,

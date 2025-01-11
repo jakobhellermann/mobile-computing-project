@@ -1,6 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import RatingService from '../../../services/ratings';
-import { UserRating } from 'web-shop-shared';
+import { UserRating } from 'shared';
 
 const schema = {
     description: 'Get the latest ratings.',

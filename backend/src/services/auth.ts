@@ -114,8 +114,6 @@ export default class AuthService {
     public async register(
         email: string,
         password: string,
-        name: string,
-        firstName: string,
         userAgent: string,
     ): Promise<string> {
         if (await this.userService.isUserEmailTaken(email)) {
@@ -133,8 +131,6 @@ export default class AuthService {
         const [id] = await this.db('users').insert({
             email,
             password_hash,
-            first_name: firstName,
-            name,
             is_admin: 0,
         });
 

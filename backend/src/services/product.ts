@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 import { ProductRatingRow } from '../database/rows';
 import { toProduct, toProducts } from '../mappers/product';
 import { ProductNotFoundError } from '../errors/product';
-import { Product, Page, PageRequest, Category } from 'web-shop-shared';
+import { Product, Page, PageRequest, Category } from 'shared';
 
 /**
  * Service for managing products.

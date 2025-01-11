@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { OrdersPerMonthStat, OverviewStats } from 'web-shop-shared';
+import { OrdersPerMonthStat, OverviewStats } from 'shared';
 
 /**
  * Service for managing stats.

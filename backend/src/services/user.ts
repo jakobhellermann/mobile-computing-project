@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Page, PageRequest, User, UserUpdate } from 'web-shop-shared';
+import { Page, PageRequest, User, UserUpdate } from 'shared';
 import { EmailAlreadyExistsError } from './auth';
 import { toUser } from '../mappers/user';
 
@@ -69,8 +69,6 @@ export default class UserService {
         const rowsAffected = await this.db('users')
             .update({
                 email: user.email,
-                name: user.name,
-                first_name: user.firstName,
             })
             .where({ id });
 

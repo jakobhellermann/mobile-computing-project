@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { toAddress, toAddresses } from '../mappers/address';
-import { Address } from 'web-shop-shared';
+import { Address } from 'shared';
 import { AddressNotFoundError } from '../errors/address';
 
 /**

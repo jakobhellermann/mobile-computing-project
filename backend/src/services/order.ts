@@ -16,7 +16,7 @@ import {
     Product,
     CheckoutItem,
     OrderDiscount,
-} from 'web-shop-shared';
+} from 'shared';
 import ProductService from './product';
 import AddressService from './address';
 import CouponService from './coupon';

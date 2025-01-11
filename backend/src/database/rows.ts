@@ -6,8 +6,6 @@ import { Knex } from 'knex';
 export type UserRow = {
     id: number;
     email: string;
-    name: string;
-    first_name: string;
     password_hash: string;
     is_admin: number;
 };

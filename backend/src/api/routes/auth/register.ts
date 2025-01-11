@@ -10,10 +10,8 @@ const schema = {
         properties: {
             email: { type: 'string' },
             password: { type: 'string' },
-            name: { type: 'string' },
-            firstName: { type: 'string' },
         },
-        required: ['email', 'password', 'name', 'firstName'],
+        required: ['email', 'password'],
     },
     response: {
         200: {
@@ -33,7 +31,7 @@ export function register(
 ): FastifyPluginAsyncJsonSchemaToTs {
     return async (fastify) => {
         fastify.post('/register', { schema }, async (request, reply) => {
-            const { email, password, name, firstName } = request.body;
+            const { email, password} = request.body;
 
             const userAgent = request.headers['user-agent'] ?? '';
 
@@ -41,8 +39,6 @@ export function register(
                 const token = await authService.register(
                     email,
                     password,
-                    name,
-                    firstName,
                     userAgent,
                 );
 

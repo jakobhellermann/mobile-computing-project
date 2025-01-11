@@ -1,4 +1,4 @@
-import { Order, OrderDiscount, OrderStatus } from 'web-shop-shared';
+import { Order, OrderDiscount, OrderStatus } from 'shared';
 import { OrderDiscountRow, OrderRow } from '../database/rows';
 
 /**

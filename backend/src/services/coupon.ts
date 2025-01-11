@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Coupon, CouponValidationResult, DiscountType } from 'web-shop-shared';
+import { Coupon, CouponValidationResult, DiscountType } from 'shared';
 import { toCoupon } from '../mappers/coupon';
 import {
     CouponAlreadyExistsError,
