@@ -5,21 +5,25 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityPr
 import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
+import { useNotifications } from '@/src/hooks/toast';
 
 export default function HomeScreen() {
   const { user, logout } = useAuth();
 
   if (!user) return LoginScreen();
 
-  return <p>
-    Logged in as {user.email}
+  return <View>
+    <ThemedText>
+      Logged in as {user.email}
+    </ThemedText>
     <CustomButton onPress={() => logout()} title='Logout' />
-  </p>;
+  </View>;
 }
 
 function LoginScreen() {
   const { register, error: registerError } = useRegister();
   const { login, error: loginError } = useLogin();
+  const { showError } = useNotifications();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
