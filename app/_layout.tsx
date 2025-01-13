@@ -2,8 +2,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import AuthProvider from "../src/modules/auth/AuthProvider";
-
-//const Stack = createStackNavigator();
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
   return <AutocompleteDropdownContextProvider>
@@ -17,6 +16,7 @@ export default function RootLayout() {
         <Stack.Screen name="pages/match_page" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" options={{ headerShown: false }} />
       </Stack>
+      <Toast />
     </AuthProvider>
   </AutocompleteDropdownContextProvider>;
 }
