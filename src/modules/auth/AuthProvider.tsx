@@ -6,7 +6,7 @@ import * as React from "react";
 
 import * as SecureStore from "expo-secure-store";
 import { Platform } from 'react-native';
-import { BASE_URL } from '@/app/api/constants';
+import { BASE_URL } from '@/src/api/constants';
 
 const SECURE_STORY_KEY_LOGIN_TOKEN = "loginToken";
 
