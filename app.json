@@ -2,7 +2,6 @@
   "expo": {
     "name": "mobile-computing-project",
     "slug": "mobile-computing-project",
-    "entrypoint":"./app/navigation.tsx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mobilecomputingproject"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5c46edd1-1447-49ef-aa23-b28d16ed35a8"
+      }
     }
   }
 }
