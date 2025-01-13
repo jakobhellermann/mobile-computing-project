@@ -57,7 +57,7 @@ export default function AuthProvider({
 
     let token = await storageUtil.getItem(SECURE_STORY_KEY_LOGIN_TOKEN);
     if (!token) {
-      console.warn("No token found");
+      console.warn("No login token found");
       setUser(null);
       return;
     }
