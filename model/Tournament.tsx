@@ -1,3 +1,6 @@
+import Match from "./Match";
+import Team from "./Team";
+
 export default interface Tournament {
     name: string;
     eventType: string;
@@ -10,6 +13,8 @@ export default interface Tournament {
     organizers: string; 
     rulebook: string;
     overviewPage: string;
+    teams:Team[];
+    matches:Match[];
   }
   
   // Example Function to Map API Response to Tournament Object
@@ -26,5 +31,7 @@ export default interface Tournament {
       organizers: apiResponse.Organizers, 
       rulebook: apiResponse.Rulebook,
       overviewPage: apiResponse.OverviewPage,
+      teams:[],
+      matches:[]
     };
   }

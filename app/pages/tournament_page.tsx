@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Tournament from '../../model/Tournament';
+import Tournament from '@/model/Tournament';
+import Team from '@/model/Team';
 import {
   ScrollView,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import { fetchTournamentData, fetchTournamentLogo } from '../../client/tournament_client';
+import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
 
 export default function TournamentPage({ route }: any) {
   const {name = 'LEC 2024 Season Finals' } = route?.params || {}; // Default params
@@ -21,6 +22,11 @@ export default function TournamentPage({ route }: any) {
     const loadTournamentData = async () => {
       try {
         const data = await fetchTournamentData(name);
+        const teams = await fetchTournamentTeams(data[0].overviewPage);
+        const matches = await fetchTournamentMatches(data[0].overviewPage);
+        console.log("asd");
+        data[0].teams = teams;
+        data[0].matches = matches;
         const image = await fetchTournamentLogo("SK_Gaming","SK_Gaminglogo_square.png")
         setTournament(data[0]); // Assuming we're interested in the first tournament
         setImage(image);
@@ -102,12 +108,12 @@ export default function TournamentPage({ route }: any) {
       {/* Teams Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Teams</Text>
-        {tournament.teams?.map((team: any, index: number) => (
+        {tournament.teams?.map((team: Team, index: number) => (
           <View key={index} style={styles.listItem}>
             <Text style={styles.listItemTitle}>{team.name}</Text>
             <FlatList
               data={team.players}
-              keyExtractor={(item, idx) => `${team.name}-${idx}`}
+              keyExtractor={(item, idx) => `${team.players}-${idx}`}
               renderItem={({ item }) => (
                 <View style={styles.playerItem}>
                   <Text style={styles.playerName}>{item.name}</Text>
@@ -119,22 +125,26 @@ export default function TournamentPage({ route }: any) {
         ))}
       </View>
 
-      {/* Bracket Section */}
+      {/* Matches Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Bracket</Text>
-        <View style={styles.bracket}>
-          {/* Matches - Replace with actual match data if available */}
-          <View style={styles.match}>
-            <View style={styles.matchTeam}>
-              <Text>▶ Team 1</Text>
-              <Text>1</Text>
+        <Text style={styles.sectionTitle}>Matches</Text>
+        <FlatList
+          data={tournament.matches} // Assuming matches are already set in the tournament object
+          keyExtractor={(item, index) => `${item.matchId}-${index}`}
+          renderItem={({ item }) => (
+            <View style={styles.matchItem}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+                </Text>
+                <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Text>
             </View>
-            <View style={styles.matchTeam}>
-              <Text>▶ Team 2</Text>
-              <Text>2</Text>
-            </View>
-          </View>
-        </View>
+          )}
+        />
       </View>
     </ScrollView>
   );
@@ -253,5 +263,31 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: 'red',
+  },
+  matchItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#EFEFEF',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  matchInfo: {
+    flex: 1,
+  },
+  matchTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  matchSubtitle: {
+    fontSize: 12,
+    color: '#777',
+  },
+  matchTime: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#555',
   },
 });
