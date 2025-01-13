@@ -3,18 +3,15 @@ import { Card } from '@/components/Card';
 import React from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation';
+import { useRouter } from "expo-router";
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'Feed'>;
 
 export default function HomeScreen() {
-  const navigation = useNavigation<NavigationProp>();
+  const router = useRouter();
 
   const handleItemPress = (id: number) => {
     console.log('Item pressed, navigating to TournamentPage with ID:', id);
-    navigation.navigate('Tournament', { id });
+    router.push("/pages/tournament_page");
   };
 
   return (

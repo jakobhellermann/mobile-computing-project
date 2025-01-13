@@ -2,6 +2,7 @@
   "expo": {
     "name": "mobile-computing-project",
     "slug": "mobile-computing-project",
+    "entrypoint":"./app/navigation.tsx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
