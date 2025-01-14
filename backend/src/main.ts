@@ -7,6 +7,7 @@ import AuthService from './services/auth';
 import { connectDatabase } from './database';
 import SessionService from './services/session';
 import UserService from './services/user';
+import SubscriptionService from './services/subscription';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -50,6 +51,7 @@ if (STATIC_FILES) {
         userService,
         argon2Secret || 'supersecret',
     );
+    const subscriptionService = new SubscriptionService(db);
 
     await fastify.register(cors, {});
     await fastify.register(
@@ -57,6 +59,7 @@ if (STATIC_FILES) {
             authService,
             sessionService,
             userService,
+            subscriptionService,
         ),
         {
             prefix: '/api',
@@ -70,7 +73,5 @@ if (STATIC_FILES) {
             fastify.log.error(err);
             process.exit();
         }
-
-        console.log(`Listening at ${address}`);
     });
 })();

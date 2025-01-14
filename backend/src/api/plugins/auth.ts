@@ -2,6 +2,7 @@ import fastifyPlugin from 'fastify-plugin';
 import SessionService from '../../services/session';
 import { FastifyAuthFunction } from '@fastify/auth';
 import { FastifyRequest } from 'fastify';
+import cookie from '@fastify/cookie';
 
 declare module 'fastify' {
     interface FastifyInstance {
@@ -46,13 +47,12 @@ export function authPlugin(sessionService: SessionService) {
  * @returns Session token or undefined.
  */
 function extractSessionToken(request: FastifyRequest): string | undefined {
-    /*const cookies = request.headers.cookie;
+    const cookies = request.headers.cookie;
 
-    if (!cookies) {
-        return undefined;
+    if (cookies) {
+        return cookie.parse(cookies)['session'];
     }
 
-    return cookie.parse(cookies)['session'];*/
 
     let authorization = request.headers.authorization;
     if (!authorization) return undefined;
@@ -60,5 +60,5 @@ function extractSessionToken(request: FastifyRequest): string | undefined {
     if (!authorization.toLowerCase().startsWith("bearer")) {
         return;
     }
-    return authorization.substring("bearer ".length)
+    return authorization.substring("bearer ".length);
 }

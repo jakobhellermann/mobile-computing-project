@@ -22,6 +22,17 @@ export type SessionRow = {
     created_at: number;
 };
 
+/**
+ * Subscription row in the database.
+ */
+export type SubscriptionRow = {
+    id: number;
+    user: number;
+    name: string;
+    type: string;
+    timestamp: number;
+};
+
 
 // Define the types for knex.
 declare module 'knex/types/tables' {
@@ -31,7 +42,8 @@ declare module 'knex/types/tables' {
      */
     interface Tables {
         users: Knex.CompositeTableType<UserRow, Omit<UserRow, 'id'>>;
-        subscriptions: Knex.CompositeTableType<SessionRow, Omit<SessionRow, 'id'>>;
+        sessions: Knex.CompositeTableType<SessionRow, Omit<SessionRow, 'id'>>;
+        subscriptions: Knex.CompositeTableType<SubscriptionRow, Omit<SubscriptionRow, 'id'>>;
     }
 }
 

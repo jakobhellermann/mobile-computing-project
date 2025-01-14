@@ -6,6 +6,7 @@ import fastifySwaggerUI from '@fastify/swagger-ui';
 import AuthService from '../services/auth';
 import SessionService from '../services/session';
 import UserService from '../services/user';
+import SubscriptionService from '../services/subscription';
 
 import { authPlugin } from './plugins/auth';
 
@@ -15,6 +16,8 @@ import { logout } from './routes/auth/logout';
 import { getCurrentUser } from './routes/user/getCurrentUser';
 import { updatePassword } from './routes/user/updatePassword';
 import { updateCurrentUser } from './routes/user/updateCurrentUser';
+import { getSubscriptions } from './routes/subscription/getSubscriptions';
+import { createSubscription } from './routes/subscription/createSubscription';
 
 /**
  * Creates the API routes.
@@ -28,6 +31,7 @@ export function api(
     authService: AuthService,
     sessionService: SessionService,
     userService: UserService,
+    subscriptionService: SubscriptionService,
 ): FastifyPluginAsync {
     return async (fastify) => {
         await fastify.register(fastifyAuth);
@@ -55,5 +59,8 @@ export function api(
         await fastify.register(updatePassword(authService));
         await fastify.register(getCurrentUser(userService));
         await fastify.register(updateCurrentUser(userService));
+
+        await fastify.register(getSubscriptions(subscriptionService));
+        await fastify.register(createSubscription(subscriptionService));
     };
 }

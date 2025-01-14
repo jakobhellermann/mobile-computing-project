@@ -19,6 +19,22 @@ const testUsers = [
     },
 ];
 
+const testSubscriptions = [
+    {
+        "id": 1,
+        "user": 2,
+        "name": "Team 1",
+        "type": "team",
+        "timestamp": 1736862070238
+    },
+    {
+        "id": 2,
+        "user": 2,
+        "name": "Some tournament",
+        "type": "tournament",
+        "timestamp": 1736862072752
+    }
+];
 
 /** @typedef {import('knex').Knex} Knex */
 /**
@@ -45,6 +61,15 @@ async function up(knex) {
             t.string('user_agent').notNullable();
             t.integer('last_used_at').notNullable();
             t.integer('created_at').notNullable();
+        }).createTable('subscriptions', (t) => {
+            t.increments('id').primary();
+            t.integer('user')
+                .notNullable()
+                .references('users.id')
+                .onDelete('CASCADE');
+            t.string('name').notNullable();
+            t.string('type').notNullable();
+            t.integer('timestamp').notNullable();
         });
 
     await seedTestData(knex);
@@ -56,8 +81,8 @@ async function up(knex) {
  * @returns {Promise<void>}
  */
 const seedTestData = async (db) => {
-    // Insert test users
     await db('users').insert(testUsers);
+    await db('subscriptions').insert(testSubscriptions);
 };
 
 /**
