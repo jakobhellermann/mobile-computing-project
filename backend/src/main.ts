@@ -16,7 +16,24 @@ import StatsService from './services/stats';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
-const fastify = Fastify({ logger: true });
+const envToLogger = {
+    development: {
+        transport: {
+            target: 'pino-pretty',
+            options: {
+                ignore: 'pid,hostname',
+            },
+        },
+    },
+    production: true,
+    test: false,
+};
+
+let env = "development" as const;
+
+const fastify = Fastify({
+    logger: envToLogger[env],
+});
 if (STATIC_FILES) {
     console.log(`Serving ${STATIC_FILES}`);
     fastify.register(fastifyStatic, { root: STATIC_FILES });
