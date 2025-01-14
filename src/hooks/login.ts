@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../modules/auth/context';
-import { BASE_URL } from '../api/constants';
+import { apiFetchUnauthorized, } from '../api/base';
 
 
 /**
@@ -12,7 +12,7 @@ import { BASE_URL } from '../api/constants';
  * @return {Function} return.login - The login function.
  */
 export const useLogin = () => {
-  const { fetchUser, loginToken } = useAuth();
+  const { setLoginToken } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,25 +25,16 @@ export const useLogin = () => {
   const login = async (email: string, password: string) => {
     setLoading(true);
 
-    fetch(`${BASE_URL}/login`, {
+    apiFetchUnauthorized<{ token: string; }>("/login", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     })
-      .then(async (res) => {
-        console.log(res);
-        if (!res.ok) {
-          throw res;
-        }
-        return await res.json() as { token: string; };
-      })
-      .then((login) => loginToken(login.token))
-      .then(fetchUser)
+      .then((login) => setLoginToken(login.token))
       .catch((error) => {
-        console.error("error");
-        console.error(error);
+        console.error(`Login error: ${error}`);
         if (error instanceof Response && error.status === 401) {
           setError(
             'E-Mail oder Passwort sind nicht korrekt. Versuche es erneut.'

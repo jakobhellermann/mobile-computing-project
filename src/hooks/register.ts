@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNotifications } from './toast';
 import { useAuth } from '../modules/auth/context';
-import { BASE_URL } from '../api/constants';
+import { apiFetchUnauthorized } from '../api/base';
 
 /**
  * Register hook.
@@ -30,19 +30,13 @@ export const useRegister = () => {
   ) => {
     setLoading(true);
 
-    fetch(`${BASE_URL}/register`, {
+    apiFetchUnauthorized("/register", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw res;
-        }
-        return res.json();
-      })
       .then(fetchUser)
       .catch(async (error) => {
         if (error instanceof Response && error.status === 409) {

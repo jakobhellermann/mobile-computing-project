@@ -6,7 +6,7 @@ import * as React from "react";
 
 import * as SecureStore from "expo-secure-store";
 import { Platform } from 'react-native';
-import { BASE_URL } from '@/src/api/constants';
+import { apiFetch } from '@/src/api/base';
 
 const SECURE_STORY_KEY_LOGIN_TOKEN = "loginToken";
 
@@ -66,28 +66,29 @@ export default function AuthProvider({
       return;
     }
 
-    try {
-      setIsLoading(true);
-      let response = await fetch(`${BASE_URL}/user`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
+    setIsLoading(true);
+    apiFetch<User>("/user", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then((user) => {
+      console.log(user);
+      setUser(user);
+
+    })
+      .catch(async (e: Error) => {
+        console.error(e);
+        if (e.cause instanceof Response) {
+          if (e.cause.status == 401) {
+            console.warn("saved token is not authorized anymore");
+            await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
+            setUser(null);
+          } else {
+            throw new Error('Unexpected error');
+          }
         }
       });
-      if (!response.ok) {
-        if (response.status == 401) {
-          console.warn("saved token is not authorized anymore");
-          await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
-          setUser(null);
-        } else {
-          throw new Error('Unexpected error');
-        }
-      } else {
-        let user = await response.json();
-        setUser(user);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+
   };
 
   /**
@@ -95,17 +96,13 @@ export default function AuthProvider({
    * 
    * Logs the user out.
    */
-  const logout = async () => {
-    await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
-
-    fetch(`${BASE_URL}/logout`, {
-      method: 'POST',
-    }).then(() => {
-      setUser(null);
-    });
+  const logout = () => {
+    return apiFetch("/logout", { method: "POST" })
+      .then(() => storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN))
+      .then(() => setUser(null));
   };
 
-  const loginToken = async (token: string) => {
+  const setLoginToken = async (token: string) => {
     await storageUtil.setItem(SECURE_STORY_KEY_LOGIN_TOKEN, token);
     await fetchUser();
   };
@@ -124,7 +121,7 @@ export default function AuthProvider({
       value={{
         user,
         fetchUser,
-        loginToken,
+        setLoginToken,
         logout,
       }}
     >

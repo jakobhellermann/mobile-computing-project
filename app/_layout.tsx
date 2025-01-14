@@ -1,12 +1,11 @@
 import 'expo-dev-client';
 import { Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
-import AuthProvider, { getAuthToken } from "../src/modules/auth/AuthProvider";
+import AuthProvider from "../src/modules/auth/AuthProvider";
 import Toast from "react-native-toast-message";
 import { usePushNotifications } from '@/src/push_notifications';
 import { SWRConfig } from 'swr';
-import { BASE_URL } from '@/src/api/constants';
+import { apiFetch } from '@/src/api/base';
 import { StrictMode } from 'react';
 
 export default function RootLayout() {
@@ -16,22 +15,7 @@ export default function RootLayout() {
     <AuthProvider>
       <StrictMode></StrictMode>
       <SWRConfig value={{
-        fetcher: async (resource) => {
-          let token = await getAuthToken();
-          let res = await fetch(`${BASE_URL}/${resource}`, {
-            headers: {
-              "Authorization": `Bearer ${token}`
-            }
-          });
-          console.log(res);
-
-          if (!res.ok) {
-            let data: { message: string; error: string; } = await res.json();
-            throw new Error(`failed to fetch ${resource}: ${data.message}`, { cause: res });
-          } {
-            return await res.json();
-          }
-        }
+        fetcher: (resource, init) => apiFetch(resource, init),
       }}>
         <Stack >
           {/* <StatusBar style="auto" /> */}
