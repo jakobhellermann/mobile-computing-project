@@ -34,6 +34,10 @@ const storageUtil = {
   }
 };
 
+export function getAuthToken(): Promise<string | null> {
+  return storageUtil.getItem(SECURE_STORY_KEY_LOGIN_TOKEN);
+}
+
 /**
  * Auth provider.
  * 
@@ -64,19 +68,23 @@ export default function AuthProvider({
 
     try {
       setIsLoading(true);
-      let response = await fetch(`${BASE_URL}/api/user`, {
+      let response = await fetch(`${BASE_URL}/user`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
       });
       if (!response.ok) {
-        if (response.status == 401)
-          throw new Error('Unauthorized');
-        else
+        if (response.status == 401) {
+          console.warn("saved token is not authorized anymore");
+          await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
+          setUser(null);
+        } else {
           throw new Error('Unexpected error');
+        }
+      } else {
+        let user = await response.json();
+        setUser(user);
       }
-      let user = await response.json();
-      setUser(user);
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +98,7 @@ export default function AuthProvider({
   const logout = async () => {
     await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
 
-    fetch(`${BASE_URL}/api/logout`, {
+    fetch(`${BASE_URL}/logout`, {
       method: 'POST',
     }).then(() => {
       setUser(null);

@@ -25,7 +25,7 @@ export const useLogin = () => {
   const login = async (email: string, password: string) => {
     setLoading(true);
 
-    fetch(`${BASE_URL}/api/login`, {
+    fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

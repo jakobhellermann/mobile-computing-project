@@ -27,7 +27,6 @@ export function usePushNotifications(
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => {
-            console.log(`got notif token ${token}`);
             token && setExpoPushToken(token);
         });
 
@@ -77,7 +76,7 @@ async function registerForPushNotificationsAsync() {
         });
     }
 
-    if (Device.isDevice) {
+    if (Device.isDevice && Platform.OS != "web") {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
         if (existingStatus !== 'granted') {
@@ -101,7 +100,7 @@ async function registerForPushNotificationsAsync() {
             handleRegistrationError(`${e}`);
         }
     } else {
-        handleRegistrationError('Must use physical device for push notifications');
+        // handleRegistrationError('Must use physical device for push notifications');
     }
 }
 
