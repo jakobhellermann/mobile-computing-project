@@ -7,7 +7,7 @@ import { createContext, useContext } from 'react';
 export type AuthContextProps = {
   user: User | null;
   fetchUser: () => Promise<void>;
-  loginToken: (token: string) => Promise<void>;
+  setLoginToken: (token: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -19,7 +19,7 @@ export const AuthContext = createContext<AuthContextProps>({
   fetchUser: () => {
     throw new Error('missing AuthProvider');
   },
-  loginToken: () => {
+  setLoginToken: () => {
     throw new Error('missing AuthProvider');
   },
   logout: () => {
