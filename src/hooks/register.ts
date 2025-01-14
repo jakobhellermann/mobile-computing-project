@@ -30,7 +30,7 @@ export const useRegister = () => {
   ) => {
     setLoading(true);
 
-    fetch(`${BASE_URL}/api/register`, {
+    fetch(`${BASE_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

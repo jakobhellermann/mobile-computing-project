@@ -6,27 +6,50 @@ import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
 import { useNotifications } from '@/src/hooks/toast';
+import { User } from '@/backend/shared';
+import { useSubscriptions } from '@/src/hooks/subscriptions';
 
 export default function HomeScreen() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
-  if (!user) return LoginScreen();
-
-  return <View>
-    <ThemedText>
-      Logged in as {user.email}
-    </ThemedText>
-    <CustomButton onPress={() => logout()} title='Logout' />
-  </View>;
+  if (!user) return <LoginScreen />;
+  else return <LoggedInScreen user={user} />;
 }
+
+function LoggedInScreen({ user }: { user: User; }) {
+  const { logout } = useAuth();
+  const { data, error, createSubscription } = useSubscriptions();
+
+  return <View style={styles.container}>
+    <ThemedText>Logged in as {user.email}</ThemedText>
+    <ThemedText>{error?.message}</ThemedText>
+
+    <ScrollView style={{ height: 256 }}>
+      <ThemedText>{JSON.stringify(data, null, "  ")}</ThemedText>
+    </ScrollView>
+
+    <View style={{ gap: 8 }}>
+      <CustomButton
+        title='Add subscription'
+        onPress={() => {
+          createSubscription("new team", "team");
+        }} />
+
+      <CustomButton title='Logout' onPress={logout} />
+    </View>
+  </View>;
+
+}
+
+const EXAMPLE_EMAIL = "testuser-normal@example.de";
+const EXAMPLE_PASSWORD = "normalpwd";
 
 function LoginScreen() {
   const { register, error: registerError } = useRegister();
   const { login, error: loginError } = useLogin();
-  const { showError } = useNotifications();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(EXAMPLE_EMAIL);
+  const [password, setPassword] = useState(EXAMPLE_PASSWORD);
 
   const onPressRegister = async () => {
     register(email, password);
