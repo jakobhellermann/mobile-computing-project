@@ -1,7 +1,6 @@
 import Tournament, { mapToTournament } from '@/model/Tournament';
 import Team, { mapToTeam } from '@/model/Team';
 import axios from 'axios';
-import { Image } from 'react-native';
 import Match, {mapToMatch} from '@/model/Match';
 
 const API_URL = 'https://lol.fandom.com/api.php';
@@ -12,6 +11,7 @@ const API_URL = 'https://lol.fandom.com/api.php';
  */
 export async function fetchTournamentData(name: string): Promise<Tournament[]> {
   // Construct the CargoQuery API request
+  console.log('Search Param:', name);
   const params = {
     action: 'cargoquery',
     format: 'json',
@@ -26,7 +26,7 @@ export async function fetchTournamentData(name: string): Promise<Tournament[]> {
     const response = await axios.get(API_URL, { params });
 
     // Parse and map the results to the Tournament interface
-    //console.log('API Response:', response.data);
+    console.log('API Response:', response.data);
     const tournaments: Tournament[] = response.data.cargoquery?.map((item: any) =>
       mapToTournament(item.title)
     ) || [];

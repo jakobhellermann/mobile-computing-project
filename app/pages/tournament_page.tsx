@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Tournament from '@/model/Tournament';
 import Team from '@/model/Team';
+import { useRouter, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -12,16 +13,19 @@ import {
 } from 'react-native';
 import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
 
-export default function TournamentPage({ route }: any) {
-  const {name = 'LEC 2024 Season Finals' } = route?.params || {}; // Default params
+export default function TournamentPage() {
+  
+  const {entityName} = useLocalSearchParams(); // Default params
   const [tournament, setTournament] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  
 
   useEffect(() => {
     const loadTournamentData = async () => {
       try {
-        const data = await fetchTournamentData(name);
+        console.log(entityName);
+        const data = await fetchTournamentData(entityName.toString());
         const teams = await fetchTournamentTeams(data[0].overviewPage);
         const matches = await fetchTournamentMatches(data[0].overviewPage);
         console.log("asd");
