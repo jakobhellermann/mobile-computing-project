@@ -11,6 +11,17 @@ export type UserRow = {
 };
 
 /**
+ * Subscription row in the database.
+ */
+export type SubscriptionRow = {
+    id: number;
+    user: number;
+    name: string;
+    type: string;
+    timestamp: number;
+};
+
+/**
  * Address row in the database.
  */
 export type AddressRow = {

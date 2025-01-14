@@ -19,6 +19,23 @@ const testUsers = [
     },
 ];
 
+const testSubscriptions= [
+  {
+    "id": 1,
+    "user": 2,
+    "name": "Team 1",
+    "type": "team",
+    "timestamp": 1736862070238
+  },
+  {
+    "id": 2,
+    "user": 2,
+    "name": "Some tournament",
+    "type": "tournament",
+    "timestamp": 1736862072752
+  }
+];
+
 const testAddresses = [
     {
         id: 1,
@@ -446,6 +463,17 @@ async function up(knex) {
             t.string('password_hash').notNullable();
             t.boolean('is_admin').notNullable();
         })
+        .createTable('subscriptions', (t) => {
+            t.increments('id').primary();
+            t.integer('user')
+                .notNullable()
+                .references('users.id')
+                .onDelete('CASCADE');
+            t.string('name').notNullable();
+            t.string('type').notNullable();
+            t.integer('timestamp').notNullable();
+        })
+
         .createTable('addresses', (t) => {
             t.increments('id').primary();
             t.integer('user')
@@ -571,6 +599,8 @@ const seedTestData = async (db) => {
     await db('products').insert(testProducts);
     // Insert test product images
     await db('product_images').insert(testProductImages);
+
+    await db('subscriptions').insert(testSubscriptions)
 
     // Orders for feb 2024
     await createRandomOrder(db, 2, 1, 1707737786);

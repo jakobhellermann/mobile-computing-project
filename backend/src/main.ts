@@ -13,6 +13,7 @@ import OrderService from './services/order';
 import AddressService from './services/address';
 import CouponService from './services/coupon';
 import StatsService from './services/stats';
+import SubscriptionService from './services/subscription';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -59,6 +60,7 @@ if (STATIC_FILES) {
         db,
     );
     const ratingService = new RatingService(db, productService, orderService);
+    const subscriptionService = new SubscriptionService(db);
     const userService = new UserService(db);
     const authService = new AuthService(
         db,
@@ -74,6 +76,7 @@ if (STATIC_FILES) {
             authService,
             productService,
             ratingService,
+            subscriptionService,
             sessionService,
             userService,
             orderService,
@@ -93,7 +96,5 @@ if (STATIC_FILES) {
             fastify.log.error(err);
             process.exit();
         }
-
-        console.log(`Listening at ${address}`);
     });
 })();

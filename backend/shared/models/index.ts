@@ -6,3 +6,4 @@ export * from "./common";
 export * from "./address";
 export * from "./coupon";
 export * from "./stats";
+export * from "./subscription";

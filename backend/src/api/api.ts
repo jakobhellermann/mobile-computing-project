@@ -55,6 +55,9 @@ import { getOverviewStats } from './routes/stats/getOverviewStats';
 import { getAllOrders } from './routes/order/getAllOrders';
 import { cancelOrderForUser } from './routes/order/cancelOrderForUser';
 import { completeOrder } from './routes/order/completeOrder';
+import { getSubscriptions } from './routes/subscription/getSubscriptions';
+import SubscriptionService from '../services/subscription';
+import { createSubscription } from './routes/subscription/createSubscription';
 
 /**
  * Creates the API routes.
@@ -74,6 +77,7 @@ export function api(
     authService: AuthService,
     productService: ProductService,
     ratingService: RatingService,
+    subscriptionService: SubscriptionService,
     sessionService: SessionService,
     userService: UserService,
     orderService: OrderService,
@@ -131,6 +135,10 @@ export function api(
         await fastify.register(deleteRating(ratingService));
         await fastify.register(getCurrentUserRatings(ratingService));
         await fastify.register(getLatestRatings(ratingService));
+
+
+        await fastify.register(getSubscriptions(subscriptionService));
+        await fastify.register(createSubscription(subscriptionService));
 
         await fastify.register(createOrder(orderService));
         await fastify.register(getOrders(orderService));
