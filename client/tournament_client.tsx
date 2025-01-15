@@ -79,6 +79,7 @@ export async function fetchTournamentTeams(overviewpage: string): Promise<Team[]
     format: 'json',
     origin: '*', // Required for CORS
     tables: 'TournamentPlayers',
+    limit:500,
     fields: 'Team, Player, TeamOrder, OverviewPage, Role',
     where: `OverviewPage LIKE "%${overviewpage}%"`,
   };

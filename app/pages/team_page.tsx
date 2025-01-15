@@ -150,7 +150,7 @@ export default function TeamProfilePage() {
                   <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
                 </View>
                 <Text style={styles.matchTime}>
-                  {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(item.dateTimeUTC).toLocaleTimeString([], {day: '2-digit', month:'short', year:'numeric', hour: '2-digit', minute: '2-digit' })}
                 </Text>
               </Card>
             </TouchableOpacity>
@@ -166,10 +166,10 @@ export default function TeamProfilePage() {
                   <Text style={styles.matchTitle}>
                     {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
                   </Text>
-                  <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
+                  <Text style={styles.matchSubtitle}>{item.tab + "\t\t" + item.tournament || 'Tournament Info'}</Text>
                 </View>
                 <Text style={styles.matchTime}>
-                  {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], {day: '2-digit', month:'short', year:'numeric', hour: '2-digit', minute: '2-digit' })}
                 </Text>
               </Card>
             </TouchableOpacity>

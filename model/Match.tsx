@@ -22,7 +22,7 @@ export default interface Match {
       team1Score: parseInt(apiResponse.Team1Score), // Convert to number
       team2Score: parseInt(apiResponse.Team2Score), // Convert to number
       matchDay: parseInt(apiResponse.MatchDay),      // Convert to number
-      dateTimeUTC: apiResponse.DateTime_UTC,
+      dateTimeUTC: apiResponse['DateTime UTC'],
       overviewPage: apiResponse.OverviewPage,
       tournament: apiResponse.Tournament || apiResponse.OverviewPage
     };
