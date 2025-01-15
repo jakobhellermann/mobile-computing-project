@@ -9,8 +9,6 @@ export function Collapsible({ children, title, extraButton, ...props }: PropsWit
 
     return (
         <View {...props}>
-
-
             <TouchableOpacity
                 style={styles.heading}
                 onPress={() => setIsOpen((value) => !value)}
