@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Tournament from '@/model/Tournament';
 import Team from '@/model/Team';
+import Match from '@/model/Match';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
@@ -10,7 +10,9 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
+import { Card } from '@/components/Card';
 import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
 
 export default function TournamentPage() {
@@ -19,6 +21,24 @@ export default function TournamentPage() {
   const [tournament, setTournament] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const router = useRouter();
+  
+    const handleTeamRouting = (entityName: string) => {
+      console.log('Item pressed, navigating to TeamPage with Name:', entityName);
+      router.push({
+        pathname: "/pages/team_page", 
+        params: { entityName: entityName}, 
+      });
+    };
+
+    const handleMatchRouting = (matchId: string) => {
+      console.log('Item pressed, navigating to TeamPage with Name:', matchId);
+      router.push({
+        pathname: "/pages/match_page", 
+        params: { matchId: matchId}, 
+      });
+    };
   
 
   useEffect(() => {
@@ -59,6 +79,9 @@ export default function TournamentPage() {
   return (
     <ScrollView style={styles.container}>
       {/* Profile Header */}
+      <TouchableOpacity onPress={() => router.back()} style={styles.goBackButton}>
+          <Text style={styles.goBackText}>◀ Back</Text>
+      </TouchableOpacity>
       <View style={styles.profileHeader}>
         <View style={styles.profileInfo}>
           <Image
@@ -114,13 +137,15 @@ export default function TournamentPage() {
         <Text style={styles.sectionTitle}>Teams</Text>
         {tournament.teams?.map((team: Team, index: number) => (
           <View key={index} style={styles.listItem}>
-            <Text style={styles.listItemTitle}>{team.name}</Text>
+            <TouchableOpacity onPress={() => handleTeamRouting(team.name)}>
+              <Text style={styles.listItemTitle}>{team.name}</Text>
+            </TouchableOpacity>
             <FlatList
               data={team.players}
               keyExtractor={(item, idx) => `${team.players}-${idx}`}
               renderItem={({ item }) => (
                 <View style={styles.playerItem}>
-                  <Text style={styles.playerName}>{item.name}</Text>
+                  <Text style={styles.playerName}>{item.playerName}</Text>
                   <Text style={styles.playerRole}>{item.role}</Text>
                 </View>
               )}
@@ -130,25 +155,23 @@ export default function TournamentPage() {
       </View>
 
       {/* Matches Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Matches</Text>
-        <FlatList
-          data={tournament.matches} // Assuming matches are already set in the tournament object
-          keyExtractor={(item, index) => `${item.matchId}-${index}`}
-          renderItem={({ item }) => (
-            <View style={styles.matchItem}>
-              <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+      <View>
+        <Text style={styles.sectionTitle}>Latest Results</Text>
+          {tournament.matches.map((item:Match, index:number) => (
+            <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
+              <Card style={styles.matchCard}>
+                <View style={styles.matchInfo}>
+                  <Text style={styles.matchTitle}>
+                    {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+                  </Text>
+                  <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
+                </View>
+                <Text style={styles.matchTime}>
+                  {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </Text>
-                <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
-              </View>
-              <Text style={styles.matchTime}>
-                {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </Text>
-            </View>
-          )}
-        />
+              </Card>
+            </TouchableOpacity>
+          ))}
       </View>
     </ScrollView>
   );
@@ -268,6 +291,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'red',
   },
+  matchCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 8,
+  },
   matchItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -293,5 +322,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#555',
+  },
+  goBackButton: {
+    padding: 8,
+  },
+  goBackText: {
+    fontSize: 16,
+    color: "#007bff",
   },
 });

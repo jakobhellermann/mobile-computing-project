@@ -9,6 +9,7 @@ export default interface Match {
     matchDay: number;         // The match day (e.g., 1, 2, 3)
     dateTimeUTC: string;      // Date and time in UTC format
     overviewPage: string;     // URL or reference to the match overview page
+    tournament:string;
   }
 
   export function mapToMatch(apiResponse: any): Match {
@@ -23,5 +24,6 @@ export default interface Match {
       matchDay: parseInt(apiResponse.MatchDay),      // Convert to number
       dateTimeUTC: apiResponse.DateTime_UTC,
       overviewPage: apiResponse.OverviewPage,
+      tournament: apiResponse.Tournament || apiResponse.OverviewPage
     };
   }

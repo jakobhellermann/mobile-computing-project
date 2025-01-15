@@ -1,5 +1,5 @@
 import Tournament, { mapToTournament } from '@/model/Tournament';
-import Team, { mapToTeam } from '@/model/Team';
+import Team, { mapToTournamentTeam } from '@/model/Team';
 import axios from 'axios';
 import Match, {mapToMatch} from '@/model/Match';
 
@@ -87,7 +87,7 @@ export async function fetchTournamentTeams(overviewpage: string): Promise<Team[]
     // Perform the API request
     const response = await axios.get(API_URL, { params });
     // Convert the team map to an array
-    return mapToTeam(response);
+    return mapToTournamentTeam(response);
   } catch (error) {
     console.error('Error fetching tournament data:', error);
     throw error;
@@ -95,10 +95,6 @@ export async function fetchTournamentTeams(overviewpage: string): Promise<Team[]
 }
 
 export async function fetchTournamentMatches(overviewpage: string): Promise<Match[]> {
-  // Construct the CargoQuery API request
-  //let tournamentFields = 'T.Name,T.DateStart,T.Date,T.Region,T.League,T.Prizepool,T.OverviewPage,T.Organizers,T.Rulebook,T.EventType,T.Region,T.Country'
-  //let TeamFields = 'P.Team, P.Player, P.TeamOrder, P.OverviewPage'
-                    
 
   const params = {
     action: 'cargoquery',
