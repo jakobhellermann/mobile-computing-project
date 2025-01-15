@@ -1,7 +1,7 @@
 import Tournament, { mapToTournament } from '@/model/Tournament';
 import Team, { mapToTournamentTeam } from '@/model/Team';
 import axios from 'axios';
-import Match, {mapToMatch} from '@/model/Match';
+import Match, { mapToMatch } from '@/model/Match';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 
@@ -41,12 +41,12 @@ export async function fetchTournamentData(name: string): Promise<Tournament[]> {
 export async function fetchTournamentLogo(team: string, filename: string): Promise<any> {
   // Construct the CargoQuery API request
   const params = {
-        action: 'query',
-        format: 'json',
-        origin: '*',
-        titles: `File:${filename}`,
-        prop: 'imageinfo',
-        iiprop: "url",
+    action: 'query',
+    format: 'json',
+    origin: '*',
+    titles: `File:${filename}`,
+    prop: 'imageinfo',
+    iiprop: "url",
   };
 
   try {
@@ -57,7 +57,7 @@ export async function fetchTournamentLogo(team: string, filename: string): Promi
     //console.log('API Response:', response.data);
     const pages = response.data.query.pages;
     const firstPageKey = Object.keys(pages)[0];
-    const resultImageURL = pages[firstPageKey]?.imageinfo?.[0].url; 
+    const resultImageURL = pages[firstPageKey]?.imageinfo?.[0].url;
     //console.log('Image URL:', resultImageURL);
     let result = new URL(resultImageURL);
     result.search = "";
@@ -72,14 +72,14 @@ export async function fetchTournamentTeams(overviewpage: string): Promise<Team[]
   // Construct the CargoQuery API request
   //let tournamentFields = 'T.Name,T.DateStart,T.Date,T.Region,T.League,T.Prizepool,T.OverviewPage,T.Organizers,T.Rulebook,T.EventType,T.Region,T.Country'
   //let TeamFields = 'P.Team, P.Player, P.TeamOrder, P.OverviewPage'
-                    
+
 
   const params = {
     action: 'cargoquery',
     format: 'json',
     origin: '*', // Required for CORS
     tables: 'TournamentPlayers',
-    limit:500,
+    limit: 500,
     fields: 'Team, Player, TeamOrder, OverviewPage, Role',
     where: `OverviewPage LIKE "%${overviewpage}%"`,
   };

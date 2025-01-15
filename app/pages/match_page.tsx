@@ -18,56 +18,56 @@ import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
 import { fetchLatestTeamMatches, fetchTeamData, fetchUpcomingTeamMatches } from '@/client/team_client';
 import { fetchApiImage } from '@/client/image_client';
-import { fetchMatch } from '@/client/Match_client';
+import { fetchMatch } from '@/client/match_client';
 
 export default function MatchOverviewPage() {
-    const router = useRouter();
-    const {entityName} = useLocalSearchParams(); 
-    const [match, setMatch] = useState<Match>();
-    const [team1, setTeam1] = useState<Team>();
-    const [team2, setTeam2] = useState<Team>();
-    const [imageTeam1, setImage1] = useState<any>(null);
-    const [imageTeam2, setImage2] = useState<any>(null);
-    const [hthMatches, setHthMatches] = useState<Match[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    //TODO Match Page
-        // useEffect(() => {
-        //     const loadTeamData = async () => {
-        //       try {
-                
-        //         const match = await fetchMatch(entityName.toString());
+  const router = useRouter();
+  const { entityName } = useLocalSearchParams();
+  const [match, setMatch] = useState<Match>();
+  const [team1, setTeam1] = useState<Team>();
+  const [team2, setTeam2] = useState<Team>();
+  const [imageTeam1, setImage1] = useState<any>(null);
+  const [imageTeam2, setImage2] = useState<any>(null);
+  const [hthMatches, setHthMatches] = useState<Match[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  //TODO Match Page
+  // useEffect(() => {
+  //     const loadTeamData = async () => {
+  //       try {
 
-        //         console.log(entityName);
-        //         setMatch(match);
-        //         //setTeam1(team); 
-        //         //setImage(image);
-        //         setHthMatches(hthMatches);
-        //         //setUpcomingMatches(upcomingMatches)
-        //       } catch (error) {
-        //         console.error(error);
-        //       } finally {
-        //         setLoading(false);
-        //       }
-        //     };
-        
-        //     loadTeamData();
-        //   }, []);
-        
-        //   if (loading) {
-        //     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
-        //   }
-        
-        //   if (!match) {
-        //     return (
-        //       <View style={styles.errorContainer}>
-        //         <Text style={styles.errorText}>Team not found.</Text>
-        //       </View>
-        //     );
-        //   }
+  //         const match = await fetchMatch(entityName.toString());
+
+  //         console.log(entityName);
+  //         setMatch(match);
+  //         //setTeam1(team); 
+  //         //setImage(image);
+  //         setHthMatches(hthMatches);
+  //         //setUpcomingMatches(upcomingMatches)
+  //       } catch (error) {
+  //         console.error(error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     loadTeamData();
+  //   }, []);
+
+  //   if (loading) {
+  //     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
+  //   }
+
+  //   if (!match) {
+  //     return (
+  //       <View style={styles.errorContainer}>
+  //         <Text style={styles.errorText}>Team not found.</Text>
+  //       </View>
+  //     );
+  //   }
 
   return (
 
-    
+
     <ScrollView style={styles.container}>
       {/* Tournament Header */}
       <View style={styles.tournamentHeader}>

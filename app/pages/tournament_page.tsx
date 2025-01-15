@@ -9,7 +9,6 @@ import {
   Text,
   View,
   Image,
-  FlatList,
   ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
@@ -17,30 +16,30 @@ import { Card } from '@/components/Card';
 import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
 
 export default function TournamentPage() {
-  
-  const {entityName} = useLocalSearchParams(); // Default params
+
+  const { entityName } = useLocalSearchParams(); // Default params
   const [tournament, setTournament] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
-  
-    const handleTeamRouting = (entityName: string) => {
-      console.log('Item pressed, navigating to TeamPage with Name:', entityName);
-      router.push({
-        pathname: "/pages/team_page", 
-        params: { entityName: entityName}, 
-      });
-    };
 
-    const handleMatchRouting = (matchId: string) => {
-      console.log('Item pressed, navigating to TeamPage with Name:', matchId);
-      router.push({
-        pathname: "/pages/match_page", 
-        params: { matchId: matchId}, 
-      });
-    };
-  
+  const handleTeamRouting = (entityName: string) => {
+    console.log('Item pressed, navigating to TeamPage with Name:', entityName);
+    router.push({
+      pathname: "/pages/team_page",
+      params: { entityName: entityName },
+    });
+  };
+
+  const handleMatchRouting = (matchId: string) => {
+    console.log('Item pressed, navigating to TeamPage with Name:', matchId);
+    router.push({
+      pathname: "/pages/match_page",
+      params: { matchId: matchId },
+    });
+  };
+
 
   useEffect(() => {
     const loadTournamentData = async () => {
@@ -52,7 +51,7 @@ export default function TournamentPage() {
         console.log("asd");
         data[0].teams = teams;
         data[0].matches = matches;
-        const image = await fetchTournamentLogo("SK_Gaming","SK_Gaminglogo_square.png")
+        const image = await fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png");
         setTournament(data[0]); // Assuming we're interested in the first tournament
         setImage(image);
       } catch (error) {
@@ -81,7 +80,7 @@ export default function TournamentPage() {
     <ScrollView style={styles.container}>
       {/* Profile Header */}
       <TouchableOpacity onPress={() => router.back()} style={styles.goBackButton}>
-          <Text style={styles.goBackText}>◀ Back</Text>
+        <Text style={styles.goBackText}>◀ Back</Text>
       </TouchableOpacity>
       <View style={styles.profileHeader}>
         <View style={styles.profileInfo}>
@@ -141,12 +140,12 @@ export default function TournamentPage() {
             <TouchableOpacity onPress={() => handleTeamRouting(team.name)}>
               <Text style={styles.listItemTitle}>{team.name}</Text>
             </TouchableOpacity>
-            {team.players.map((player:Player) => (
-                <View style={styles.playerItem}>
-                  <Text style={styles.playerName}>{player.playerName}</Text>
-                  <Text style={styles.playerRole}>{player.role}</Text>
-                </View>
-              ))}
+            {team.players.map((player: Player) => (
+              <View style={styles.playerItem}>
+                <Text style={styles.playerName}>{player.playerName}</Text>
+                <Text style={styles.playerRole}>{player.role}</Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>
@@ -154,21 +153,21 @@ export default function TournamentPage() {
       {/* Matches Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-          {tournament.matches.map((item:Match, index:number) => (
-            <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
-              <Card style={styles.matchCard}>
-                <View style={styles.matchInfo}>
-                  <Text style={styles.matchTitle}>
-                    {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                  </Text>
-                  <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
-                </View>
-                <Text style={styles.matchTime}>
-                  {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        {tournament.matches.map((item: Match, index: number) => (
+          <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
                 </Text>
-              </Card>
-            </TouchableOpacity>
-          ))}
+                <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );
