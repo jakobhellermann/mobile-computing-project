@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Team from '@/model/Team';
 import Match from '@/model/Match';
+import Player from '@/model/Player';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
@@ -140,16 +141,12 @@ export default function TournamentPage() {
             <TouchableOpacity onPress={() => handleTeamRouting(team.name)}>
               <Text style={styles.listItemTitle}>{team.name}</Text>
             </TouchableOpacity>
-            <FlatList
-              data={team.players}
-              keyExtractor={(item, idx) => `${team.players}-${idx}`}
-              renderItem={({ item }) => (
+            {team.players.map((player:Player) => (
                 <View style={styles.playerItem}>
-                  <Text style={styles.playerName}>{item.playerName}</Text>
-                  <Text style={styles.playerRole}>{item.role}</Text>
+                  <Text style={styles.playerName}>{player.playerName}</Text>
+                  <Text style={styles.playerRole}>{player.role}</Text>
                 </View>
-              )}
-            />
+              ))}
           </View>
         ))}
       </View>
