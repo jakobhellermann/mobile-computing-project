@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import { Card } from '@/components/Card';
 import { Collapsible } from '@/components/Collapsible';
-import { MaterialIcons } from '@expo/vector-icons';
 import { fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
 import { fetchTournamentLogo } from '@/client/tournament_client';
 import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
+import { IconButton } from '@/components/IconButton';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -109,8 +109,8 @@ export default function TournamentPage() {
           <Text style={styles.profileName}>{tournament.name}</Text>
         </View>
         <View style={styles.profileIcons}>
-          <Text>⭐</Text>
-          <Text>🔔</Text>
+          <IconButton onPress={toggleFavorite} name='star' size={24} />
+          <IconButton onPress={toggleNotifications} name='notifications-on' size={24} />
         </View>
       </View>
 
@@ -155,9 +155,9 @@ export default function TournamentPage() {
         <Text style={styles.sectionTitle}>Teams</Text>
         {tournament.teams?.map((team: Team) => (
           <Collapsible key={team.name} title={team.name} style={styles.listItem}
-            extraButton={<TouchableOpacity onPress={() => handleTeamRouting(team.name)}><MaterialIcons name="read-more" size={18} weight="medium" /></TouchableOpacity>}>
-            {team.players.map((player: Player) => (
-              <View key={player.id} style={styles.playerItem}>
+            extraButton={<IconButton onPress={() => handleTeamRouting(team.name)} name="read-more" />}>
+            {team.players.map((player: Player, index) => (
+              <View key={index} style={styles.playerItem}>
                 <Text style={styles.playerName}>{player.playerName}</Text>
                 <Text style={styles.playerRole}>{player.role}</Text>
               </View>
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   profileInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    maxWidth: "80%",
   },
   profileImage: {
     width: 50,
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 16,
     fontWeight: 'bold',
+    flexShrink: 1,
   },
   profileIcons: {
     flexDirection: 'row',
