@@ -22,7 +22,7 @@ export default function HomeScreen() {
     try {
       setLoading(true);
       const tournaments = await searchTournaments(term); // Fetch tournaments
-      const formattedSuggestions = tournaments.map((tournament: any, index: number) => ({
+      const formattedSuggestions = tournaments.map((tournament, index) => ({
         id: index.toString(),
         title: `${tournament.name}`, // TODO:change Format
         //title: `${tournament.name}\n${tournament.eventType || ''}`, 

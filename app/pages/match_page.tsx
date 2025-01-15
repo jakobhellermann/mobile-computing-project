@@ -17,8 +17,8 @@ export default function MatchOverviewPage() {
   const [match, setMatch] = useState<Match>();
   const [team1, setTeam1] = useState<Team>();
   const [team2, setTeam2] = useState<Team>();
-  const [imageTeam1, setImage1] = useState<any>(null);
-  const [imageTeam2, setImage2] = useState<any>(null);
+  const [imageTeam1, setImage1] = useState<string | undefined>();
+  const [imageTeam2, setImage2] = useState<string | undefined>();
   const [hthMatches, setHthMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   //TODO Match Page

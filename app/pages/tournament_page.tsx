@@ -26,7 +26,7 @@ export default function TournamentPage() {
 
   const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [tournament, setTournament] = useState<TournamentState | undefined>();
-  const [image, setImage] = useState<any>(null);
+  const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
