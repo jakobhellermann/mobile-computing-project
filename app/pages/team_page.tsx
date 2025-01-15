@@ -134,8 +134,8 @@ export default function TeamProfilePage() {
       </View>
 
       <View style={styles.table}>
-        {team.players.map((player: Player, index: number) => (
-          <View style={styles.tableRow}>
+        {team.players.map((player: Player) => (
+          <View key={player.id} style={styles.tableRow}>
             <Text style={styles.tableKey}>{player.playerName}</Text>
             <Text style={styles.tableValue}>{player.name}</Text>
             <Text style={styles.tableValue}>{player.role}</Text>
@@ -146,8 +146,8 @@ export default function TeamProfilePage() {
       {/* Latest Results */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {latestMatches.map((item: Match, index: number) => (
-          <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
+        {latestMatches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
                 <Text style={styles.matchTitle}>
@@ -165,8 +165,8 @@ export default function TeamProfilePage() {
       {/* Upcoming Matches */}
       <View>
         <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-        {upcomingMatches.map((item: Match, index: number) => (
-          <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
+        {upcomingMatches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
                 <Text style={styles.matchTitle}>

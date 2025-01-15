@@ -143,7 +143,7 @@ export default function TournamentPage() {
               <Text style={styles.listItemTitle}>{team.name}</Text>
             </TouchableOpacity>
             {team.players.map((player: Player) => (
-              <View style={styles.playerItem}>
+              <View key={player.id} style={styles.playerItem}>
                 <Text style={styles.playerName}>{player.playerName}</Text>
                 <Text style={styles.playerRole}>{player.role}</Text>
               </View>
@@ -155,8 +155,8 @@ export default function TournamentPage() {
       {/* Matches Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {tournament.matches.map((item: Match, index: number) => (
-          <TouchableOpacity onPress={() => handleMatchRouting(item.matchId)}>
+        {tournament.matches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
                 <Text style={styles.matchTitle}>
