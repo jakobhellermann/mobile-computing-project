@@ -15,6 +15,7 @@ const schema = {
             email: { type: 'string' },
             password: { type: 'string' },
         },
+        examples: [{ email: "testuser-normal@example.de", "password": "normalpwd" }],
         required: ['email', 'password'],
     },
     response: {

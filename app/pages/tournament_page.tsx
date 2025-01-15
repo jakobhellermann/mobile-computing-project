@@ -16,6 +16,7 @@ import { fetchTournamentLogo } from '@/client/tournament_client';
 import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
+import { useSubscriptions } from '@/src/hooks/subscriptions';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -28,6 +29,8 @@ export default function TournamentPage() {
   const [tournament, setTournament] = useState<TournamentState | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
+
+  const { data: subscriptions, createSubscription } = useSubscriptions();
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -50,7 +53,9 @@ export default function TournamentPage() {
   };
 
 
-  const toggleNotifications = () => { };
+  const toggleNotifications = () => {
+
+  };
   const toggleFavorite = () => { };
 
   useEffect(() => {

@@ -3,7 +3,6 @@ import { Subscription } from 'shared';
 import {
     SubscriptionNotFoundError,
 } from '../errors/subscription';
-import OrderService from './order';
 import { toSubscription } from '../mappers/subscription';
 
 /**
