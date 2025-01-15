@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Team from '@/model/Team';
 import Match from '@/model/Match';
 import Player from '@/model/Player';
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, useNavigation, Link } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -23,6 +23,7 @@ export default function TournamentPage() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
+  const navigation = useNavigation();
 
   const handleTeamRouting = (entityName: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', entityName);
@@ -54,6 +55,8 @@ export default function TournamentPage() {
         const image = await fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png");
         setTournament(data[0]); // Assuming we're interested in the first tournament
         setImage(image);
+
+        navigation.setOptions({ title: data[0].name });
       } catch (error) {
         console.error(error);
       } finally {
@@ -79,9 +82,6 @@ export default function TournamentPage() {
   return (
     <ScrollView style={styles.container}>
       {/* Profile Header */}
-      <TouchableOpacity onPress={() => router.back()} style={styles.goBackButton}>
-        <Text style={styles.goBackText}>◀ Back</Text>
-      </TouchableOpacity>
       <View style={styles.profileHeader}>
         <View style={styles.profileInfo}>
           <Image

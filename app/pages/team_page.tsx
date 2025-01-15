@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Team from '@/model/Team';
 import Player from '@/model/Player';
 import Match from '@/model/Match';
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -22,6 +22,7 @@ import { fetchApiImage } from '@/client/image_client';
 
 export default function TeamProfilePage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [team, setTeam] = useState<Team>();
   const [image, setImage] = useState<any>(null);
@@ -51,6 +52,9 @@ export default function TeamProfilePage() {
         setImage(image);
         setLatestMatches(latestMatches);
         setUpcomingMatches(upcomingMatches);
+
+
+        navigation.setOptions({ title: team.name });
       } catch (error) {
         console.error(error);
       } finally {
