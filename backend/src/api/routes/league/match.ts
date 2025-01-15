@@ -1,5 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import LeagueService from '../../../services/leaguepedia';
+import { defaultLeagueAPIExpiration } from './common';
 
 
 export function getMatch(
@@ -25,6 +26,7 @@ export function getMatch(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchMatch(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
