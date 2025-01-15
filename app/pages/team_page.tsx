@@ -9,15 +9,12 @@ import {
   Text,
   View,
   Image,
-  FlatList,
   ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
-import { ThemedText } from '@/components/ThemedText';
-import { fetchLatestTeamMatches, fetchTeamData, fetchUpcomingTeamMatches } from '@/client/team_client';
 import { fetchApiImage } from '@/client/image_client';
+import { fetchTeam, fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
 
 
 export default function TeamProfilePage() {
@@ -43,13 +40,12 @@ export default function TeamProfilePage() {
     const loadTeamData = async () => {
       try {
 
-        const team = await fetchTeamData(entityName);
+        const team = await fetchTeam(entityName);
         const [image, latestMatches, upcomingMatches] = await Promise.all([
           fetchApiImage(team.name.concat("logo_square.png")),
-          fetchLatestTeamMatches(team.name),
-          fetchUpcomingTeamMatches(team.name),
+          fetchTeamLatestMatches(team.name),
+          fetchTeamUpcomingMatches(team.name),
         ]);
-        console.log(entityName);
         setTeam(team);
         setImage(image);
         setLatestMatches(latestMatches);

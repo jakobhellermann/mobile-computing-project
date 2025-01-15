@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Team from '@/model/Team';
-import Match from '@/model/Match';
-import Player from '@/model/Player';
-import { useRouter, useLocalSearchParams, useNavigation, Link } from "expo-router";
+import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ScrollView,
   StyleSheet,
@@ -13,14 +10,22 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { Card } from '@/components/Card';
-import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
 import { Collapsible } from '@/components/Collapsible';
 import { MaterialIcons } from '@expo/vector-icons';
+import { fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
+import { fetchTournamentLogo } from '@/client/tournament_client';
+import { Tournament, Team, Match } from 'shared';
+import Player from '@/model/Player';
+
+type TournamentState = Tournament & {
+  teams: Team[],
+  matches: Match[],
+};
 
 export default function TournamentPage() {
 
   const { entityName } = useLocalSearchParams<{ entityName: string; }>();
-  const [tournament, setTournament] = useState<any>(null);
+  const [tournament, setTournament] = useState<TournamentState | undefined>();
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -48,19 +53,20 @@ export default function TournamentPage() {
     const loadTournamentData = async () => {
       try {
         console.log(entityName);
-        // Assuming we're interested in the first tournament
-        const data = (await fetchTournamentData(entityName))[0];
+
+        const results = await searchTournaments(entityName);
+        // Assuming we're interested in the first tournament. TODO: add method returning a single tournament
+        const tournament = results[0];
+
         const [teams, matches, image] = await Promise.all([
-          fetchTournamentTeams(data.overviewPage),
-          fetchTournamentMatches(data.overviewPage),
+          fetchTournamentTeams(tournament.overviewPage),
+          fetchTournamentMatches(tournament.overviewPage),
           fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png"),
         ]);
-        data.teams = teams;
-        data.matches = matches;
-        setTournament(data);
+        setTournament({ ...tournament, teams, matches });
         setImage(image);
 
-        navigation.setOptions({ title: data.name });
+        navigation.setOptions({ title: tournament.name });
       } catch (error) {
         console.error(error);
       } finally {
@@ -107,7 +113,7 @@ export default function TournamentPage() {
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Organizer</Text>
-            <Text style={styles.tableValue}>{tournament.organizer || 'Unknown'}</Text>
+            <Text style={styles.tableValue}>{tournament.organizers || 'Unknown'}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Rulebook</Text>
@@ -123,7 +129,7 @@ export default function TournamentPage() {
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Address</Text>
-            <Text style={styles.tableValue}>{tournament.address || 'Unknown'}</Text>
+            <Text style={styles.tableValue}>{'Unknown (TODO)'}</Text>
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Start Date</Text>
@@ -131,7 +137,7 @@ export default function TournamentPage() {
           </View>
           <View style={styles.tableRow}>
             <Text style={styles.tableKey}>End Date</Text>
-            <Text style={styles.tableValue}>{tournament.endDate || 'N/A'}</Text>
+            <Text style={styles.tableValue}>{'N/A (TODO)'}</Text>
           </View>
         </View>
       </View>

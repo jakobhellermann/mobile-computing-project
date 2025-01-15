@@ -1,8 +1,6 @@
 import axios from 'axios';
-import Tournament from '../lolfandom/model/Tournament';
-import Match from '../lolfandom/model/Match';
-import Team from '../lolfandom/model/Team';
-import Player from '../lolfandom/model/Player';
+import { Match, Team, Tournament } from 'shared';
+import Player from 'shared/models/Player';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 
@@ -294,8 +292,6 @@ function mapToTournament(apiResponse: any): Tournament {
         organizers: apiResponse.Organizers,
         rulebook: apiResponse.Rulebook,
         overviewPage: apiResponse.OverviewPage,
-        teams: [],
-        matches: []
     };
 }
 function mapToMatch(apiResponse: any): Match {

@@ -8,17 +8,10 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
-import { fetchLatestTeamMatches, fetchTeamData, fetchUpcomingTeamMatches } from '@/client/team_client';
-import { fetchApiImage } from '@/client/image_client';
-import { fetchMatch } from '@/client/match_client';
 
 export default function MatchOverviewPage() {
   const router = useRouter();

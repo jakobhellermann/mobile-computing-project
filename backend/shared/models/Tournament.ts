@@ -1,7 +1,4 @@
-import Match from "./Match";
-import Team from "./Team";
-
-export default interface Tournament {
+export type Tournament = {
   name: string;
   eventType: string;
   dateStart: string;
@@ -13,6 +10,4 @@ export default interface Tournament {
   organizers: string;
   rulebook: string;
   overviewPage: string;
-  teams: Team[];
-  matches: Match[];
-}
+};

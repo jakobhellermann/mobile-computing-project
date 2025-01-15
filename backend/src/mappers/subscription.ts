@@ -1,5 +1,5 @@
 import { SubscriptionRow } from '../database/rows';
-import { Subscription } from 'shared/models/Subscription';
+import { Subscription } from 'shared';
 
 /**
  * Convert rating row to rating.
