@@ -43,10 +43,12 @@ export default function TeamProfilePage() {
     const loadTeamData = async () => {
       try {
 
-        const team = await fetchTeamData(entityName.toString());
-        const image = await fetchApiImage(team.name.concat("logo_square.png"));
-        const latestMatches = await fetchLatestTeamMatches(team.name);
-        const upcomingMatches = await fetchUpcomingTeamMatches(team.name);
+        const team = await fetchTeamData(entityName);
+        const [image, latestMatches, upcomingMatches] = await Promise.all([
+          fetchApiImage(team.name.concat("logo_square.png")),
+          fetchLatestTeamMatches(team.name),
+          fetchUpcomingTeamMatches(team.name),
+        ]);
         console.log(entityName);
         setTeam(team);
         setImage(image);

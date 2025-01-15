@@ -25,11 +25,11 @@ export default function TournamentPage() {
   const router = useRouter();
   const navigation = useNavigation();
 
-  const handleTeamRouting = (entityName: string) => {
-    console.log('Item pressed, navigating to TeamPage with Name:', entityName);
+  const handleTeamRouting = (teamName: string) => {
+    console.log('Item pressed, navigating to TeamPage with Name:', teamName);
     router.push({
       pathname: "/pages/team_page",
-      params: { entityName: entityName },
+      params: { entityName: teamName },
     });
   };
 
@@ -37,7 +37,7 @@ export default function TournamentPage() {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.push({
       pathname: "/pages/match_page",
-      params: { matchId: matchId },
+      params: { matchId },
     });
   };
 
@@ -46,17 +46,19 @@ export default function TournamentPage() {
     const loadTournamentData = async () => {
       try {
         console.log(entityName);
-        const data = await fetchTournamentData(entityName);
-        const teams = await fetchTournamentTeams(data[0].overviewPage);
-        const matches = await fetchTournamentMatches(data[0].overviewPage);
-        console.log("asd");
-        data[0].teams = teams;
-        data[0].matches = matches;
-        const image = await fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png");
-        setTournament(data[0]); // Assuming we're interested in the first tournament
+        // Assuming we're interested in the first tournament
+        const data = (await fetchTournamentData(entityName))[0];
+        const [teams, matches, image] = await Promise.all([
+          fetchTournamentTeams(data.overviewPage),
+          fetchTournamentMatches(data.overviewPage),
+          fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png"),
+        ]);
+        data.teams = teams;
+        data.matches = matches;
+        setTournament(data);
         setImage(image);
 
-        navigation.setOptions({ title: data[0].name });
+        navigation.setOptions({ title: data.name });
       } catch (error) {
         console.error(error);
       } finally {
