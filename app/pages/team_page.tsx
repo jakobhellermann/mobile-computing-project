@@ -22,7 +22,7 @@ import { fetchApiImage } from '@/client/image_client';
 
 export default function TeamProfilePage() {
   const router = useRouter();
-  const { entityName } = useLocalSearchParams();
+  const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [team, setTeam] = useState<Team>();
   const [image, setImage] = useState<any>(null);
   const [latestMatches, setLatestMatches] = useState<Match[]>([]);

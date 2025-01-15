@@ -17,7 +17,7 @@ import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetch
 
 export default function TournamentPage() {
 
-  const { entityName } = useLocalSearchParams(); // Default params
+  const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [tournament, setTournament] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +45,7 @@ export default function TournamentPage() {
     const loadTournamentData = async () => {
       try {
         console.log(entityName);
-        const data = await fetchTournamentData(entityName.toString());
+        const data = await fetchTournamentData(entityName);
         const teams = await fetchTournamentTeams(data[0].overviewPage);
         const matches = await fetchTournamentMatches(data[0].overviewPage);
         console.log("asd");

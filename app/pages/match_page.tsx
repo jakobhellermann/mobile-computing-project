@@ -22,7 +22,7 @@ import { fetchMatch } from '@/client/match_client';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
-  const { entityName } = useLocalSearchParams();
+  const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [match, setMatch] = useState<Match>();
   const [team1, setTeam1] = useState<Team>();
   const [team2, setTeam2] = useState<Team>();
@@ -35,7 +35,7 @@ export default function MatchOverviewPage() {
   //     const loadTeamData = async () => {
   //       try {
 
-  //         const match = await fetchMatch(entityName.toString());
+  //         const match = await fetchMatch(entityName);
 
   //         console.log(entityName);
   //         setMatch(match);
