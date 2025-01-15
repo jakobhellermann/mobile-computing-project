@@ -8,6 +8,7 @@ import { connectDatabase } from './database';
 import SessionService from './services/session';
 import UserService from './services/user';
 import SubscriptionService from './services/subscription';
+import LeagueService from './services/leaguepedia';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -52,6 +53,7 @@ if (STATIC_FILES) {
         argon2Secret || 'supersecret',
     );
     const subscriptionService = new SubscriptionService(db);
+    const leagueService = new LeagueService();
 
     await fastify.register(cors, {});
     await fastify.register(
@@ -60,6 +62,7 @@ if (STATIC_FILES) {
             sessionService,
             userService,
             subscriptionService,
+            leagueService,
         ),
         {
             prefix: '/api',

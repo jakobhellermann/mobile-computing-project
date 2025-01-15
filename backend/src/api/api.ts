@@ -19,6 +19,11 @@ import { updateCurrentUser } from './routes/user/updateCurrentUser';
 import { getSubscriptions } from './routes/subscription/getSubscriptions';
 import { createSubscription } from './routes/subscription/createSubscription';
 
+import * as leagueTournament from './routes/league/tournament';
+import * as leagueMatch from './routes/league/match';
+import * as leagueTeam from './routes/league/team';
+import LeagueService from '../services/leaguepedia';
+
 /**
  * Creates the API routes.
  *
@@ -32,6 +37,7 @@ export function api(
     sessionService: SessionService,
     userService: UserService,
     subscriptionService: SubscriptionService,
+    leagueService: LeagueService,
 ): FastifyPluginAsync {
     return async (fastify) => {
         await fastify.register(fastifyAuth);
@@ -55,6 +61,14 @@ export function api(
         await fastify.register(login(authService));
         await fastify.register(register(authService));
         await fastify.register(logout(sessionService));
+
+        await fastify.register(leagueTournament.searchTournament(leagueService));
+        await fastify.register(leagueTournament.getTournamentTeams(leagueService));
+        await fastify.register(leagueTournament.getTournamentMatches(leagueService));
+        await fastify.register(leagueMatch.getMatch(leagueService));
+        await fastify.register(leagueTeam.getTeam(leagueService));
+        await fastify.register(leagueTeam.getLatestMatches(leagueService));
+        await fastify.register(leagueTeam.getUpcomingMatches(leagueService));
 
         await fastify.register(updatePassword(authService));
         await fastify.register(getCurrentUser(userService));

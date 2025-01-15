@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { Subscription } from 'shared';
-import { SubscriptionNotFoundError } from '../errors/subscription';
+import { SubscriptionNotFoundError } from '../errors/db';
 import { toSubscription } from '../mappers/subscription';
 
 /**
