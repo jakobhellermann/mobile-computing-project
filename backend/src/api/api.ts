@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import fastifyAuth from '@fastify/auth';
+import fastifyCaching from '@fastify/caching';
 import { login } from './routes/auth/login';
 import { register } from './routes/auth/register';
 import { getProduct } from './routes/product/getProduct';
@@ -93,6 +94,11 @@ export function api(
 ): FastifyPluginAsync {
     return async (fastify) => {
         await fastify.register(fastifyAuth);
+
+        await fastify.register(fastifyCaching, {
+            privacy: fastifyCaching.privacy.PRIVATE,
+        });
+
         await fastify.register(authPlugin(sessionService));
         await fastify.register(isAdminPlugin(userService));
 

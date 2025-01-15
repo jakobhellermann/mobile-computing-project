@@ -1,5 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import LeagueService from '../../../services/leaguepedia';
+import { defaultLeagueAPIExpiration } from './common';
 
 
 export function searchTournament(
@@ -28,6 +29,7 @@ export function searchTournament(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchTournamentData(request.query.term);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
@@ -58,6 +60,7 @@ export function getTournamentTeams(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchTournamentTeams(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
@@ -88,6 +91,7 @@ export function getTournamentMatches(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchTournamentMatches(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );

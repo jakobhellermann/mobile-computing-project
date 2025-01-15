@@ -1,5 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import LeagueService from '../../../services/leaguepedia';
+import { defaultLeagueAPIExpiration } from './common';
 
 export function getTeam(
     leagueService: LeagueService,
@@ -24,6 +25,7 @@ export function getTeam(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchTeamData(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
@@ -54,6 +56,7 @@ export function getLatestMatches(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchLatestTeamMatches(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
@@ -83,6 +86,7 @@ export function getUpcomingMatches(
             },
             async (request, reply) => {
                 let response = await leagueService.fetchUpcomingTeamMatches(request.params.id);
+                defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },
         );
