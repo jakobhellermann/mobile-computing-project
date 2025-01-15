@@ -25,6 +25,7 @@ import * as leagueMatch from './routes/league/match';
 import * as leagueTeam from './routes/league/team';
 import LeagueService from '../services/leaguepedia';
 import { ApiNotFoundError } from '../errors/api';
+import { deleteSubscription } from './routes/subscription/deleteSubscription';
 
 /**
  * Creates the API routes.
@@ -93,5 +94,6 @@ export function api(
 
         await fastify.register(getSubscriptions(subscriptionService));
         await fastify.register(createSubscription(subscriptionService));
+        await fastify.register(deleteSubscription(subscriptionService));
     };
 }
