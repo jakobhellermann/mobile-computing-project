@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import { Card } from '@/components/Card';
 import { fetchTournamentData, fetchTournamentLogo, fetchTournamentMatches, fetchTournamentTeams } from '../../client/tournament_client';
+import { Collapsible } from '@/components/Collapsible';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function TournamentPage() {
 
@@ -137,18 +139,16 @@ export default function TournamentPage() {
       {/* Teams Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Teams</Text>
-        {tournament.teams?.map((team: Team, index: number) => (
-          <View key={index} style={styles.listItem}>
-            <TouchableOpacity onPress={() => handleTeamRouting(team.name)}>
-              <Text style={styles.listItemTitle}>{team.name}</Text>
-            </TouchableOpacity>
+        {tournament.teams?.map((team: Team) => (
+          <Collapsible key={team.name} title={team.name} style={styles.listItem}
+            extraButton={<TouchableOpacity onPress={() => handleTeamRouting(team.name)}><MaterialIcons name="read-more" size={18} weight="medium" /></TouchableOpacity>}>
             {team.players.map((player: Player) => (
               <View key={player.id} style={styles.playerItem}>
                 <Text style={styles.playerName}>{player.playerName}</Text>
                 <Text style={styles.playerRole}>{player.role}</Text>
               </View>
             ))}
-          </View>
+          </Collapsible>
         ))}
       </View>
 
