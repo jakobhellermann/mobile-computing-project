@@ -39,20 +39,13 @@ export default function TeamProfilePage() {
   useEffect(() => {
     const loadTeamData = async () => {
       try {
-
         const team = await fetchTeam(entityName);
-        const [image, latestMatches, upcomingMatches] = await Promise.all([
-          fetchApiImage(team.name.concat("logo_square.png")),
-          fetchTeamLatestMatches(team.name),
-          fetchTeamUpcomingMatches(team.name),
-        ]);
         setTeam(team);
-        setImage(image);
-        setLatestMatches(latestMatches);
-        setUpcomingMatches(upcomingMatches);
-
-
         navigation.setOptions({ title: team.name });
+
+        fetchTeamLatestMatches(team.name).then(setLatestMatches);
+        fetchTeamUpcomingMatches(team.name).then(setUpcomingMatches);
+        fetchApiImage(team.name.concat("logo_square.png")).then(setImage);
       } catch (error) {
         console.error(error);
       } finally {
