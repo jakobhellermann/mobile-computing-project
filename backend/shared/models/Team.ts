@@ -1,7 +1,7 @@
 import { Player } from './Player';
 
-export interface Team {
+export type Team = {
   name: string;
   players: Player[];
   overviewPage: string;
-}
+};

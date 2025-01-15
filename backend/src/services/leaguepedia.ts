@@ -291,8 +291,6 @@ function mapToTournament(apiResponse: any): Tournament {
         organizers: apiResponse.Organizers,
         rulebook: apiResponse.Rulebook,
         overviewPage: apiResponse.OverviewPage,
-        teams: [],
-        matches: []
     };
 }
 function mapToMatch(apiResponse: any): Match {

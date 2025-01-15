@@ -2,8 +2,8 @@ import { ThemedText } from '@/components/ThemedText';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown';
-import { fetchTournamentData } from '@/client/tournament_client';
 import { useRouter } from 'expo-router';
+import { searchTournaments } from '@/src/api/league';
 
 
 export default function HomeScreen() {
@@ -13,15 +13,15 @@ export default function HomeScreen() {
   const [suggestionsList, setSuggestionsList] = useState<AutocompleteDropdownItem[]>([]);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const getSuggestions = useCallback(async (q: string) => {
-    if (!q) {
+  const getSuggestions = useCallback(async (term: string) => {
+    if (!term) {
       setSuggestionsList([]);
       return;
     }
 
     try {
       setLoading(true);
-      const tournaments = await fetchTournamentData(q); // Fetch tournaments
+      const tournaments = await searchTournaments(term); // Fetch tournaments
       const formattedSuggestions = tournaments.map((tournament: any, index: number) => ({
         id: index.toString(),
         title: `${tournament.name}`, // TODO:change Format
@@ -40,8 +40,8 @@ export default function HomeScreen() {
   const onSelectItem = useCallback((item: AutocompleteDropdownItem | null) => {
     if (item) {
       router.push({
-        pathname: "/pages/tournament_page", 
-        params: { entityName: item.title }, 
+        pathname: "/pages/tournament_page",
+        params: { entityName: item.title },
       });
     }
   }, [router]);

@@ -1,4 +1,4 @@
-export interface Match {
+export type Match = {
   matchId: string;          // Unique identifier for the match
   tab: string;
   team1: string;            // Name of the first team
