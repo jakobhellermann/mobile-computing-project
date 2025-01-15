@@ -15,6 +15,9 @@ export const useNotifications = () => {
 
     return {
         notify,
-        showError: (message: string) => notify({ message, type: "error" }),
+        showError: (message: string | Error) => {
+            if (message instanceof Error) message = message.message;
+            notify({ message, type: "error" });
+        },
     };
 };

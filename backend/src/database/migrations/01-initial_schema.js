@@ -25,6 +25,7 @@ const testSubscriptions = [
         "user": 2,
         "name": "Team 1",
         "type": "team",
+        "notifications": true,
         "timestamp": 1736862070238
     },
     {
@@ -32,6 +33,7 @@ const testSubscriptions = [
         "user": 2,
         "name": "Some tournament",
         "type": "tournament",
+        "notifications": false,
         "timestamp": 1736862072752
     }
 ];
@@ -61,7 +63,8 @@ async function up(knex) {
             t.string('user_agent').notNullable();
             t.integer('last_used_at').notNullable();
             t.integer('created_at').notNullable();
-        }).createTable('subscriptions', (t) => {
+        })
+        .createTable('subscriptions', (t) => {
             t.increments('id').primary();
             t.integer('user')
                 .notNullable()
@@ -69,6 +72,7 @@ async function up(knex) {
                 .onDelete('CASCADE');
             t.string('name').notNullable();
             t.string('type').notNullable();
+            t.boolean('notifications').notNullable();
             t.integer('timestamp').notNullable();
         });
 

@@ -8,10 +8,9 @@ import { Subscription } from 'shared';
  */
 export function toSubscription(row: SubscriptionRow): Subscription {
     return {
-        id: row.id,
-        user: row.user,
-        name: row.name,
         type: row.type,
+        name: row.name,
+        notifications: row.notifications ?? false,
         timestamp: row.timestamp,
     };
 }

@@ -11,6 +11,17 @@ export type UserRow = {
 };
 
 /**
+ * Subscription row in the database.
+ */
+export type SubscriptionRow = {
+    id: number;
+    user: number;
+    name: string;
+    type: string;
+    timestamp: number;
+};
+
+/**
  * Session row in the database.
  */
 export type SessionRow = {
@@ -20,17 +31,6 @@ export type SessionRow = {
     user_agent: string;
     last_used_at: number;
     created_at: number;
-};
-
-/**
- * Subscription row in the database.
- */
-export type SubscriptionRow = {
-    id: number;
-    user: number;
-    name: string;
-    type: string;
-    timestamp: number;
 };
 
 

@@ -1,13 +1,7 @@
 /**
- * Base class for all league API errors.
+ * Error thrown when something is not found
  */
-export abstract class ApiError extends Error { }
-
-/**
- * Error thrown when an order product is not found.
- * @extends OrderError
- */
-export class ApiNotFoundError extends ApiError {
+export class ApiNotFoundError extends Error {
     public constructor(entity: string) {
         super(`Could not find '${entity}'`);
     }
