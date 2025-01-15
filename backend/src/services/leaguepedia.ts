@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { Match, Team, Tournament } from 'shared';
-import Player from 'shared/models/Player';
+import { Match, Team, Tournament, Player } from 'shared';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 

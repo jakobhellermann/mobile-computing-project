@@ -14,8 +14,8 @@ import { Collapsible } from '@/components/Collapsible';
 import { MaterialIcons } from '@expo/vector-icons';
 import { fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
 import { fetchTournamentLogo } from '@/client/tournament_client';
-import { Tournament, Team, Match } from 'shared';
-import Player from '@/model/Player';
+import { Tournament, Team, Match, Player } from 'shared';
+import { useNotifications } from '@/src/hooks/toast';
 
 type TournamentState = Tournament & {
   teams: Team[],
