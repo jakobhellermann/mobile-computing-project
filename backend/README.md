@@ -11,7 +11,7 @@ npm install
 The database is automatically migrated and seeded when the server is started.
 
 ```sh
-npm run dev # in watch mode
+npm run start # in watch mode
 ```
 
 ### Test HTTP
