@@ -19,21 +19,23 @@ const testUsers = [
     },
 ];
 
-const testSubscriptions= [
-  {
-    "id": 1,
-    "user": 2,
-    "name": "Team 1",
-    "type": "team",
-    "timestamp": 1736862070238
-  },
-  {
-    "id": 2,
-    "user": 2,
-    "name": "Some tournament",
-    "type": "tournament",
-    "timestamp": 1736862072752
-  }
+const testSubscriptions = [
+    {
+        "id": 1,
+        "user": 2,
+        "name": "Team 1",
+        "type": "team",
+        "notifications": true,
+        "timestamp": 1736862070238
+    },
+    {
+        "id": 2,
+        "user": 2,
+        "name": "Some tournament",
+        "type": "tournament",
+        "notifications": false,
+        "timestamp": 1736862072752
+    }
 ];
 
 const testAddresses = [
@@ -471,6 +473,7 @@ async function up(knex) {
                 .onDelete('CASCADE');
             t.string('name').notNullable();
             t.string('type').notNullable();
+            t.boolean('notifications').notNullable();
             t.integer('timestamp').notNullable();
         })
 
@@ -600,7 +603,7 @@ const seedTestData = async (db) => {
     // Insert test product images
     await db('product_images').insert(testProductImages);
 
-    await db('subscriptions').insert(testSubscriptions)
+    await db('subscriptions').insert(testSubscriptions);
 
     // Orders for feb 2024
     await createRandomOrder(db, 2, 1, 1707737786);

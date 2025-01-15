@@ -16,7 +16,7 @@ import { fetchTournamentLogo } from '@/client/tournament_client';
 import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
-import { useSubscriptions } from '@/src/hooks/subscriptions';
+import { useSubscription } from '@/src/hooks/subscriptions';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -25,12 +25,12 @@ type TournamentState = Tournament & {
 
 export default function TournamentPage() {
 
-  const { entityName } = useLocalSearchParams<{ entityName: string; }>();
+  const { entityName: tournamentId } = useLocalSearchParams<{ entityName: string; }>();
   const [tournament, setTournament] = useState<TournamentState | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { data: subscriptions, createSubscription } = useSubscriptions();
+  const { subscription, toggleSubscription, toggleNotifications } = useSubscription("tournament", tournamentId);
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -52,20 +52,14 @@ export default function TournamentPage() {
     });
   };
 
-
-  const toggleNotifications = () => {
-
-  };
-  const toggleFavorite = () => { };
-
   useEffect(() => {
     const loadTournamentData = async () => {
       try {
-        console.log(entityName);
+        console.log(tournamentId);
 
-        const results = await searchTournaments(entityName);
+        const results = await searchTournaments(tournamentId);
         if (results.length === 0) {
-          showError(`Could not find tournament '${entityName}'`);
+          showError(`Could not find tournament '${tournamentId}'`);
           return;
         }
         // Assuming we're interested in the first tournament. TODO: add method returning a single tournament
@@ -88,7 +82,7 @@ export default function TournamentPage() {
     };
 
     loadTournamentData();
-  }, [entityName]);
+  }, [tournamentId]);
 
   if (loading) {
     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
@@ -114,12 +108,15 @@ export default function TournamentPage() {
           <Text style={styles.profileName}>{tournament.name}</Text>
         </View>
         <View style={styles.profileIcons}>
-          <IconButton onPress={toggleFavorite} name='star' size={24} />
-          <IconButton onPress={toggleNotifications} name='notifications-on' size={24} />
+          <IconButton onPress={() => toggleSubscription().catch(showError)} name='star' size={24} color={
+            subscription.data ? "gold" : "black"
+          } />
+          <IconButton disabled={!subscription.data} onPress={() => toggleNotifications().catch(showError)} name='notifications-on' size={24}
+            color={subscription.data?.notifications ? "gold" : "black"}
+          />
         </View>
       </View>
 
-      {/* General Info Section */}
       {/* General Info Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>General Info</Text>

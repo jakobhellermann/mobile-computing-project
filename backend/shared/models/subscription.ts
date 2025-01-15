@@ -1,7 +1,7 @@
 export type Subscription = {
-  id: number;
-  user: number;
-  name: string;
   type: string;
+  name: string;
+
+  notifications: boolean;
   timestamp: number;
 };

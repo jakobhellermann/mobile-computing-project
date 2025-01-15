@@ -56,16 +56,16 @@ import { getOverviewStats } from './routes/stats/getOverviewStats';
 import { getAllOrders } from './routes/order/getAllOrders';
 import { cancelOrderForUser } from './routes/order/cancelOrderForUser';
 import { completeOrder } from './routes/order/completeOrder';
-import { getSubscriptions } from './routes/subscription/getSubscriptions';
+import { getSubscription, getSubscriptions } from './routes/subscription/getSubscriptions';
 import SubscriptionService from '../services/subscription';
-import { createSubscription } from './routes/subscription/createSubscription';
+import { updateSubscription } from './routes/subscription/updateSubscription';
 
 import * as leagueTournament from './routes/league/tournament';
 import * as leagueMatch from './routes/league/match';
 import * as leagueTeam from './routes/league/team';
 import LeagueService from '../services/leaguepedia';
 import { ApiNotFoundError } from '../errors/api';
-import { deleteSubscription } from './routes/subscription/deleteSubscription';
+import { deleteAllSubscriptions, deleteSubscription } from './routes/subscription/deleteSubscription';
 
 /**
  * Creates the API routes.
@@ -105,7 +105,7 @@ export function api(
         fastify.setErrorHandler((error, request, reply) => {
             if (error instanceof ApiNotFoundError) {
                 reply.status(404);
-                reply.send({ statusCode: 400, error: "Not Found", message: error.message });
+                reply.send({ statusCode: 404, error: "Not Found", message: error.message });
                 return;
             }
             origHandler(error, request, reply);
@@ -169,9 +169,11 @@ export function api(
         await fastify.register(getLatestRatings(ratingService));
 
 
+        await fastify.register(getSubscription(subscriptionService));
         await fastify.register(getSubscriptions(subscriptionService));
-        await fastify.register(createSubscription(subscriptionService));
+        await fastify.register(updateSubscription(subscriptionService));
         await fastify.register(deleteSubscription(subscriptionService));
+        await fastify.register(deleteAllSubscriptions(subscriptionService));
 
         await fastify.register(createOrder(orderService));
         await fastify.register(getOrders(orderService));

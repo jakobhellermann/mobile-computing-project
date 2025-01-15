@@ -18,6 +18,7 @@ export type SubscriptionRow = {
     user: number;
     name: string;
     type: string;
+    notifications: boolean;
     timestamp: number;
 };
 
