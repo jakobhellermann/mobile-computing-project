@@ -64,6 +64,7 @@ import * as leagueTournament from './routes/league/tournament';
 import * as leagueMatch from './routes/league/match';
 import * as leagueTeam from './routes/league/team';
 import LeagueService from '../services/leaguepedia';
+import { ApiNotFoundError } from '../errors/api';
 
 /**
  * Creates the API routes.
@@ -97,6 +98,16 @@ export function api(
 
         await fastify.register(fastifyCaching, {
             privacy: fastifyCaching.privacy.PRIVATE,
+        });
+
+        let origHandler = fastify.errorHandler;
+        fastify.setErrorHandler((error, request, reply) => {
+            if (error instanceof ApiNotFoundError) {
+                reply.status(404);
+                reply.send({ statusCode: 400, error: "Not Found", message: error.message });
+                return;
+            }
+            origHandler(error, request, reply);
         });
 
         await fastify.register(authPlugin(sessionService));

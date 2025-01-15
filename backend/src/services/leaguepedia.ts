@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Match, Team, Tournament, Player } from 'shared';
+import { ApiNotFoundError } from '../errors/api';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 
@@ -177,7 +178,12 @@ export default class LeagueService {
             const response = await axios.get(API_URL, { params });
             console.log("Team Response:", response.data);
             // Convert the team map to an array
-            return mapToTeam(response);
+            let team = mapToTeam(response);
+
+            if (!team) {
+                throw new ApiNotFoundError(teamname);
+            }
+            return team;
         } catch (error) {
             console.error('Error fetching tournament data:', error);
             throw error;
@@ -280,7 +286,7 @@ export default class LeagueService {
 
 function mapToTournament(apiResponse: any): Tournament {
     return {
-        name: apiResponse.Name,
+        name: apiResponse.Name ? unescapeHTML(apiResponse.Name) : apiResponse.Name,
         eventType: apiResponse.EventType,
         dateStart: apiResponse.DateStart,
         dateEnd: apiResponse.Date,
@@ -358,7 +364,7 @@ export function mapToTournamentTeam(apiResponse: any): Team[] {
 
 }
 
-export function mapToTeam(apiResponse: any): Team {
+export function mapToTeam(apiResponse: any): Team | undefined {
     const rawTeams = apiResponse.data.cargoquery || [];
 
     // Group players by team
@@ -404,3 +410,35 @@ function sortPlayersByRole(players: Player[]): Player[] {
         return roleA - roleB;
     });
 }
+
+// https://stackoverflow.com/a/39243641
+const htmlEntities: Record<string, string> = {
+    nbsp: ' ',
+    cent: '¢',
+    pound: '£',
+    yen: '¥',
+    euro: '€',
+    copy: '©',
+    reg: '®',
+    lt: '<',
+    gt: '>',
+    quot: '"',
+    amp: '&',
+    apos: '\''
+};
+
+function unescapeHTML(str: string) {
+    return str.replace(/\&([^;]+);/g, (entity: string, entityCode: string) => {
+        var match;
+
+        if (entityCode in htmlEntities) {
+            return htmlEntities[entityCode];
+        } else if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
+            return String.fromCharCode(parseInt(match[1], 16));
+        } else if (match = entityCode.match(/^#(\d+)$/)) {
+            return String.fromCharCode(~~match[1]);
+        } else {
+            return entity;
+        }
+    });
+};
