@@ -1,11 +1,73 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Team from '@/model/Team';
+import Player from '@/model/Player';
+import Match from '@/model/Match';
+import { useRouter, useLocalSearchParams } from "expo-router";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
+import { fetchLatestTeamMatches, fetchTeamData, fetchUpcomingTeamMatches } from '@/client/team_client';
+import { fetchApiImage } from '@/client/image_client';
+import { fetchMatch } from '@/client/Match_client';
 
 export default function MatchOverviewPage() {
+    const router = useRouter();
+    const {entityName} = useLocalSearchParams(); 
+    const [match, setMatch] = useState<Match>();
+    const [team1, setTeam1] = useState<Team>();
+    const [team2, setTeam2] = useState<Team>();
+    const [imageTeam1, setImage1] = useState<any>(null);
+    const [imageTeam2, setImage2] = useState<any>(null);
+    const [hthMatches, setHthMatches] = useState<Match[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    //TODO Match Page
+        // useEffect(() => {
+        //     const loadTeamData = async () => {
+        //       try {
+                
+        //         const match = await fetchMatch(entityName.toString());
+
+        //         console.log(entityName);
+        //         setMatch(match);
+        //         //setTeam1(team); 
+        //         //setImage(image);
+        //         setHthMatches(hthMatches);
+        //         //setUpcomingMatches(upcomingMatches)
+        //       } catch (error) {
+        //         console.error(error);
+        //       } finally {
+        //         setLoading(false);
+        //       }
+        //     };
+        
+        //     loadTeamData();
+        //   }, []);
+        
+        //   if (loading) {
+        //     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
+        //   }
+        
+        //   if (!match) {
+        //     return (
+        //       <View style={styles.errorContainer}>
+        //         <Text style={styles.errorText}>Team not found.</Text>
+        //       </View>
+        //     );
+        //   }
+
   return (
+
+    
     <ScrollView style={styles.container}>
       {/* Tournament Header */}
       <View style={styles.tournamentHeader}>
@@ -121,5 +183,19 @@ const styles = StyleSheet.create({
   card: {
     padding: 16,
     marginBottom: 8,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
