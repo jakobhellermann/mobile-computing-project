@@ -5,9 +5,8 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityPr
 import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
-import { useNotifications } from '@/src/hooks/toast';
-import { User } from '@/backend/shared';
 import { useSubscriptions } from '@/src/hooks/subscriptions';
+import { User } from 'shared';
 
 export default function HomeScreen() {
   const { user } = useAuth();

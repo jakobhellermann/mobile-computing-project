@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Team from '@/model/Team';
-import Player from '@/model/Player';
-import Match from '@/model/Match';
 import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 import {
   ScrollView,
@@ -15,6 +12,7 @@ import {
 import { Card } from '@/components/Card';
 import { fetchApiImage } from '@/client/image_client';
 import { fetchTeam, fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
+import { Team, Match, Player } from 'shared';
 
 
 export default function TeamProfilePage() {

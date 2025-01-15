@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Team from '@/model/Team';
-import Player from '@/model/Player';
-import Match from '@/model/Match';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
   ScrollView,
@@ -12,6 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
+import { Match, Team } from 'shared';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
