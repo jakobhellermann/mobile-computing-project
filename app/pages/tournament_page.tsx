@@ -31,6 +31,7 @@ export default function TournamentPage() {
 
   const router = useRouter();
   const navigation = useNavigation();
+  const { showError } = useNotifications();
 
   const handleTeamRouting = (teamName: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', teamName);
@@ -49,12 +50,19 @@ export default function TournamentPage() {
   };
 
 
+  const toggleNotifications = () => { };
+  const toggleFavorite = () => { };
+
   useEffect(() => {
     const loadTournamentData = async () => {
       try {
         console.log(entityName);
 
         const results = await searchTournaments(entityName);
+        if (results.length === 0) {
+          showError(`Could not find tournament '${entityName}'`);
+          return;
+        }
         // Assuming we're interested in the first tournament. TODO: add method returning a single tournament
         const tournament = results[0];
 
