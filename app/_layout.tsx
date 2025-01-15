@@ -21,10 +21,10 @@ export default function RootLayout() {
           {/* <StatusBar style="auto" /> */}
 
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="pages/tournament_page" options={{ headerShown: false }} />
-          <Stack.Screen name="pages/team_page" options={{ headerShown: false }} />
-          <Stack.Screen name="pages/match_page" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+          <Stack.Screen name="pages/tournament_page" options={{ title: "Tournament" }} />
+          <Stack.Screen name="pages/team_page" options={{ title: "Team" }} />
+          <Stack.Screen name="pages/match_page" options={{ title: "Match" }} />
+          <Stack.Screen name="+not-found" />
         </Stack>
         <Toast />
       </SWRConfig>
