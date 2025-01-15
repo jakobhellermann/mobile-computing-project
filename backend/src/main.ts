@@ -14,6 +14,7 @@ import AddressService from './services/address';
 import CouponService from './services/coupon';
 import StatsService from './services/stats';
 import SubscriptionService from './services/subscription';
+import LeagueService from './services/leaguepedia';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -69,6 +70,7 @@ if (STATIC_FILES) {
         argon2Secret || 'supersecret',
     );
     const statsService = new StatsService(db);
+    const leagueService = new LeagueService();
 
     await fastify.register(cors, {});
     await fastify.register(
@@ -83,6 +85,7 @@ if (STATIC_FILES) {
             addressService,
             couponService,
             statsService,
+            leagueService,
         ),
         {
             prefix: '/api',

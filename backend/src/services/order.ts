@@ -38,7 +38,7 @@ export default class OrderService {
         private readonly addressService: AddressService,
         private readonly couponService: CouponService,
         private readonly db: Knex,
-    ) {}
+    ) { }
 
     /**
      * Check if user has purchased product.
@@ -253,7 +253,7 @@ export default class OrderService {
                 }
 
                 return coupon;
-            }) || [],
+            }) ?? [],
         );
 
         const totalAfterDiscount = coupons.reduce(
