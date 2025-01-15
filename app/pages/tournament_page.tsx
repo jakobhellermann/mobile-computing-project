@@ -58,13 +58,13 @@ export default function TournamentPage() {
         // Assuming we're interested in the first tournament. TODO: add method returning a single tournament
         const tournament = results[0];
 
-        const [teams, matches, image] = await Promise.all([
+        const [teams, matches] = await Promise.all([
           fetchTournamentTeams(tournament.overviewPage),
           fetchTournamentMatches(tournament.overviewPage),
-          fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png"),
         ]);
         setTournament({ ...tournament, teams, matches });
-        setImage(image);
+
+        fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png").then(setImage);
 
         navigation.setOptions({ title: tournament.name });
       } catch (error) {
