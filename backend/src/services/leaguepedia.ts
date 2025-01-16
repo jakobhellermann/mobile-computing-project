@@ -309,7 +309,7 @@ export function mapToTournamentTeam(rawTeams: any[]): Team[] {
     const teamMap: Record<string, Team> = {};
 
     rawTeams.forEach((item: any) => {
-        const { Team: teamName, Player: playerName, Role: playerRole, OverviewPage: overviewPage } = item.title;
+        const { Team: teamName, Player: playerName, Role: playerRole, OverviewPage: overviewPage } = item;
 
         // If the team doesn't exist in the map, create an entry
         if (!teamMap[teamName]) {
@@ -346,7 +346,7 @@ export function mapToTeam(rawTeams: any[]): Team | undefined {
     'ID, Name, Player, Team, Role, OverviewPage';
 
     rawTeams.forEach((item: any) => {
-        const { ID: playerID, Name: name, Player: playerName, Team: teamName, Role: playerRole, OverviewPage: overviewPage } = item.title;
+        const { ID: playerID, Name: name, Player: playerName, Team: teamName, Role: playerRole, OverviewPage: overviewPage } = item;
 
         // If the team doesn't exist in the map, create an entry
         if (!teamMap[teamName]) {
