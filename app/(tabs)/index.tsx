@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View, TouchableOpacity, Text } from 'react-nati
 import { useRouter } from "expo-router";
 import { Match } from '@/backend/shared';
 import { fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
+import { useNotifications } from '@/src/hooks/toast';
 
 
 export default function HomeScreen() {
@@ -13,11 +14,13 @@ export default function HomeScreen() {
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const { showError } = useNotifications();
+
   useEffect(() => {
     const loadTeamData = async () => {
       try {
-        fetchTeamLatestMatches("%").then(setLatestMatches);
-        fetchTeamUpcomingMatches("%").then(setUpcomingMatches);
+        fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
+        fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
       } catch (error) {
         console.error(error);
       } finally {
