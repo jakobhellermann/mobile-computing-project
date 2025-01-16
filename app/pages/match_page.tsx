@@ -216,17 +216,15 @@ export default function MatchOverviewPage() {
       {/* Head To Head Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {hthMatches.map((item: Match) => (
-          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+        {hthMatches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                </Text>
-                <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
+                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
               </View>
               <Text style={styles.matchTime}>
-                {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                {new Date(match.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </Text>
             </Card>
           </TouchableOpacity>
@@ -369,3 +367,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
+export function matchHeaderText(match: Match) {
+  let team = (name: string, score?: number) => score != null ? `${name} (${score})` : name;
+  return `${team(match.team1, match.team1Score)} vs ${team(match.team2, match.team2Score)}`;
+};
