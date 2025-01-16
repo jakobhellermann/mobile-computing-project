@@ -16,6 +16,7 @@ import { Match, Team } from 'shared';
 import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
 import { fetchApiImage } from '@/client/image_client';
 import axios from 'axios';
+import { formatDate } from '../(tabs)';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
@@ -223,9 +224,7 @@ export default function MatchOverviewPage() {
                 <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
                 <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(match.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}

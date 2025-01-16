@@ -53,9 +53,7 @@ export default function HomeScreen() {
                 <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
                 <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(match.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}
@@ -72,9 +70,7 @@ export default function HomeScreen() {
                 </Text>
                 <Text style={styles.matchSubtitle}>{match.tab + "\t\t" + match.tournament || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(match.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}
@@ -202,3 +198,21 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
+
+// TODO: find a better place for this
+export function formatDate(date: Date | string | null, onNull: string = "TBD"): string {
+  if (date === null) {
+    return onNull;
+  }
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
+
+  return date.toLocaleDateString(["de-DE"], {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
