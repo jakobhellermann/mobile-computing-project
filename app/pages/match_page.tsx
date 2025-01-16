@@ -298,9 +298,8 @@ const styles = StyleSheet.create({
   },
   playersContainer: {
     flexDirection: "row",
-    flexWrap: "wrap", // Wrap items to the next line
     justifyContent: "center", // Center the grid
-    gap: 16, // Add spacing between items
+    gap: 12, // Add spacing between items
   },
   playerItem: {
     alignItems: "center", // Center icon and text

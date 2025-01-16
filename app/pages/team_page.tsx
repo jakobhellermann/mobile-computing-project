@@ -15,6 +15,7 @@ import { fetchTeam, fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/s
 import { Team, Match, Player } from 'shared';
 import { matchHeaderText } from './match_page';
 import { formatDate } from '../(tabs)';
+import { SubscriptionConfigIcons } from './subscriptions_page';
 
 
 export default function TeamProfilePage() {
@@ -78,6 +79,7 @@ export default function TeamProfilePage() {
           style={styles.teamImage}
         />
         <Text style={styles.teamName}>{team.name}</Text>
+        <SubscriptionConfigIcons type='team' name={entityName} />
       </View>
       <View style={styles.header}>
         <Text style={styles.sectionTitle}>Active Roster</Text>
