@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import { Card } from '@/components/Card';
 import { Collapsible } from '@/components/Collapsible';
-import { fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
-import { fetchTournamentLogo } from '@/client/tournament_client';
+import { fetchTournament, fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
+import { fetchTournamentLogo, fetchTournamentTest } from '@/client/tournament_client';
 import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
@@ -58,13 +58,11 @@ export default function TournamentPage() {
       try {
         console.log(tournamentId);
 
-        const results = await searchTournaments(tournamentId);
-        if (results.length === 0) {
+        const tournament = await fetchTournament(tournamentId);
+        if (!tournament) {
           showError(`Could not find tournament '${tournamentId}'`);
           return;
         }
-        // Assuming we're interested in the first tournament. TODO: add method returning a single tournament
-        const tournament = results[0];
 
         const [teams, matches] = await Promise.all([
           fetchTournamentTeams(tournament.overviewPage),

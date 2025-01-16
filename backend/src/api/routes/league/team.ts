@@ -2,6 +2,39 @@ import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-sc
 import LeagueService from '../../../services/leaguepedia';
 import { defaultLeagueAPIExpiration } from './common';
 
+export function searchTeams(
+    leagueService: LeagueService,
+): FastifyPluginAsyncJsonSchemaToTs {
+    return async (fastify) => {
+        fastify.get(
+            '/league/team/search',
+            {
+                schema: {
+                    description: 'List teams matching the search term',
+                    tags: ['league'],
+                    querystring: {
+                        type: "object",
+                        required: ["term"],
+                        properties: {
+                            term: { type: "string" }
+                        }
+                    },
+                    response: {
+                        200: {
+                            type: 'array',
+                        },
+                    },
+                } as const
+            },
+            async (request, reply) => {
+                let response = await leagueService.fetchTeamSearch(request.query.term);
+                defaultLeagueAPIExpiration(reply);
+                reply.send(response);
+            },
+        );
+    };
+}
+
 export function getTeam(
     leagueService: LeagueService,
 ): FastifyPluginAsyncJsonSchemaToTs {

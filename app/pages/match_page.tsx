@@ -15,6 +15,7 @@ import { Match } from 'shared';
 import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
 import { fetchApiImage } from '@/client/image_client';
 import { formatDate } from '../(tabs)';
+import { fetchMatchRosterTest, fetchMatchTest } from '@/client/tournament_client';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
@@ -40,11 +41,11 @@ export default function MatchOverviewPage() {
     const loadMatchData = async () => {
       try {
         console.log("Match page with Id", entityName);
-        const match = await fetchMatch(entityName);
+        const match = await fetchMatchTest(entityName);
         console.log("Match:", match);
         const hthMatches = await fetchHtHMatches(match.team1, match.team2);
-        const team1 = await fetchMatchRoster(match.matchId, match.team1);
-        const team2 = await fetchMatchRoster(match.matchId, match.team2);
+        const team1 = await fetchMatchRosterTest(match.matchId, match.team1);
+        const team2 = await fetchMatchRosterTest(match.matchId, match.team2);
         console.log(entityName);
         setMatch(match);
         console.log(team1);

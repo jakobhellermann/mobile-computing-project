@@ -38,13 +38,38 @@ export default class LeagueService {
     }
     // #endregion
 
+    public async fetchTeamSearch(name: string): Promise<string[]> {
+        // Construct the CargoQuery API request
+        console.log('Search Param:', name);
+        const params = {
+            action: 'cargoquery',
+            format: 'json',
+            origin: '*', // Required for CORS
+            tables: 'Teams',
+            fields: 'Name, IsDisbanded',
+            where: `Name LIKE "%${name}%" AND IsDisbanded = 0`,
+        };
+
+        try {
+            const response = await axios.get(API_URL, { params });
+
+            console.log('API Response Team List:', response.data);
+            const searchTeams: string[] = response.data.cargoquery?.map((item: any) => item.title.Name) || [];
+
+            return searchTeams;
+        } catch (error) {
+            console.error('Error fetching tournament data:', error);
+            throw error;
+        }
+    }
+
     // #region Tournaments
 
     /**
      * Fetch tournament data from the Tournaments table.
      * @returns {Promise<Tournament[]>} 
      */
-    public async fetchTournamentData(name: string): Promise<Tournament[]> {
+    public async fetchTournamentSearch(name: string): Promise<Tournament[]> {
         // Construct the CargoQuery API request
         console.log('Search Param:', name);
         const params = {
@@ -67,6 +92,43 @@ export default class LeagueService {
             ) || [];
 
             return tournaments;
+        } catch (error) {
+            console.error('Error fetching tournament data:', error);
+            throw error;
+        }
+    }
+
+    /**
+ * Fetch tournament data from the Tournaments table.
+ * @returns {Promise<Tournament>} 
+ */
+    public async fetchTournamentData(name: string): Promise<Tournament> {
+        // Construct the CargoQuery API request
+        console.log('Search Param:', name);
+        const params = {
+            action: 'cargoquery',
+            format: 'json',
+            origin: '*', // Required for CORS
+            tables: 'Tournaments',
+            fields: 'Name,DateStart,Date,Region,League,Prizepool,OverviewPage,Organizers,Rulebook,EventType,Region,Country',
+            where: `OverviewPage LIKE "${name}"`,
+        };
+
+        try {
+            // Perform the API request
+            const response = await axios.get(API_URL, { params });
+
+            // Parse and map the results to the Tournament interface
+            console.log('API Response:', response.data);
+            const tournaments: Tournament[] = response.data.cargoquery?.map((item: any) =>
+                mapToTournament(item.title)
+            ) || [];
+
+            if (tournaments.length != 1) {
+                throw new Error(`Expected to get 1 match for ${name}, fround ${tournaments.length}`);
+            }
+
+            return tournaments[0];
         } catch (error) {
             console.error('Error fetching tournament data:', error);
             throw error;

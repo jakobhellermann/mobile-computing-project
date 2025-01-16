@@ -4,13 +4,15 @@ import { apiFetch } from "./base";
 export function searchTournaments(term: string): Promise<Tournament[]> {
     return apiFetch(`/league/tournament/search?term=${encodeURIComponent(term)}`);
 }
+export function fetchTournament(tournamentId: string): Promise<Tournament> {
+    return apiFetch(`/league/tournament/${encodeURIComponent(tournamentId)}`);
+}
 export function fetchTournamentTeams(tournamentId: string): Promise<Team[]> {
     return apiFetch(`/league/tournament/${encodeURIComponent(tournamentId)}/teams`);
 }
 export function fetchTournamentMatches(tournamentId: string): Promise<Match[]> {
     return apiFetch(`/league/tournament/${encodeURIComponent(tournamentId)}/matches`);
 }
-
 export function fetchMatch(matchId: string): Promise<Match> {
     return apiFetch(`/league/match/${encodeURIComponent(matchId)}`);
 }
@@ -20,7 +22,9 @@ export function fetchHtHMatches(team1: string, team2: string): Promise<Match[]> 
 export function fetchMatchRoster(matchId: string, team: string): Promise<string[]> {
     return apiFetch(`/league/match/${encodeURIComponent(matchId)}/${encodeURIComponent(team)}/roster`);
 }
-
+export function searchTeams(term: string): Promise<string[]> {
+    return apiFetch(`/league/team/search?term=${encodeURIComponent(term)}`);
+}
 export function fetchTeam(teamId: string): Promise<Team> {
     return apiFetch(`/league/team/${encodeURIComponent(teamId)}`);
 }
