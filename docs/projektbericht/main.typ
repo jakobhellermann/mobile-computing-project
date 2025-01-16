@@ -25,18 +25,17 @@
 
 == Projektvision
 
-#todo
+Die App "NexTrack" soll die zentrale Anlaufstelle für League of Legends Esports-Fans werden. Sie ermöglicht es den Nutzern, Turniere, Teams und Spiele einfach zu entdecken, zu verfolgen und im persönlichen Kalender zu organisieren. Mit einem nutzerzentrierten Ansatz und einer intuitiven Benutzeroberfläche verbindet die App Fans mit ihrer Leidenschaft für Esports und bietet ihnen eine personalisierte, interaktive Erfahrung.
 
 == Zielgruppe
 
-#todo
+Die App richtet sich an League of Legends Esports-Fans aller Altersgruppen, die ihre Lieblingsteams und Turniere verfolgen möchten. Sie bietet sowohl Gelegenheitsspielern als auch langjährige Esports-Fans eine Plattform, um stets, in einer intuitiven Umgebung, informiert zu bleiben und keine Matches zu verpassen.
 
 === Personas
 
-#todo
-
 ==== Christian Müller
-#todo avatare
+
+#image("assets/personas/personaChristian2.png")
 
 Alter: 25 Jahre
 / Beruf: Student und eSports-Fan
@@ -48,23 +47,23 @@ Christian ist seit Jahren begeistert von eSports und hat ein Faible für profess
 Er verfolgt die größten Events und kennt die Namen einiger Top-Spieler und Teams.
 Als Student nutzt er gelegentlich seine Freizeit, um in diesem Feld auf dem Laufenden zu bleiben.
 Dies passiert auch gerne im Zug oder in den kurzen Pausen zwischen den Vorlesungen.
-Er nutzt Seiten wie z.B. Liquipedia oder HLTV, um aktuelle Spielstände, Turnierinformationen oder Statistiken zu finden.
+Er nutzt Seiten wie z.B. Liquipedia oder Lol.fandom, um aktuelle Spielstände, Turnierinformationen oder Statistiken zu finden.
 
 *Motivation und Ziele:*
 
-Christian will jederzeit Zugriff auf aktuelle eSports-Informationen haben, ohne lange suchen zu müssen.
+Christian will jederzeit Zugriff auf aktuelle League of Legends eSports-Informationen haben, ohne lange suchen zu müssen.
 Turniere im Blick behalten: Er möchte keine großen eSports-Events verpassen und plant oft seine Woche rund um die Turnierpläne.
 Schnelle Ladezeiten: Er schätzt eine App, die schnell lädt und ihm die Infos sofort liefert, besonders wenn er unterwegs ist.
 
 *App-Funktionen, die Christian gefallen könnten:*
 
 - Live-Ergebnisse und Benachrichtigungen: Push-Benachrichtigungen für seine Lieblingsteams und -turniere, um Ergebnisse und Updates sofort zu erfahren.
-- Favoriten speichern: Teams und Spieler, die er verfolgt, schnell und einfach als Favoriten speichern können.
+- Favoriten speichern: Teams und Turniere, die er verfolgt, schnell und einfach als Favoriten speichern können.
 - Kalenderintegration: Eine Kalenderfunktion, die ihm hilft, Turniere zu planen und keine Events zu verpassen.
 
 ==== Lisa Kühne
 
-#todo
+#image("assets/personas/personaLisa2.png")
 
 / Alter: 21 Jahre
 / Beruf: SHK im Lehramtsstudium
@@ -74,7 +73,7 @@ Schnelle Ladezeiten: Er schätzt eine App, die schnell lädt und ihm die Infos s
 *Portrait*
 
 Lisa ist Student und spielt seit längerem in ihrer Freizeit diverse Singleplayer Games.
-Während des Lockdowns in Corona hat sie angefangen mit ihren Freunden Valorant zu spielen und ist seitdem mehr und mehr an der Szene interessiert. Sie hat auf Twitch E-Sport-Streams vorgeschlagen bekommen. Das hat ihr Interesse geweckt und sie würde sich gerne mehr mit dem Thema beschäftigen, allerdings findet sie es schwierig, einen Einstieg zu finden, da es nicht sofort klar ist, welche Events es überhaupt gibt, was für Teams gerade beliebt sind und wo es die Spiele zu sehen gibt. Sie hätte gerne eine einzige Stelle, die ihr sowohl alle Informationen auf einmal gibt, und wo sie ohne klares Ziel etwas herumschauen kann, um zu entdecken, was es gerade so gibt.
+Während des Lockdowns in Corona hat sie angefangen mit ihren Freunden League of Legends zu spielen und ist seitdem mehr und mehr an der Szene interessiert. Sie hat auf Twitch E-Sport-Streams vorgeschlagen bekommen. Das hat ihr Interesse geweckt und sie würde sich gerne mehr mit dem Thema beschäftigen, allerdings findet sie es schwierig, einen Einstieg zu finden, da es nicht sofort klar ist, welche Events es überhaupt gibt, was für Teams gerade beliebt sind und wo es die Spiele zu sehen gibt. Sie hätte gerne eine einzige Stelle, die ihr sowohl alle Informationen auf einmal gibt, und wo sie ohne klares Ziel etwas herumschauen kann, um zu entdecken, was es gerade so gibt.
 
 *Motivation und Ziele*
 Lisa wünscht sich, den Einstieg in ihr neues Hobby zu vereinfachen. Dafür hätte sie gerne einen Ort, wo sie Informationen entdecken kann, die relevant für sie sein könnten.
@@ -91,31 +90,36 @@ Lisa wünscht sich, den Einstieg in ihr neues Hobby zu vereinfachen. Dafür hät
 === Lisa
 
 Lisa ist an einem Samstagnachmittag gelangweilt an ihrem iPad und überlegt sich, was sie machen will.
-Da fällt ihr ein, dass sie sich mal die E-Sports Szene von Valorant angucken wollte und sich dafür eine App heruntergeladen hatte.
-Sie öffnet die App auf dem iPad, um herauszufinden, was für Turniere anstehen. Im Discover-Feed sieht sie direkt einen Abschnitt mit der Überschrift: "Heute live: Valorant Champions Series – Halbfinale!" Darunter findet sie die Startzeit in ihrer Zeitzone (heute Abend), eine Kurzbeschreibung des Matches und die Teams, die gegeneinander antreten.
+Da fällt ihr ein, dass sie sich mal die E-Sports Szene von League of Legends angucken wollte und sich dafür eine App heruntergeladen hatte.
+Sie öffnet die App auf dem iPad, um herauszufinden, was für Turniere anstehen. Im Discover-Feed sieht sie direkt einen Abschnitt mit der Überschrift: "Heute live: Worlds 2024 – Halbfinale!" Darunter findet sie die Startzeit in ihrer Zeitzone (heute Abend), eine Kurzbeschreibung des Matches und die Teams, die gegeneinander antreten.
 
-Mit einem Klick auf das Ergebnis kommt sie zur Detailansicht, die ihr die Möglichkeit bietet, direkt den Stream auf Twitch zu öffnen, oder eine Erinnerung für später zu erstellen. Sie richtet sich eine Erinnerung ein, und klickt dann weiter auf "VCT" um Infos zum Tournament zu sehen, insbesondere die aktuelle Rangliste.
+Mit einem Klick auf das Ergebnis kommt sie zur Detailansicht, die ihr die Möglichkeit bietet, direkt den Stream auf Twitch zu öffnen, oder eine Erinnerung für später zu erstellen. Sie richtet sich eine Erinnerung ein, und klickt dann weiter auf "Worlds 2024" um Infos zum Tournament zu sehen.
 
 Am Abend bekommt sie eine Benachrichtigung am Handy, dass das Match nun beginnt. Sie öffnet die App und beginnt den Stream anzugucken.
 
 === Christian
 
-Christian sitzt im Zug auf dem Weg zur Universität. Heute beginnt die Gruppenphase für das CS2-Turnier Shanghai-Major, für das er am Tag davor seine Tipps im In-Game Tippspiel abgegeben hat.
-Leider überschneidet sich die Übertragung mit einer seiner Vorlesungen. Er möchte trotzdem informiert bleiben und keine Turnier-Entwicklungen verpassen. Am Morgen öffnet Christian die Esports-App und sucht im Tab "Suche" nach dem "Shanghai-Major". Er wählt das Turnier aus und markiert dieses als Favorit. Dabei aktiviert er die Option „Live-Benachrichtigungen“, damit die App ihn über wichtige Ereignisse wie Spielstände oder das Match-Ergebnis informiert.
-Während der Vorlesung schaltet Christian sein Handy auf lautlos. Die Esports-App sendet ihm Push-Benachrichtigungen: „G2 Esports gewinnt gegen Mouz!“.
-Er ist beruhigt, dass er die wichtigsten Updates trotz der Vorlesung mitbekommt. Nach der Vorlesung öffnet Christian die App erneut. Im "Kalender" Tab findet er die einzelnen Spiele. Mit einem Klick auf den "VOD/Stream" Button findet er Youtube- und Twitch-Link Vorschläge für die Spielaufnahme der vergangenen Spiele. Christian ist glücklich, dass er ohne eine Suche im Internet alle Informationen über seine App verfügbar hat.
+Christian sitzt im Zug auf dem Weg zur Universität. Heute beginnen die Playoffs für die LEC Season Finals 2024, für das er am Tag davor seine Tipps im In-Game Tippspiel abgegeben hat.
+Leider überschneidet sich die Übertragung mit einer seiner Vorlesungen. Er möchte nach den Vorlesung schnellen Zugang zu den Turnier-Entwicklungen haben, um möglichst wenig zu verpassen. Am Morgen öffnet Christian die Esports-App und sucht im Tab "Suche" nach dem "LEC Season Finals 2024". Er wählt das Turnier aus und markiert dieses als Favorit. Dabei aktiviert er die Option „Benachrichtigungen aktivieren“, damit die App ihn über wichtige Ereignisse wie Spielstände oder das Match-Ergebnis informiert.
+Während der Vorlesung schaltet Christian sein Handy auf lautlos, damit er nicht abgelenkt wird. Die Esports-App sendet ihm Push-Benachrichtigungen: „G2 Esports gewinnt gegen T1!“.
+Nach der Vorlesung sieht Christian die Benachrichtigung auf seinem Handy. Er ist beruhigt, dass er die wichtigsten Updates direkt nach der Vorlesung mitbekommt. Im "Kalender" Tab findet er die einzelnen Spiele. Mit einem Klick auf den "VOD/Stream" Button findet er Youtube- und Twitch-Link Vorschläge für die Spielaufnahme der vergangenen Spiele. Christian ist glücklich, dass er ohne eine Suche im Internet alle Informationen über seine App verfügbar hat.
 
 
 #pagebreak()
 
 == Storyboard
 
-#todo schön machen
-#image("assets/storyboards/lisa.jpg")
+Storyboard Lisa
 
-#todo zweites storyboard
+#image("assets/storyboards/Lisa_Storyboard.png")
+
+Storyboard Christian
+
+#image("assets/storyboards/Christian_Storyboard.png")
 
 == UML-Anwendungsdiagramm
+
+#image("assets/UML/UML_NexTrack.png")
 
 = Figma Export
 
