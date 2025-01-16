@@ -301,7 +301,7 @@ export default class LeagueService {
             console.log('API Response MatchRoster:', response.data);
             let result = response.data.cargoquery[0].title.Roster.split(",");
 
-            if (result.length < 1){
+            if (result.length < 1) {
                 result = result[0].split(",");
             }
 

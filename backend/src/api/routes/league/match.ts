@@ -45,7 +45,7 @@ export function getMatchRoster(
                     tags: ['league'],
                     params: {
                         type: 'object',
-                        properties: { id: { type: 'string' },  team: { type: 'string' } },
+                        properties: { id: { type: 'string' }, team: { type: 'string' } },
                         required: ['id', 'team'],
                     },
                     response: {
