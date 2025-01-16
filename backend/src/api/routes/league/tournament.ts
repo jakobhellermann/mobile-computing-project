@@ -28,7 +28,37 @@ export function searchTournament(
                 } as const
             },
             async (request, reply) => {
-                let response = await leagueService.fetchTournamentData(request.query.term);
+                let response = await leagueService.fetchTournamentSearch(request.query.term);
+                defaultLeagueAPIExpiration(reply);
+                reply.send(response);
+            },
+        );
+    };
+}
+
+export function getTournament(
+    leagueService: LeagueService,
+): FastifyPluginAsyncJsonSchemaToTs {
+    return async (fastify) => {
+        fastify.get(
+            '/league/tournament/:id',
+            {
+                schema: {
+                    description: 'Get a tournament by overviewPage',
+                    tags: ['league'],
+                    params: {
+                        type: 'object',
+                        properties: { id: { type: 'string' } },
+                        required: ['id'],
+                    },
+                    response: {
+                        200: {
+                        },
+                    },
+                } as const
+            },
+            async (request, reply) => {
+                let response = await leagueService.fetchTournamentData(request.params.id);
                 defaultLeagueAPIExpiration(reply);
                 reply.send(response);
             },

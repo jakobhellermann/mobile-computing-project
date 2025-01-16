@@ -3,15 +3,24 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { AutocompleteDropdown, AutocompleteDropdownItem } from 'react-native-autocomplete-dropdown';
 import { useRouter } from 'expo-router';
-import { searchTournaments } from '@/src/api/league';
+import { searchTeams, searchTournaments } from '@/src/api/league';
+
+interface CustomAutocompleteDropdownItem extends AutocompleteDropdownItem {
+  type?: string;
+  searchParam?: string;
+}
+
+const SEARCHTYPE = Object.freeze({
+  TOURNAMENT: "Turnier",
+  TEAM: "Team"
+});
 
 
 export default function HomeScreen() {
   const router = useRouter();
-  const searchRef = useRef(null);
+  const searchRef = useRef<CustomAutocompleteDropdownItem>(null);
   const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState<AutocompleteDropdownItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState(null);
 
   const getSuggestions = useCallback(async (term: string) => {
     if (!term) {
@@ -22,27 +31,45 @@ export default function HomeScreen() {
     try {
       setLoading(true);
       const tournaments = await searchTournaments(term); // Fetch tournaments
-      const formattedSuggestions = tournaments.map((tournament, index) => ({
+      const teams = await searchTeams(term);
+      console.log("Found Teams",teams);
+      const formattedSuggestions: CustomAutocompleteDropdownItem[] = tournaments.map((tournament, index) => ({
         id: index.toString(),
-        title: `${tournament.name}`, // TODO:change Format
-        //title: `${tournament.name}\n${tournament.eventType || ''}`, 
-        tournamentData: tournament,
+        title: tournament.name,
+        type: SEARCHTYPE.TOURNAMENT,
+        searchParam: tournament.overviewPage,
       }));
-      setSuggestionsList(formattedSuggestions);
+      const formattedSuggestionsTeams: CustomAutocompleteDropdownItem[] = teams.map((team, index) => ({
+        id: index.toString(),
+        title: team,
+        type: SEARCHTYPE.TEAM,
+        searchParam: team,
+      }));
+      setSuggestionsList(formattedSuggestions.concat(formattedSuggestionsTeams));
     } catch (error) {
-      console.error('Error fetching tournament data:', error);
+      console.error('Error fetching search data:', error);
       setSuggestionsList([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const onSelectItem = useCallback((item: AutocompleteDropdownItem | null) => {
+  const onSelectItem = useCallback((item: CustomAutocompleteDropdownItem | null) => {
+    console.log(item);
     if (item) {
-      router.push({
-        pathname: "/pages/tournament_page",
-        params: { entityName: item.title },
-      });
+      
+      if(item.type == SEARCHTYPE.TOURNAMENT){
+        router.push({
+          pathname: "/pages/tournament_page",
+          params: { entityName: item.searchParam },
+        });
+      } else{
+        router.push({
+          pathname: "/pages/team_page",
+          params: { entityName: item.searchParam },
+        });
+      }
+      
     }
   }, [router]);
 
@@ -83,7 +110,12 @@ export default function HomeScreen() {
         suggestionsListContainerStyle={{
           backgroundColor: '#ece6f0',
         }}
-        renderItem={(item, text) => <Text style={{ color: 'black', padding: 15 }}>{item.title}</Text>}
+        renderItem={(item: CustomAutocompleteDropdownItem, text) => 
+                    <View style={{ padding: 15 }}>
+                      <Text style={{ color: 'black', fontSize: 16 }}>{item.title}</Text>
+                      <Text style={{ color: '#7d7d7d', fontSize: 12 }}>{item.type}</Text>
+                    </View>
+                  }
       />
     </ScrollView >
   );
