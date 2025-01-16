@@ -17,6 +17,7 @@ import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
 import { useSubscription } from '@/src/hooks/subscriptions';
+import { matchHeaderText } from './match_page';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -48,7 +49,7 @@ export default function TournamentPage() {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.push({
       pathname: "/pages/match_page",
-      params: { entityName:matchId },
+      params: { entityName: matchId },
     });
   };
 
@@ -171,17 +172,15 @@ export default function TournamentPage() {
       {/* Matches Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {tournament.matches.map((item: Match) => (
-          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+        {tournament.matches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                </Text>
-                <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
+                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                <Text style={styles.matchSubtitle}>{match.tab || 'Tournament Info'}</Text>
               </View>
               <Text style={styles.matchTime}>
-                {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(match.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </Text>
             </Card>
           </TouchableOpacity>
