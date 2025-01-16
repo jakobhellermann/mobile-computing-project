@@ -4,7 +4,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { Calendar } from 'react-native-calendars';
 
 export default function HomeScreen() {
-  const handleDayPress = (day: { dateString: string }) => {
+  const handleDayPress = (day: { dateString: string; }) => {
     console.log('Selected day:', day.dateString);
     // TODO: Logic für die einzelnen Tage
   };

@@ -298,10 +298,12 @@ export default class LeagueService {
             // Perform the API request
             const response = await axios.get(API_URL, { params });
             // Convert the team map to an array
-            console.log('API Response MatchRoster:', response.data);
+            if (response.data.cargoquery.length === 0) {
+                throw new ApiNotFoundError(`roster ${matchId} ${team}`);
+            }
             let result = response.data.cargoquery[0].title.Roster.split(",");
 
-            if (result.length < 1){
+            if (result.length < 1) {
                 result = result[0].split(",");
             }
 

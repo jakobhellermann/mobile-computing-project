@@ -11,11 +11,10 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
-import { ThemedText } from '@/components/ThemedText';
-import { Match, Team } from 'shared';
+import { Match } from 'shared';
 import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
 import { fetchApiImage } from '@/client/image_client';
-import axios from 'axios';
+import { formatDate } from '../(tabs)';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
@@ -28,8 +27,6 @@ export default function MatchOverviewPage() {
   const [hthMatches, setHthMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const API_URL = 'https://lol.fandom.com/api.php';
-
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.replace({
@@ -37,72 +34,72 @@ export default function MatchOverviewPage() {
       params: { entityName: matchId },
     });
   };
-  
+
   //TODO Match Page
   useEffect(() => {
-      const loadMatchData = async () => {
-        try {
-          console.log("Match page with Id", entityName);
-          const match = await fetchMatch(entityName);
-          console.log("Match:", match);
-          const hthMatches = await fetchHtHMatches(match.team1,match.team2);
-          const team1 = await fetchMatchRoster(match.matchId, match.team1);
-          const team2 = await fetchMatchRoster(match.matchId, match.team2);
-          await fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
-          await fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
-          console.log(entityName);
-          setMatch(match);
-          console.log(team1);
-          console.log(team2);
-          setTeam1(team1); 
-          setTeam2(team2);
-          setHthMatches(hthMatches);
+    const loadMatchData = async () => {
+      try {
+        console.log("Match page with Id", entityName);
+        const match = await fetchMatch(entityName);
+        console.log("Match:", match);
+        const hthMatches = await fetchHtHMatches(match.team1, match.team2);
+        const team1 = await fetchMatchRoster(match.matchId, match.team1);
+        const team2 = await fetchMatchRoster(match.matchId, match.team2);
+        console.log(entityName);
+        setMatch(match);
+        console.log(team1);
+        console.log(team2);
+        setTeam1(team1);
+        setTeam2(team2);
+        setHthMatches(hthMatches);
 
-          
-          //   const params = {
-          //     action: 'cargoquery',
-          //     format: 'json',
-          //     origin: '*', // Required for CORS
-          //     limit: 10,
-          //     tables: 'ScoreboardTeams',
-          //     fields: 'Roster, GameId, Team',
-          //     where: `GameId LIKE "${entityName}_1" AND Team LIKE "${match.team1}"`,
-          // };
-  
-          // try {
-          //     // Perform the API request
-          //     const response = await axios.get(API_URL, { params });
-              
-          //     // Convert the team map to an array
-          //     console.log('API Response MatchRoster:', response.data.cargoquery[0].title.Roster);
+        fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
+        fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
 
-              
-          // } catch (error) {
-          //     console.error('Error fetching tournament data:', error);
-          //     throw error;
-          // }
+        //   const params = {
+        //     action: 'cargoquery',
+        //     format: 'json',
+        //     origin: '*', // Required for CORS
+        //     limit: 10,
+        //     tables: 'ScoreboardTeams',
+        //     fields: 'Roster, GameId, Team',
+        //     where: `GameId LIKE "${entityName}_1" AND Team LIKE "${match.team1}"`,
+        // };
 
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
+        // try {
+        //     // Perform the API request
+        //     const response = await axios.get(API_URL, { params });
 
-      loadMatchData();
-    }, []);
+        //     // Convert the team map to an array
+        //     console.log('API Response MatchRoster:', response.data.cargoquery[0].title.Roster);
 
-    if (loading) {
-      return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
-    }
 
-    if (!match) {
-      return (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Match not found.</Text>
-        </View>
-      );
-    }
+        // } catch (error) {
+        //     console.error('Error fetching tournament data:', error);
+        //     throw error;
+        // }
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMatchData();
+  }, []);
+
+  if (loading) {
+    return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
+  }
+
+  if (!match) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Match not found.</Text>
+      </View>
+    );
+  }
 
   return (
 
@@ -116,7 +113,7 @@ export default function MatchOverviewPage() {
 
       {/* Teams */}
       <View style={styles.teamsContainer}>
-        
+
         <View style={styles.team}>
           <Image
             source={{ uri: imageTeam1 }} // Replace with your image URL
@@ -216,18 +213,14 @@ export default function MatchOverviewPage() {
       {/* Head To Head Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {hthMatches.map((item: Match) => (
-          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+        {hthMatches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                </Text>
-                <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
+                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}
@@ -369,3 +362,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
+
+export function matchHeaderText(match: Match) {
+  let team = (name: string, score?: number) => score != null ? `${name} (${score})` : name;
+  return `${team(match.team1, match.team1Score)} vs ${team(match.team2, match.team2Score)}`;
+};

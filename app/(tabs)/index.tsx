@@ -2,10 +2,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { Card } from '@/components/Card';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Match } from '@/backend/shared';
-import { fetchTeam, fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
+import { fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
+import { useNotifications } from '@/src/hooks/toast';
+import { matchHeaderText } from '../pages/match_page';
 
 
 export default function HomeScreen() {
@@ -14,20 +15,22 @@ export default function HomeScreen() {
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const { showError } = useNotifications();
+
   useEffect(() => {
-      const loadTeamData = async () => {
-        try {
-          fetchTeamLatestMatches("%").then(setLatestMatches);
-          fetchTeamUpcomingMatches("%").then(setUpcomingMatches);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      loadTeamData();
-    }, []);
+    const loadTeamData = async () => {
+      try {
+        fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
+        fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTeamData();
+  }, []);
 
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
@@ -41,44 +44,38 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <ThemedText type='title'>News</ThemedText>
       {/* Latest Results */}
-            <View>
-              <Text style={styles.sectionTitle}>Latest Results</Text>
-              {latestMatches.map((item: Match) => (
-                <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
-                  <Card style={styles.matchCard}>
-                    <View style={styles.matchInfo}>
-                      <Text style={styles.matchTitle}>
-                        {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                      </Text>
-                      <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
-                    </View>
-                    <Text style={styles.matchTime}>
-                      {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </View>
-            {/* Upcoming Matches */}
-            <View>
-              <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-              {upcomingMatches.map((item: Match) => (
-                <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
-                  <Card style={styles.matchCard}>
-                    <View style={styles.matchInfo}>
-                      <Text style={styles.matchTitle}>
-                        {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                      </Text>
-                      <Text style={styles.matchSubtitle}>{item.tab + "\t\t" + item.tournament || 'Tournament Info'}</Text>
-                    </View>
-                    <Text style={styles.matchTime}>
-                      {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </View>
-      
+      <View>
+        <Text style={styles.sectionTitle}>Latest Results</Text>
+        {latestMatches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {/* Upcoming Matches */}
+      <View>
+        <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+        {upcomingMatches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                </Text>
+                <Text style={styles.matchSubtitle}>{match.tab + "\t\t" + match.tournament || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </View>
+
     </ScrollView >
   );
 }
@@ -201,3 +198,21 @@ const styles = StyleSheet.create({
     color: '#555',
   },
 });
+
+// TODO: find a better place for this
+export function formatDate(date: Date | string | null, onNull: string = "TBD"): string {
+  if (date === null) {
+    return onNull;
+  }
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
+
+  return date.toLocaleDateString(["de-DE"], {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}

@@ -46,7 +46,7 @@ export function deleteAllSubscriptions(
 ): FastifyPluginAsyncJsonSchemaToTs {
     return async (fastify) => {
         fastify.delete(
-            '/subscriptions',
+            '/subscription',
             {
                 schema: schemaAll,
                 preHandler: authenticated(fastify),

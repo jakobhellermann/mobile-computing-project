@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { SubscriptionType } from 'shared';
 
 /**
  * User row in the database.
@@ -17,7 +18,7 @@ export type SubscriptionRow = {
     id: number;
     user: number;
     name: string;
-    type: string;
+    type: SubscriptionType;
     notifications: boolean;
     timestamp: number;
 };

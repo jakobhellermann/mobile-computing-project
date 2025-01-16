@@ -17,6 +17,9 @@ import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
 import { useSubscription } from '@/src/hooks/subscriptions';
+import { matchHeaderText } from './match_page';
+import { formatDate } from '../(tabs)';
+import { SubscriptionConfigIcons } from './subscriptions_page';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -29,8 +32,6 @@ export default function TournamentPage() {
   const [tournament, setTournament] = useState<TournamentState | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  const { subscription, toggleSubscription, toggleNotifications } = useSubscription("tournament", tournamentId);
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -48,7 +49,7 @@ export default function TournamentPage() {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.push({
       pathname: "/pages/match_page",
-      params: { entityName:matchId },
+      params: { entityName: matchId },
     });
   };
 
@@ -107,14 +108,7 @@ export default function TournamentPage() {
           />
           <Text style={styles.profileName}>{tournament.name}</Text>
         </View>
-        <View style={styles.profileIcons}>
-          <IconButton onPress={() => toggleSubscription().catch(showError)} name='star' size={24} color={
-            subscription.data ? "gold" : "black"
-          } />
-          <IconButton disabled={!subscription.data} onPress={() => toggleNotifications().catch(showError)} name='notifications-on' size={24}
-            color={subscription.data?.notifications ? "gold" : "black"}
-          />
-        </View>
+        <SubscriptionConfigIcons type='tournament' name={tournamentId} />
       </View>
 
       {/* General Info Section */}
@@ -171,18 +165,14 @@ export default function TournamentPage() {
       {/* Matches Section */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {tournament.matches.map((item: Match) => (
-          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+        {tournament.matches.map((match: Match) => (
+          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
               <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                </Text>
-                <Text style={styles.matchSubtitle}>{item.tab || 'Tournament Info'}</Text>
+                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                <Text style={styles.matchSubtitle}>{match.tab || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(item.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}

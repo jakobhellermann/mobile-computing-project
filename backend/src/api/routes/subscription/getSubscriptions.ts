@@ -52,7 +52,7 @@ export function getSubscriptions(
 ): FastifyPluginAsyncJsonSchemaToTs {
     return async (fastify) => {
         fastify.get(
-            '/subscriptions',
+            '/subscription',
             {
                 schema: {
                     description: 'Get all subscriptions of the authenticated user',
@@ -76,10 +76,10 @@ export function getSubscriptions(
                 preHandler: authenticated(fastify),
             },
             async (request, reply) => {
-                const addresses = await subscriptionService.getSubscriptionsByUser(
+                const subscriptions = await subscriptionService.getSubscriptionsByUser(
                     request.user,
                 );
-                return reply.send(addresses);
+                return reply.send(subscriptions);
             },
         );
     };
