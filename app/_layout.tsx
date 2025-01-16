@@ -7,15 +7,27 @@ import { usePushNotifications } from '@/src/push_notifications';
 import { SWRConfig } from 'swr';
 import { apiFetch } from '@/src/api/base';
 import { StrictMode } from 'react';
+import { useLinkTo } from '@react-navigation/native';
+import { useNotifications } from '@/src/hooks/toast';
 
 export default function RootLayout() {
   const { expoPushToken, lastNotification } = usePushNotifications({ onNotificationResponse: (res) => console.log(`got response ${JSON.stringify(res)}`) });
+
+  const { showError } = useNotifications();
 
   return <AutocompleteDropdownContextProvider>
     <AuthProvider>
       <StrictMode></StrictMode>
       <SWRConfig value={{
         fetcher: (resource, init) => apiFetch(resource, init),
+        shouldRetryOnError: false,
+        onError: (error, key) => {
+          console.log("got", error);
+          if (error instanceof Error) {
+            showError(error.message);
+
+          }
+        }
       }}>
         <Stack >
           {/* <StatusBar style="auto" /> */}

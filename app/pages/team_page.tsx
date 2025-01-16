@@ -20,7 +20,7 @@ export default function TeamProfilePage() {
   const navigation = useNavigation();
   const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [team, setTeam] = useState<Team>();
-  const [image, setImage] = useState<any>(null);
+  const [image, setImage] = useState<string | undefined>();
   const [latestMatches, setLatestMatches] = useState<Match[]>([]);
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

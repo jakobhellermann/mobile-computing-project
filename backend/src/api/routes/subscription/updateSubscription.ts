@@ -5,22 +5,36 @@ import { authenticated } from '../../prehandler/authenticated';
 const schema = {
     description: 'Register a new subscription',
     tags: ['subscriptions'],
+    params: {
+        type: 'object',
+        properties: {
+            type: { type: 'string' },
+            name: { type: 'string' },
+        },
+        required: ['type', 'name'],
+    },
     body: {
         type: 'object',
-        required: ['name', 'type'],
         properties: {
-            name: { type: 'string' },
-            type: { type: 'string' },
+            notifications: { type: 'boolean' },
         },
     },
+    response: {
+        404: {
+            type: 'object',
+            properties: {
+                message: { type: 'string', example: 'Address not found' },
+            },
+        },
+    }
 } as const;
 
-export function createSubscription(
+export function updateSubscription(
     subscriptionService: SubscriptionService,
 ): FastifyPluginAsyncJsonSchemaToTs {
     return async (fastify) => {
-        fastify.post(
-            '/subscriptions',
+        fastify.put(
+            '/subscription/:type/:name',
             {
                 schema,
                 preHandler: authenticated(fastify),
@@ -28,10 +42,11 @@ export function createSubscription(
             async (request, reply) => {
                 fastify.log.debug(`creating new subscription`, request.body);
 
-                await subscriptionService.createSubscription(
+                await subscriptionService.updateSubscription(
                     request.user,
-                    request.body.name,
-                    request.body.type,
+                    request.params.type,
+                    request.params.name,
+                    request.body?.notifications,
                 );
 
                 return reply.status(204).send();

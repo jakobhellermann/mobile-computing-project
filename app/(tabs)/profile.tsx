@@ -5,7 +5,6 @@ import { ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityPr
 import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
-import { useSubscriptions } from '@/src/hooks/subscriptions';
 import { User } from 'shared';
 
 export default function HomeScreen() {
@@ -17,21 +16,21 @@ export default function HomeScreen() {
 
 function LoggedInScreen({ user }: { user: User; }) {
   const { logout } = useAuth();
-  const { data, error, createSubscription } = useSubscriptions();
+  // const { data, error, createSubscription } = useSubscriptions();
 
   return <View style={styles.container}>
     <ThemedText>Logged in as {user.email}</ThemedText>
-    <ThemedText>{error?.message}</ThemedText>
+    {/* <ThemedText>{error?.message}</ThemedText>
 
     <ScrollView style={{ height: 256 }}>
       <ThemedText>{JSON.stringify(data, null, "  ")}</ThemedText>
-    </ScrollView>
+    </ScrollView> */}
 
     <View style={{ gap: 8 }}>
       <CustomButton
         title='Add subscription'
         onPress={() => {
-          createSubscription("new team", "team");
+          // createSubscription("new team", "team");
         }} />
 
       <CustomButton title='Logout' onPress={logout} />
