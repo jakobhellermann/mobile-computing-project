@@ -11,11 +11,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
-import { ThemedText } from '@/components/ThemedText';
-import { Match, Team } from 'shared';
+import { Match } from 'shared';
 import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
 import { fetchApiImage } from '@/client/image_client';
-import axios from 'axios';
 import { formatDate } from '../(tabs)';
 
 export default function MatchOverviewPage() {
@@ -28,8 +26,6 @@ export default function MatchOverviewPage() {
   const [imageTeam2, setImage2] = useState<string | undefined>();
   const [hthMatches, setHthMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const API_URL = 'https://lol.fandom.com/api.php';
 
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);

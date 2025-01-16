@@ -19,6 +19,7 @@ import { IconButton } from '@/components/IconButton';
 import { useSubscription } from '@/src/hooks/subscriptions';
 import { matchHeaderText } from './match_page';
 import { formatDate } from '../(tabs)';
+import { SubscriptionConfigIcons } from './subscriptions_page';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -31,8 +32,6 @@ export default function TournamentPage() {
   const [tournament, setTournament] = useState<TournamentState | undefined>();
   const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  const { subscription, toggleSubscription, toggleNotifications } = useSubscription("tournament", tournamentId);
 
   const router = useRouter();
   const navigation = useNavigation();
@@ -109,14 +108,7 @@ export default function TournamentPage() {
           />
           <Text style={styles.profileName}>{tournament.name}</Text>
         </View>
-        <View style={styles.profileIcons}>
-          <IconButton onPress={() => toggleSubscription().catch(showError)} name='star' size={24} color={
-            subscription.data ? "gold" : "black"
-          } />
-          <IconButton disabled={!subscription.data} onPress={() => toggleNotifications().catch(showError)} name='notifications-on' size={24}
-            color={subscription.data?.notifications ? "gold" : "black"}
-          />
-        </View>
+        <SubscriptionConfigIcons type='tournament' name={tournamentId} />
       </View>
 
       {/* General Info Section */}

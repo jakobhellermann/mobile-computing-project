@@ -1,7 +1,6 @@
 import { Knex } from 'knex';
 import { Subscription } from 'shared';
 import { toSubscription } from '../mappers/subscription';
-import fastify from 'fastify';
 
 /**
  * Service for managing subscriptions.
@@ -29,6 +28,7 @@ export default class SubscriptionService {
         notifications?: boolean
     ): Promise<void> {
         let existing = (await this.db('subscriptions').where({ user: userId, name, type }).select());
+        console.log(`updating subscription ${type}/${name} (did exist: ${existing.length > 0})`);
         console.log(existing);
         if (existing.length == 0) {
             await this.db('subscriptions').insert({
@@ -39,7 +39,7 @@ export default class SubscriptionService {
                 timestamp: Date.now(),
             });
         } else {
-            await this.db('subscriptions').update({
+            await this.db('subscriptions').where({ user: userId, name, type }).update({
                 user: userId,
                 name,
                 type,
@@ -87,11 +87,15 @@ export default class SubscriptionService {
      * @throws SubscriptionNotFoundError if subscription is not found.
      */
     public async deleteSubscription(userId: number, type: string, name: string): Promise<void> {
+        console.log(`deleting subscription ${type}/${name}`);
         const rowsAffected = await this.db('subscriptions')
             .where({ user: userId, type, name })
             .delete();
         if (rowsAffected === 0) {
             console.warn(`No subscriptions deleted for ${type}/${name}`);
+        }
+        if (rowsAffected > 1) {
+            console.error("Affected multiple rows?");
         }
     }
 

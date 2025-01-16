@@ -13,19 +13,32 @@ type HookResponse = {
     toggleSubscription: () => Promise<void>;
     toggleNotifications: () => Promise<void>;
 };
+
+export function useAllSubscriptions(): SWRResponse<Subscription[], Error> {
+    return useSWR<Subscription[], Error>("/subscription");
+}
+
 export function useSubscription(type: SubscriptionType, name: string): HookResponse {
     const resource = `/subscription/${type}/${encodeURIComponent(name)}`;
     const subscription = useSWR<Subscription, Error>(resource);
 
-    const updateSubscription = (data?: { notifications: boolean; }) => apiFetch<void>(resource, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", },
-        body: JSON.stringify(data ?? {})
-    }).finally(() => {
-        mutate(resource, { ...subscription.data, ...data });
-    });
-    const deleteSubscription = () => apiFetch<void>(resource, { method: "DELETE" }).finally(() => {
+
+    const updateSubscription = async (data?: { notifications: boolean; }) => {
+        let optimisticUpdate: Subscription = subscription.data ? { ...subscription.data, ...data } : {
+            name, type, notifications: data?.notifications ?? false, timestamp: 0
+        };
+        subscription.mutate(optimisticUpdate, { revalidate: false });
+
+        await apiFetch<void>(resource, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json", },
+            body: JSON.stringify(data ?? {})
+        });
+        // revalidate
         mutate(resource);
+    };
+    const deleteSubscription = () => apiFetch<void>(resource, { method: "DELETE" }).finally(() => {
+        mutate(resource, null);
     });
 
 
