@@ -9,6 +9,7 @@ import SessionService from './services/session';
 import UserService from './services/user';
 import SubscriptionService from './services/subscription';
 import LeagueService from './services/leaguepedia';
+import { notificationsPlugin } from './notificationJob';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -68,6 +69,7 @@ if (STATIC_FILES) {
             prefix: '/api',
         },
     );
+    await fastify.register(notificationsPlugin(subscriptionService));
 
     await db.migrate.latest();
 
