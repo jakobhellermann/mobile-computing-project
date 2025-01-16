@@ -1,6 +1,5 @@
 import { Knex } from 'knex';
 import { Subscription } from 'shared';
-import { SubscriptionNotFoundError } from '../errors/db';
 import { toSubscription } from '../mappers/subscription';
 
 /**
@@ -17,22 +16,36 @@ export default class SubscriptionService {
         private readonly db: Knex,
     ) { }
     /**
-     * Create subscription.
+     * Update subscription, creating it if it didn't already.
      * @param userId - User id.
      * @param name - Name.
      * @param type - Type.
      */
-    public async createSubscription(
+    public async updateSubscription(
         userId: number,
-        name: string,
         type: string,
+        name: string,
+        notifications?: boolean
     ): Promise<void> {
-        await this.db('subscriptions').insert({
-            user: userId,
-            name,
-            type,
-            timestamp: Date.now(),
-        });
+        let existing = (await this.db('subscriptions').where({ user: userId, name, type }).select());
+        console.log(`updating subscription ${type}/${name} (did exist: ${existing.length > 0})`);
+        console.log(existing);
+        if (existing.length == 0) {
+            await this.db('subscriptions').insert({
+                user: userId,
+                name,
+                type,
+                notifications: notifications ?? false,
+                timestamp: Date.now(),
+            });
+        } else {
+            await this.db('subscriptions').where({ user: userId, name, type }).update({
+                user: userId,
+                name,
+                type,
+                notifications,
+            });
+        }
     }
 
     /**
@@ -56,38 +69,43 @@ export default class SubscriptionService {
         return row.map(toSubscription);
     }
 
+    public async getSubscription(userId: number, type: string, name: string): Promise<Subscription | null> {
+        const row = await this.db('subscriptions')
+            .where({ user: userId, type: type, name })
+            .select();
+        if (row.length === 0) return null;
+
+        return toSubscription(row[0]);
+    }
+
+
+
     /**
      * Delete subscription.
      * @param subscriptionId - Subscription id.
      * @param userId - User id.
      * @throws SubscriptionNotFoundError if subscription is not found.
      */
-    public async deleteSubscription(subscriptionId: number, userId: number): Promise<void> {
+    public async deleteSubscription(userId: number, type: string, name: string): Promise<void> {
+        console.log(`deleting subscription ${type}/${name}`);
         const rowsAffected = await this.db('subscriptions')
-            .where({ id: subscriptionId, user: userId })
+            .where({ user: userId, type, name })
             .delete();
         if (rowsAffected === 0) {
-            throw new SubscriptionNotFoundError();
+            console.warn(`No subscriptions deleted for ${type}/${name}`);
+        }
+        if (rowsAffected > 1) {
+            console.error("Affected multiple rows?");
         }
     }
 
     /**
-     * Get subscription by id.
-     * @param id - Subscription id.
+     * Delete all subscriptions of the user.
      * @param userId - User id.
-     * @returns Subscription.
-     * @throws SubscriptionNotFoundError if subscription is not found.
      */
-    private async getSubscriptionById(id: number, userId: number) {
-        const row = await this.db('subscriptions')
-            .where({ id, user: userId })
-            .select()
-            .first();
-
-        if (!row) {
-            throw new SubscriptionNotFoundError();
-        }
-
-        return toSubscription(row);
+    public async deleteAllSubscriptions(userId: number): Promise<void> {
+        await this.db('subscriptions')
+            .where({ user: userId })
+            .delete();
     }
 }

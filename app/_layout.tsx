@@ -22,10 +22,11 @@ export default function RootLayout() {
         fetcher: (resource, init) => apiFetch(resource, init),
         shouldRetryOnError: false,
         onError: (error, key) => {
-          console.log("got", error);
           if (error instanceof Error) {
+            if (error.cause instanceof Response && [401].includes(error.cause.status)) {
+              return;
+            }
             showError(error.message);
-
           }
         }
       }}>
@@ -36,6 +37,7 @@ export default function RootLayout() {
           <Stack.Screen name="pages/tournament_page" options={{ title: "Tournament" }} />
           <Stack.Screen name="pages/team_page" options={{ title: "Team" }} />
           <Stack.Screen name="pages/match_page" options={{ title: "Match" }} />
+          <Stack.Screen name="pages/subscriptions_page" options={{ title: "Subscriptions" }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <Toast />

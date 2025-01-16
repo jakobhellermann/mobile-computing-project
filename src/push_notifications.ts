@@ -27,6 +27,7 @@ export function usePushNotifications(
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => {
+            console.log(`has push token ${token}`);
             token && setExpoPushToken(token);
         });
 

@@ -1,5 +1,5 @@
 import { SubscriptionRow } from '../database/rows';
-import { Subscription } from 'shared';
+import { Subscription, SubscriptionType } from 'shared';
 
 /**
  * Convert rating row to rating.
@@ -8,7 +8,7 @@ import { Subscription } from 'shared';
  */
 export function toSubscription(row: SubscriptionRow): Subscription {
     return {
-        type: row.type,
+        type: row.type as SubscriptionType,
         name: row.name,
         notifications: row.notifications ?? false,
         timestamp: row.timestamp,

@@ -1,5 +1,8 @@
+
+export type SubscriptionType = "tournament" | "match" | "team";
+
 export type Subscription = {
-  type: string;
+  type: SubscriptionType;
   name: string;
 
   notifications: boolean;
