@@ -18,6 +18,7 @@ import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
 import { useSubscription } from '@/src/hooks/subscriptions';
 import { matchHeaderText } from './match_page';
+import { formatDate } from '../(tabs)';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -179,9 +180,7 @@ export default function TournamentPage() {
                 <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
                 <Text style={styles.matchSubtitle}>{match.tab || 'Tournament Info'}</Text>
               </View>
-              <Text style={styles.matchTime}>
-                {new Date(match.dateTimeUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </Text>
+              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
             </Card>
           </TouchableOpacity>
         ))}
