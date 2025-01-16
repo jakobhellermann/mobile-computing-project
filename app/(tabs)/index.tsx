@@ -2,10 +2,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { Card } from '@/components/Card';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Match } from '@/backend/shared';
-import { fetchTeam, fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
+import { fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
 
 
 export default function HomeScreen() {
@@ -15,19 +14,19 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-      const loadTeamData = async () => {
-        try {
-          fetchTeamLatestMatches("%").then(setLatestMatches);
-          fetchTeamUpcomingMatches("%").then(setUpcomingMatches);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      loadTeamData();
-    }, []);
+    const loadTeamData = async () => {
+      try {
+        fetchTeamLatestMatches("%").then(setLatestMatches);
+        fetchTeamUpcomingMatches("%").then(setUpcomingMatches);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTeamData();
+  }, []);
 
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
@@ -41,44 +40,44 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <ThemedText type='title'>News</ThemedText>
       {/* Latest Results */}
-            <View>
-              <Text style={styles.sectionTitle}>Latest Results</Text>
-              {latestMatches.map((item: Match) => (
-                <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
-                  <Card style={styles.matchCard}>
-                    <View style={styles.matchInfo}>
-                      <Text style={styles.matchTitle}>
-                        {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                      </Text>
-                      <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
-                    </View>
-                    <Text style={styles.matchTime}>
-                      {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </View>
-            {/* Upcoming Matches */}
-            <View>
-              <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-              {upcomingMatches.map((item: Match) => (
-                <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
-                  <Card style={styles.matchCard}>
-                    <View style={styles.matchInfo}>
-                      <Text style={styles.matchTitle}>
-                        {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
-                      </Text>
-                      <Text style={styles.matchSubtitle}>{item.tab + "\t\t" + item.tournament || 'Tournament Info'}</Text>
-                    </View>
-                    <Text style={styles.matchTime}>
-                      {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              ))}
-            </View>
-      
+      <View>
+        <Text style={styles.sectionTitle}>Latest Results</Text>
+        {latestMatches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+                </Text>
+                <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {/* Upcoming Matches */}
+      <View>
+        <Text style={styles.sectionTitle}>Upcoming Matches</Text>
+        {upcomingMatches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+                </Text>
+                <Text style={styles.matchSubtitle}>{item.tab + "\t\t" + item.tournament || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
+      </View>
+
     </ScrollView >
   );
 }
