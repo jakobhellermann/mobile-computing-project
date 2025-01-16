@@ -48,8 +48,6 @@ export default function MatchOverviewPage() {
         const hthMatches = await fetchHtHMatches(match.team1, match.team2);
         const team1 = await fetchMatchRoster(match.matchId, match.team1);
         const team2 = await fetchMatchRoster(match.matchId, match.team2);
-        await fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
-        await fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
         console.log(entityName);
         setMatch(match);
         console.log(team1);
@@ -58,6 +56,8 @@ export default function MatchOverviewPage() {
         setTeam2(team2);
         setHthMatches(hthMatches);
 
+        fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
+        fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
 
         //   const params = {
         //     action: 'cargoquery',
