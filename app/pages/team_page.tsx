@@ -30,7 +30,7 @@ export default function TeamProfilePage() {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.push({
       pathname: "/pages/match_page",
-      params: { matchId: matchId },
+      params: { entityName: matchId },
     });
   };
 

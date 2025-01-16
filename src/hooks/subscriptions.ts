@@ -64,7 +64,6 @@ type HookResponse = {
 };
 export function useSubscriptions(): HookResponse {
     const swr = useSWR<Subscription[], Error>("/subscriptions");
-
     const createSubscription = (name: string, type: SubscriptionType) => {
         return apiFetch<void>("/subscriptions", {
             method: "POST",

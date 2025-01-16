@@ -48,7 +48,7 @@ export default function TournamentPage() {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
     router.push({
       pathname: "/pages/match_page",
-      params: { matchId },
+      params: { entityName:matchId },
     });
   };
 

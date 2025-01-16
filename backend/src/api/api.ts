@@ -84,6 +84,8 @@ export function api(
         await fastify.register(leagueTournament.getTournamentTeams(leagueService));
         await fastify.register(leagueTournament.getTournamentMatches(leagueService));
         await fastify.register(leagueMatch.getMatch(leagueService));
+        await fastify.register(leagueMatch.getHtHMatches(leagueService));
+        await fastify.register(leagueMatch.getMatchRoster(leagueService));
         await fastify.register(leagueTeam.getTeam(leagueService));
         await fastify.register(leagueTeam.getLatestMatches(leagueService));
         await fastify.register(leagueTeam.getUpcomingMatches(leagueService));
