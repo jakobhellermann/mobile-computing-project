@@ -1,60 +1,108 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import {
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  Image,
+  TouchableOpacity
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
 import { Match, Team } from 'shared';
+import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
+import { fetchApiImage } from '@/client/image_client';
+import axios from 'axios';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
   const { entityName } = useLocalSearchParams<{ entityName: string; }>();
   const [match, setMatch] = useState<Match>();
-  const [team1, setTeam1] = useState<Team>();
-  const [team2, setTeam2] = useState<Team>();
+  const [team1, setTeam1] = useState<string[]>([]);
+  const [team2, setTeam2] = useState<string[]>([]);
   const [imageTeam1, setImage1] = useState<any>(null);
   const [imageTeam2, setImage2] = useState<any>(null);
   const [hthMatches, setHthMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const API_URL = 'https://lol.fandom.com/api.php';
+
+  const handleMatchRouting = (matchId: string) => {
+    console.log('Item pressed, navigating to TeamPage with Name:', matchId);
+    router.replace({
+      pathname: "/pages/match_page",
+      params: { entityName: matchId },
+    });
+  };
+  
   //TODO Match Page
-  // useEffect(() => {
-  //     const loadTeamData = async () => {
-  //       try {
+  useEffect(() => {
+      const loadMatchData = async () => {
+        try {
+          console.log("Match page with Id", entityName);
+          const match = await fetchMatch(entityName);
+          console.log("Match:", match);
+          const hthMatches = await fetchHtHMatches(match.team1,match.team2);
+          const team1 = await fetchMatchRoster(match.matchId, match.team1);
+          const team2 = await fetchMatchRoster(match.matchId, match.team2);
+          await fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
+          await fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
+          console.log(entityName);
+          setMatch(match);
+          console.log(team1);
+          console.log(team2);
+          setTeam1(team1); 
+          setTeam2(team2);
+          setHthMatches(hthMatches);
 
-  //         const match = await fetchMatch(entityName);
+          
+          //   const params = {
+          //     action: 'cargoquery',
+          //     format: 'json',
+          //     origin: '*', // Required for CORS
+          //     limit: 10,
+          //     tables: 'ScoreboardTeams',
+          //     fields: 'Roster, GameId, Team',
+          //     where: `GameId LIKE "${entityName}_1" AND Team LIKE "${match.team1}"`,
+          // };
+  
+          // try {
+          //     // Perform the API request
+          //     const response = await axios.get(API_URL, { params });
+              
+          //     // Convert the team map to an array
+          //     console.log('API Response MatchRoster:', response.data.cargoquery[0].title.Roster);
 
-  //         console.log(entityName);
-  //         setMatch(match);
-  //         //setTeam1(team); 
-  //         //setImage(image);
-  //         setHthMatches(hthMatches);
-  //         //setUpcomingMatches(upcomingMatches)
-  //       } catch (error) {
-  //         console.error(error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
+              
+          // } catch (error) {
+          //     console.error('Error fetching tournament data:', error);
+          //     throw error;
+          // }
 
-  //     loadTeamData();
-  //   }, []);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  //   if (loading) {
-  //     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
-  //   }
+      loadMatchData();
+    }, []);
 
-  //   if (!match) {
-  //     return (
-  //       <View style={styles.errorContainer}>
-  //         <Text style={styles.errorText}>Team not found.</Text>
-  //       </View>
-  //     );
-  //   }
+    if (loading) {
+      return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
+    }
+
+    if (!match) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>Match not found.</Text>
+        </View>
+      );
+    }
 
   return (
 
@@ -63,58 +111,126 @@ export default function MatchOverviewPage() {
       {/* Tournament Header */}
       <View style={styles.tournamentHeader}>
         <Ionicons name="play-circle" size={24} />
-        <Text style={styles.tournamentName}>Tournament ABC</Text>
+        <Text style={styles.tournamentName}>{match.tournament}</Text>
       </View>
 
       {/* Teams */}
       <View style={styles.teamsContainer}>
+        
         <View style={styles.team}>
-          <Ionicons name="person-circle" size={80} />
-          <Text style={styles.teamName}>Team 1</Text>
+          <Image
+            source={{ uri: imageTeam1 }} // Replace with your image URL
+            style={styles.teamImage}
+          />
+          <Text style={styles.teamName}>{match.team1}</Text>
+          <Text style={styles.vsText}>{match.team1Score}</Text>
         </View>
         <Text style={styles.vsText}>VS</Text>
         <View style={styles.team}>
-          <Ionicons name="person-circle" size={80} />
-          <Text style={styles.teamName}>Team 2</Text>
+          <Image
+            source={{ uri: imageTeam2 }} // Replace with your image URL
+            style={styles.teamImage}
+          />
+          <Text style={styles.teamName}>{match.team2}</Text>
+          <Text style={styles.vsText}>{match.team2Score}</Text>
         </View>
       </View>
 
       {/* Players */}
-      <View>
-        {/* Team 1 Players */}
-        <Text style={styles.sectionTitle}>Team 1</Text>
-        <View style={styles.playersContainer}>
-          {[...Array(5)].map((_, i) => (
-            <View key={i} style={styles.playerItem}>
-              <Ionicons name="person-circle-outline" size={40} />
-              <Text style={styles.playerName}>Player {i + 1}</Text>
-            </View>
-          ))}
+      <View style={styles.playersContainer}>
+        <View key={"Top"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team1[0] || ""}</Text>
         </View>
+        <View key={"Jungle"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Jungle_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team1[1] || ""}</Text>
+        </View>
+        <View key={"Middle"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Middle_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team1[2] || ""}</Text>
+        </View>
+        <View key={"Bottom"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Bottom_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team1[3] || ""}</Text>
+        </View>
+        <View key={"Support"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Support_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team1[4] || ""}</Text>
+        </View>
+      </View>
 
-        {/* Team 2 Players */}
-        <Text style={styles.sectionTitle}>Team 2</Text>
-        <View style={styles.playersContainer}>
-          {[...Array(5)].map((_, i) => (
-            <View key={i} style={styles.playerItem}>
-              <Ionicons name="person-circle-outline" size={40} />
-              <Text style={styles.playerName}>Player {i + 1}</Text>
-            </View>
-          ))}
+      <View style={styles.playersContainer}>
+        <View key={"Top"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team2[0] || ""}</Text>
+        </View>
+        <View key={"Jungle"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Jungle_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team2[1] || ""}</Text>
+        </View>
+        <View key={"Middle"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Middle_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team2[2] || ""}</Text>
+        </View>
+        <View key={"Bottom"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Bottom_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team2[3] || ""}</Text>
+        </View>
+        <View key={"Support"} style={styles.playerItem}>
+          <Image
+            source={require("../../assets/icons/Support_icon.png")} // Replace with your image URL
+            style={styles.iconImage}
+          />
+          <Text style={styles.playerName}> {team2[4] || ""}</Text>
         </View>
       </View>
 
       {/* Head To Head Section */}
       <View>
-        <Text style={styles.sectionTitle}>Head To Head</Text>
-        <Card style={styles.card}>
-          <ThemedText>List item</ThemedText>
-          <ThemedText>Supporting line text lorem ipsum dolor sit amet, consectetur.</ThemedText>
-        </Card>
-        <Card style={styles.card}>
-          <ThemedText>List item</ThemedText>
-          <ThemedText>Supporting line text lorem ipsum dolor sit amet, consectetur.</ThemedText>
-        </Card>
+        <Text style={styles.sectionTitle}>Latest Results</Text>
+        {hthMatches.map((item: Match) => (
+          <TouchableOpacity key={item.matchId} onPress={() => handleMatchRouting(item.matchId)}>
+            <Card style={styles.matchCard}>
+              <View style={styles.matchInfo}>
+                <Text style={styles.matchTitle}>
+                  {`${item.team1} (${item.team1Score}) vs ${item.team2} (${item.team2Score})`}
+                </Text>
+                <Text style={styles.matchSubtitle}>{item.tab + "\t" + item.tournament || 'Tournament Info'}</Text>
+              </View>
+              <Text style={styles.matchTime}>
+                {new Date(item.dateTimeUTC).toLocaleTimeString([], { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );
@@ -124,6 +240,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: '#f5f5f5',
+  },
+  iconImage: {
+    width: 40,
+    height: 40,
+    marginBottom: 8,
   },
   tournamentHeader: {
     flexDirection: 'row',
@@ -136,22 +257,44 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   teamsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    marginVertical: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 16, // Space above and below the container
   },
   team: {
-    alignItems: 'center',
+    alignItems: "center", // Center content vertically
+    marginHorizontal: 16, // Space between the teams
+  },
+  teamLogo: {
+    width: 50,
+    height: 50,
+    marginBottom: 8, // Space between the logo and name
   },
   teamName: {
-    marginTop: 8,
+    fontSize: 14,
+    textAlign: "center",
+    marginBottom: 4, // Space between the name and score
+  },
+  teamScore: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   vsText: {
-    fontSize: 24,
+    fontSize: 18,
+    fontWeight: "bold",
+    marginHorizontal: 8, // Space around the "VS" text
+  },
+  teamImage: {
+    width: 70,
+    height: 70,
+    marginBottom: 8, // Space between image and text
+  },
+  scoreText: {
+    fontSize: 30,
     fontWeight: 'bold',
+    marginTop: 16, // Space between "VS" and teams
     textAlign: 'center',
   },
   sectionTitle: {
@@ -160,16 +303,20 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   playersContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 8,
+    flexDirection: "row",
+    flexWrap: "wrap", // Wrap items to the next line
+    justifyContent: "center", // Center the grid
+    gap: 16, // Add spacing between items
   },
   playerItem: {
-    alignItems: 'center',
+    alignItems: "center", // Center icon and text
+    margin: 8, // Space around each player item
+    width: 40, // Ensure uniform width for all items
   },
   playerName: {
-    marginTop: 4,
+    textAlign: "center", // Center text under the image
     fontSize: 12,
+    flexWrap: "wrap", // Allow text to wrap
   },
   card: {
     padding: 16,
@@ -188,5 +335,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  matchItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#EFEFEF',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  matchInfo: {
+    flex: 1,
+  },
+  matchTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  matchSubtitle: {
+    fontSize: 12,
+    color: '#777',
+  },
+  matchTime: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#555',
+  },
+  matchCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginBottom: 8,
   },
 });

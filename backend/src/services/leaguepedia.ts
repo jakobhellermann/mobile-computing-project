@@ -276,6 +276,65 @@ export default class LeagueService {
         }
     };
     // #endregion
+
+    public async fetchMatchRoster(matchId: string, team: string): Promise<string[]> {
+        const params = {
+            action: 'cargoquery',
+            format: 'json',
+            origin: '*', // Required for CORS
+            limit: 10,
+            tables: 'ScoreboardTeams',
+            fields: 'Roster, GameId, Team',
+            where: `GameId LIKE "${matchId}_1" AND Team LIKE "${team}"`,
+        };
+
+        try {
+            // Perform the API request
+            const response = await axios.get(API_URL, { params });
+            // Convert the team map to an array
+            console.log('API Response MatchRoster:', response.data);
+            let result = response.data.cargoquery[0].title.Roster.split(",");
+
+            if (result.length < 1){
+                result = result[0].split(",");
+            }
+
+            return result;
+        } catch (error) {
+            console.error('Error fetching tournament data:', error);
+            throw error;
+        }
+    };
+
+    public async fetchHtHMatches(team1: string, team2: string): Promise<Match[]> {
+        const params = {
+            action: 'cargoquery',
+            format: 'json',
+            origin: '*', // Required for CORS
+            limit: 50,
+            tables: 'MatchSchedule=M, Tournaments=T',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            join_on: 'M.OverviewPage=T.OverviewPage',
+            where: `(M.Team1 LIKE "%${team1}%" AND M.Team2 LIKE "%${team2}%") OR (M.Team1 LIKE "%${team2}%" AND M.Team2 LIKE "%${team1}%") AND M.Winner IS NOT NULL`,
+            order_by: 'DateTime_UTC desc',
+        };
+
+        try {
+            // Perform the API request
+            const response = await axios.get(API_URL, { params });
+            // Convert the team map to an array
+            console.log('API Response HtH Matches:', response.data);
+
+            const matches: Match[] = response.data.cargoquery?.map((item: any) =>
+                mapToMatch(item.title)
+            ) || [];
+            return matches;
+        } catch (error) {
+            console.error('Error fetching tournament data:', error);
+            throw error;
+        }
+    };
+
 }
 
 function mapToTournament(apiResponse: any): Tournament {
@@ -396,6 +455,8 @@ export function mapToTeam(apiResponse: any): Team {
     return teams[0];
 
 }
+
+
 
 function sortPlayersByRole(players: Player[]): Player[] {
     return players.sort((a, b) => {
