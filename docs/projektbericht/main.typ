@@ -123,7 +123,11 @@ Storyboard Christian
 
 = Figma Export
 
-#todo
+Der Prototyp der NexTrack-App ist ein Low-Fidelity Prototyp. Dieser wurde in der früheren Entwicklungsphase erstellt und nur zu geringen Ausmaßen angepasst. Einige Frames zeigen größtenteils Platzhalterdaten an, da sich die Daten bei jedem Aufruf dieses Frames ändern könnten.
+
+Figma dev Link: https://www.figma.com/design/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&m=dev&t=BbwUVtRJfw0UotXN-1
+
+Figma Prototyp Link: https://www.figma.com/proto/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&t=BbwUVtRJfw0UotXN-1
 
 = Git Repo
 
