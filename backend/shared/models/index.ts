@@ -5,3 +5,4 @@ export * from "./Tournament";
 export * from "./Match";
 export * from "./Team";
 export * from "./Player";
+export * from "./UpcomingEvent";

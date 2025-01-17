@@ -1,4 +1,4 @@
-import { Match, Team, Tournament } from "shared";
+import { Match, Team, Tournament, UpcomingEvent } from "shared";
 import { apiFetch } from "./base";
 
 export function searchTournaments(term: string): Promise<Tournament[]> {
@@ -33,4 +33,7 @@ export function fetchTeamLatestMatches(teamId: string): Promise<Match[]> {
 }
 export function fetchTeamUpcomingMatches(teamId: string): Promise<Match[]> {
     return apiFetch(`/league/team/${encodeURIComponent(teamId)}/matches/upcoming`);
+}
+export function fetchUpcomingEvents(): Promise<UpcomingEvent[]> {
+    return apiFetch(`upcomingevents`);
 }

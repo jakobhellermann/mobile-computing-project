@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
-import { UpcomingEventRow } from '../database/rows';
-import { time } from 'console';
+import { toUpcomingEvent } from '../mappers/upcomingEvent';
+import { UpcomingEvent } from 'shared';
 
 /**
  * Service for storing upcoming events
@@ -70,9 +70,10 @@ export default class UpcomingEventService {
     }
 
 
-    public async getSubscribedUpcomingEvents(userId: number): Promise<UpcomingEventRow[]> {
-        return this.db('upcomingEvents')
+    public async getSubscribedUpcomingEvents(userId: number): Promise<UpcomingEvent[]> {
+        const events = await this.db('upcomingEvents')
             .select();
+        return events.map(toUpcomingEvent);
     }
 
     /**
@@ -81,8 +82,9 @@ export default class UpcomingEventService {
      * @param name - Name/id.
      * @param timestamp - When the event occurs.
      */
-    public async getAll(): Promise<UpcomingEventRow[]> {
-        return this.db('upcomingEvents')
+    public async getAll(): Promise<UpcomingEvent[]> {
+        const events = await this.db('upcomingEvents')
             .select();
+        return events.map(toUpcomingEvent);
     }
 }

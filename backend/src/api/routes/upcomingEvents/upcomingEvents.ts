@@ -21,7 +21,7 @@ export function getUpcomingEvents(
                                     matchId: { type: 'string' },
                                     tournament: { type: 'string' },
                                     team1: { type: 'string' },
-                                    team2: { type: 'boolean' },
+                                    team2: { type: 'string' },
                                     timestamp: { type: 'number' },
                                 },
                             },
