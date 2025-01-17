@@ -15,7 +15,7 @@ export default class LeagueService {
             origin: '*', // Required for CORS
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `M.MatchId LIKE "${matchId}"`,
         };
@@ -199,7 +199,7 @@ export default class LeagueService {
             format: 'json',
             origin: '*', // Required for CORS
             tables: 'MatchSchedule',
-            fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
+            fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage, BestOf, Stream',
             where: `OverviewPage LIKE "%${overviewpage}%"`,
         };
 
@@ -260,7 +260,7 @@ export default class LeagueService {
             origin: '*', // Required for CORS
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NOT NULL`,
             order_by: 'DateTime_UTC desc',
@@ -289,9 +289,9 @@ export default class LeagueService {
             origin: '*', // Required for CORS
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
-            where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NULL`,
+            where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NULL AND M.DateTime_UTC IS NOT NULL AND M.DateTime_UTC >= '${getCurrentTime()}'`,
             order_by: 'DateTime_UTC asc',
         };
 
@@ -300,6 +300,8 @@ export default class LeagueService {
             const response = await axios.get(API_URL, { params });
             // Convert the team map to an array
             console.log('API Response Upcoming Matches:', response.data);
+
+            console.log(getCurrentTime());
 
             const matches: Match[] = response.data.cargoquery?.map((item: any) =>
                 mapToMatch(item.title)
@@ -345,34 +347,42 @@ export default class LeagueService {
     };
     // #endregion
 
-    public async fetchMatchRoster(matchId: string, team: string): Promise<string[]> {
+    public async fetchMatchRoster(overviewPage: string, team: string): Promise<string[]> {
         const params = {
             action: 'cargoquery',
             format: 'json',
             origin: '*', // Required for CORS
-            limit: 10,
-            tables: 'ScoreboardTeams',
-            fields: 'Roster, GameId, Team',
-            where: `GameId LIKE "${matchId}_1" AND Team LIKE "${team}"`,
+            tables: 'TournamentPlayers',
+            limit: 500,
+            fields: 'Team, Player, TeamOrder, N_PlayerInTeam, OverviewPage, Role',
+            where: `OverviewPage LIKE "${overviewPage}" AND Team Like "${team}"`,
         };
-
+  
         try {
-            // Perform the API request
-            const response = await axios.get(API_URL, { params });
-            // Convert the team map to an array
-            if (response.data.cargoquery.length === 0) {
-                throw new ApiNotFoundError(`roster ${matchId} ${team}`);
-            }
-            let result = response.data.cargoquery[0].title.Roster.split(",");
-
-            if (result.length < 1) {
-                result = result[0].split(",");
-            }
-
-            return result;
+          const response = await axios.get(API_URL, { params });
+          const players = response.data.cargoquery.map((item: any) => item.title);
+  
+          // Filter and organize players by role
+          const roles = ["Top", "Jungle", "Mid", "Bot", "Support"];
+          const roster: string[] = [];
+  
+          for (const role of roles) {
+              const playersByRole = players.filter((player: any) => player.Role === role);
+              if (playersByRole.length > 0) {
+                  const firstPlayer = playersByRole.reduce((prev: any, curr: any) => {
+                      return Number(prev.N_PlayerInTeam) < Number(curr.N_PlayerInTeam) ? prev : curr;
+                  });
+                  roster.push(firstPlayer.Player.split("(")[0]);
+              } else {
+                  roster.push("");
+              }
+          }
+  
+          console.log("FinalRoster:", roster)
+          return roster;
         } catch (error) {
-            console.error('Error fetching tournament data:', error);
-            throw error;
+        console.error('Error fetching tournament data:', error);
+        throw error;
         }
     };
 
@@ -383,7 +393,7 @@ export default class LeagueService {
             origin: '*', // Required for CORS
             limit: 50,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `(M.Team1 LIKE "%${team1}%" AND M.Team2 LIKE "%${team2}%") OR (M.Team1 LIKE "%${team2}%" AND M.Team2 LIKE "%${team1}%") AND M.Winner IS NOT NULL`,
             order_by: 'DateTime_UTC desc',
@@ -433,10 +443,12 @@ function mapToMatch(apiResponse: any): Match {
         team2Score: parseInt(apiResponse.Team2Score), // Convert to number
         matchDay: parseInt(apiResponse.MatchDay), // Convert to number
         dateTimeUTC: apiResponse['DateTime UTC'],
+        bestOf: apiResponse.BestOf,
+        stream: apiResponse.Stream || "TBD",
         overviewPage: apiResponse.OverviewPage,
         tournament: apiResponse.Tournament || apiResponse.OverviewPage
     };
-}
+  }
 
 
 const ROLE_PRIORITY: Record<string, number> = {
@@ -567,3 +579,16 @@ function unescapeHTML(str: string) {
         }
     });
 };
+
+function getCurrentTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}

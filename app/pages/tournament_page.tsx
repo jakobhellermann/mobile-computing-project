@@ -20,6 +20,7 @@ import { useSubscription } from '@/src/hooks/subscriptions';
 import { matchHeaderText } from './match_page';
 import { formatDate } from '../(tabs)';
 import { SubscriptionConfigIcons } from './subscriptions_page';
+import { Ionicons } from '@expo/vector-icons';
 
 type TournamentState = Tournament & {
   teams: Team[],
@@ -100,11 +101,8 @@ export default function TournamentPage() {
       {/* Profile Header */}
       <View style={styles.profileHeader}>
         <View style={styles.profileInfo}>
-          <Image
-            source={{ uri: image }}
-            style={styles.profileImage}
-          />
-          <Text style={styles.profileName}>{tournament.name}</Text>
+          <Ionicons name="trophy" size={30} />
+          <Text style={styles.profileName}>{" " +tournament.name}</Text>
         </View>
         <SubscriptionConfigIcons type='tournament' name={tournamentId} />
       </View>
@@ -118,10 +116,6 @@ export default function TournamentPage() {
             <Text style={styles.tableValue}>{tournament.organizers || 'Unknown'}</Text>
           </View>
           <View style={styles.tableRow}>
-            <Text style={styles.tableKey}>Rulebook</Text>
-            <Text style={styles.tableValue}>{tournament.rulebook || 'Not Available'}</Text>
-          </View>
-          <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Region</Text>
             <Text style={styles.tableValue}>{tournament.region}</Text>
           </View>
@@ -130,16 +124,8 @@ export default function TournamentPage() {
             <Text style={styles.tableValue}>{tournament.eventType || 'N/A'}</Text>
           </View>
           <View style={styles.tableRow}>
-            <Text style={styles.tableKey}>Address</Text>
-            <Text style={styles.tableValue}>{'Unknown (TODO)'}</Text>
-          </View>
-          <View style={styles.tableRow}>
             <Text style={styles.tableKey}>Start Date</Text>
             <Text style={styles.tableValue}>{tournament.dateStart}</Text>
-          </View>
-          <View style={styles.tableRow}>
-            <Text style={styles.tableKey}>End Date</Text>
-            <Text style={styles.tableValue}>{'N/A (TODO)'}</Text>
           </View>
         </View>
       </View>

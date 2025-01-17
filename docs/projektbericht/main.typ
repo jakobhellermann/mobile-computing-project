@@ -119,7 +119,7 @@ Storyboard Christian
 
 == UML-Anwendungsdiagramm
 
-#image("assets/UML/UML_NexTrack.png")
+#image("assets/UML/UML_NexTrack2.png")
 
 = Figma Export
 

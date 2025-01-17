@@ -8,6 +8,8 @@ export type Match = {
   team2Score?: number;      // Points scored by Team2
   matchDay: number;         // The match day (e.g., 1, 2, 3)
   dateTimeUTC: string;      // Date and time in UTC format
+  bestOf: string;
+  stream: string;
   overviewPage: string;     // URL or reference to the match overview page
   tournament: string;
 }
