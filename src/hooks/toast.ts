@@ -1,22 +1,27 @@
 import Toast from "react-native-toast-message";
 
 export const useNotifications = () => {
-    const notify = (info: { message: string, type?: 'success' | 'error'; }) => {
-        /*if (ToastAndroid)
-            ToastAndroid.show(info.message, 2000);
-        else {
-            alert(info.message);
-        }*/
+    const notify = (info: { message: string, subtext?: string, type?: 'success' | 'error'; }) => {
         Toast.show({
             type: info.type,
             text1: info.message,
+            text2: info.subtext,
         });
     };
 
     return {
         notify,
         showError: (message: string | Error) => {
-            if (message instanceof Error) message = message.message;
+            console.error(message);
+            if (message instanceof Error) {
+                console.log(message.message);
+                if (message.message.includes('NetworkError')) {
+                    notify({ message: "No network connectivity!", subtext: "Please make sure you have service and try again.", type: "error" });
+                } else {
+                    notify({ message: "Unexpected error occured!", subtext: "Please try again.", type: "error" });
+                }
+                return;
+            }
             notify({ message, type: "error" });
         },
     };

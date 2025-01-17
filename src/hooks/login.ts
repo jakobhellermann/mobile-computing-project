@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../modules/auth/context';
 import { apiFetchUnauthorized, } from '../api/base';
+import { useNotifications } from './toast';
 
 
 /**
@@ -15,6 +16,8 @@ export const useLogin = () => {
   const { setLoginToken } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { showError } = useNotifications();
 
   /**
    * Login function.
@@ -36,13 +39,11 @@ export const useLogin = () => {
       .catch((error) => {
         console.error(`Login error: ${error}`);
         if (error instanceof Response && error.status === 401) {
-          setError(
-            'E-Mail oder Passwort sind nicht korrekt. Versuche es erneut.'
+          showError(
+            'E-Mail oder Passwort sind nicht korrekt.\nVersuche es erneut.'
           );
         } else {
-          setError(
-            'Ein unerwarteter Fehler ist aufgetreten. Versuche es erneut.'
-          );
+          showError(error);
         }
       })
       .finally(() => setLoading(false));

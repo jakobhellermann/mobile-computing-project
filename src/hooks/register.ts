@@ -39,13 +39,9 @@ export const useRegister = () => {
     })
       .catch(async (error: Error) => {
         if (error.cause instanceof Response && error.cause.status === 409) {
-          showError('Email-Addresse bereits vergeben.');
-        } else {
-          let message = (error.cause instanceof Response) ? await error.cause.text() : "";
-          showError(
-            'Ein unerwarteter Fehler ist aufgetreten.\nVersuche es erneut.\n' + message
-          );
-        };
+          return showError('Email-Addresse bereits vergeben.');
+        }
+        showError(error);
       })
       .then(fetchUser)
       .finally(() => setLoading(false));

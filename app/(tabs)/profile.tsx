@@ -46,13 +46,8 @@ function LoginScreen() {
   const [email, setEmail] = useState(EXAMPLE_EMAIL);
   const [password, setPassword] = useState(EXAMPLE_PASSWORD);
 
-  const onPressRegister = async () => {
-    register(email, password);
-  };
-
-  const onPressLogin = async () => {
-    login(email, password);
-  };
+  const onPressRegister = () => register(email, password);;
+  const onPressLogin = () => login(email, password);
 
   return (
     <ScrollView style={styles.container}>
