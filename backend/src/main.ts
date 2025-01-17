@@ -12,8 +12,6 @@ import LeagueService from './services/leaguepedia';
 import { notificationsPlugin } from './notificationJob';
 import UpcomingEventService from './services/upcomingEvent';
 
-const STATIC_FILES = process.env.SERVE_STATIC;
-
 const envToLogger = {
     development: {
         transport: {
@@ -32,13 +30,8 @@ let env = "development" as const;
 const fastify = Fastify({
     logger: envToLogger[env],
 });
-if (STATIC_FILES) {
-    console.log(`Serving ${STATIC_FILES}`);
-    fastify.register(fastifyStatic, { root: STATIC_FILES });
-    fastify.setNotFoundHandler((req, res) => res.sendFile('index.html'));
-}
 
-(async () => {
+async function setup() {
     const db = connectDatabase();
 
     const argon2Secret = process.env.ARGON2_SECRET;
@@ -75,10 +68,12 @@ if (STATIC_FILES) {
     );
     await fastify.register(notificationsPlugin(subscriptionService, upcomingEventService));
 
-    fastify.listen({ port: 3000, host: '::' }, async (err, address) => {
+    fastify.listen({ port: 3000, host: '::' }, async (err) => {
         if (err) {
             fastify.log.error(err);
             process.exit();
         }
     });
-})();
+}
+
+setup();
