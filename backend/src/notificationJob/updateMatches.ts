@@ -20,16 +20,13 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let matchIds = [...new Set((byType.match ?? []).map(x => x.name))];
     let teamIds = [...new Set((byType.team ?? []).map(x => x.name))];
 
-    // let queryInFuture = `DateTime_UTC >= "${dateCargoFormat(new Date())}"`;
     let queryInFuture = `DateTime_UTC > '${getCurrentTime()}'`;
-    console.log(getCurrentTime());
     let subscriptionFilter = buildQueryOr(
         buildQueryIn("MatchId", matchIds),
         buildQueryIn("OverviewPage", tournamentIds),
         buildQueryIn("Team2", teamIds),
     );
     let where = `(${subscriptionFilter}) AND ${queryInFuture}`;
-    console.log(where);
     let upcomingMatches = await cargoQuery<any>({
         tables: 'MatchSchedule',
         fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
@@ -44,8 +41,6 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
         team2: match["Team2"],
         timestamp: new Date(match["DateTime UTC"] + 'Z'),
     }));
-
-    console.log(upcomingMatches);
 
     await upcomingEventService.bulkUpsertUpcomingEvent(updates);
     let fetched = await upcomingEventService.getAll();

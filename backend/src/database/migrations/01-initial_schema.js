@@ -47,7 +47,7 @@ const testSubscriptions = [
     {
         "id": 4,
         "user": 2,
-        "name": "Team Liquid",
+        "name": "Bilibili Gaming",
         "type": "team",
         "notifications": true,
         "timestamp": 1737119515106

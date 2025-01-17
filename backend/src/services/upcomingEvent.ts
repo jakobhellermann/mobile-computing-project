@@ -70,8 +70,14 @@ export default class UpcomingEventService {
     }
 
 
-    public async getSubscribedUpcomingEvents(userId: number): Promise<UpcomingEvent[]> {
+    public async getSubscribedUpcomingEvents(userId: number, onlyNotifications: boolean = false): Promise<UpcomingEvent[]> {
+        let notificationsFilter = onlyNotifications ? { notifications: true } : {};
+        console.log(notificationsFilter);
         const events = await this.db('upcomingEvents')
+            .whereIn("matchId", this.db("subscriptions").where({ user: userId, "type": "match", ...notificationsFilter }).select('name'))
+            .orWhereIn("team1", this.db("subscriptions").where({ user: userId, "type": "team", ...notificationsFilter }).select('name'))
+            .orWhereIn("team2", this.db("subscriptions").where({ user: userId, "type": "team", ...notificationsFilter }).select('name'))
+            .orWhereIn("tournament", this.db("subscriptions").where({ user: userId, "type": "tournament", ...notificationsFilter }).select('name'))
             .select();
         return events.map(toUpcomingEvent);
     }
