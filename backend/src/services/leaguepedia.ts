@@ -25,8 +25,8 @@ export default class LeagueService {
 
     public async fetchMatchRoster(overviewPage: string, team: string): Promise<string[]> {
         const response = await cargoQuery<any>({
-            limit: 10,
-            tables: 'ScoreboardTeams',
+            limit: 50,
+            tables: 'TournamentPlayers',
             fields: 'Team, Player, TeamOrder, N_PlayerInTeam, OverviewPage, Role',
             where: `OverviewPage LIKE "${overviewPage}" AND Team Like "${team}"`,
 
