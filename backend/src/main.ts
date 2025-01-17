@@ -10,6 +10,7 @@ import UserService from './services/user';
 import SubscriptionService from './services/subscription';
 import LeagueService from './services/leaguepedia';
 import { notificationsPlugin } from './notificationJob';
+import UpcomingEventService from './services/upcomingEvent';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -54,7 +55,10 @@ if (STATIC_FILES) {
         argon2Secret || 'supersecret',
     );
     const subscriptionService = new SubscriptionService(db);
+    const upcomingEventService = new UpcomingEventService(db);
     const leagueService = new LeagueService();
+
+    await db.migrate.latest();
 
     await fastify.register(cors, {});
     await fastify.register(
@@ -69,9 +73,7 @@ if (STATIC_FILES) {
             prefix: '/api',
         },
     );
-    await fastify.register(notificationsPlugin(subscriptionService));
-
-    await db.migrate.latest();
+    await fastify.register(notificationsPlugin(subscriptionService, upcomingEventService));
 
     fastify.listen({ port: 3000, host: '::' }, async (err, address) => {
         if (err) {

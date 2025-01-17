@@ -74,6 +74,13 @@ async function up(knex) {
             t.string('type').notNullable();
             t.boolean('notifications').notNullable();
             t.integer('timestamp').notNullable();
+        })
+        .createTable('upcomingEvents', (t) => {
+            t.string('matchId').primary();
+            t.string('tournament').notNullable();
+            t.string('team1').notNullable();
+            t.string('team2').notNullable();
+            t.integer('timestamp').notNullable();
         });
 
     await seedTestData(knex);

@@ -1,7 +1,8 @@
 import SubscriptionService from "../services/subscription";
 import { cargoQuery } from "../services/leaguepedia";
+import UpcomingEventService from "../services/upcomingEvent";
 
-export async function runUpdateMatches(subscriptionService: SubscriptionService): Promise<void> {
+export async function runUpdateMatches(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): Promise<void> {
     let all = await subscriptionService.getAllSubscriptions();
     let byType = groupBy(all, x => x.type);
     let tournaments = byType.tournament ?? [];
@@ -21,7 +22,18 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService)
         order_by: 'DateTime_UTC asc',
     });
     console.log(upcomingMatches);
-    console.log(upcomingMatches.map(res => `${res["DateTime UTC"]}-${res.MatchId}`));
+    let updates = upcomingMatches.map(match => ({
+        matchId: match["MatchId"],
+        tournament: match["OverviewPage"],
+        team1: match["Team1"],
+        team2: match["Team2"],
+        timestamp: new Date(match["DateTime UTC"] + 'Z'),
+    }));
+
+    await upcomingEventService.bulkUpsertUpcomingEvent(updates);
+    let fetched = await upcomingEventService.getAll();
+    console.log(fetched);
+
 }
 
 function groupBy<T, K extends keyof any>(arr: T[], callback: (item: T, index: number, all: T[]) => K): Partial<Record<K, T[]>> {

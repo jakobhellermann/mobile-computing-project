@@ -5,12 +5,12 @@ import { SimpleIntervalJob, AsyncTask } from "toad-scheduler";
 import SubscriptionService from "../services/subscription";
 import { runUpdateMatches } from "./updateMatches";
 import { runNotify } from "./notify";
+import UpcomingEventService from "../services/upcomingEvent";
 
 
-export function notificationsPlugin(subscriptionService: SubscriptionService): FastifyPluginAsync {
-
-    const updateMatchesTask = new AsyncTask('keep subscription updated', () => runUpdateMatches(subscriptionService), console.error);
-    const updateMatchesJob = new SimpleIntervalJob({ seconds: 5, runImmediately: true }, updateMatchesTask);
+export function notificationsPlugin(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): FastifyPluginAsync {
+    const updateMatchesTask = new AsyncTask('keep subscription updated', () => runUpdateMatches(subscriptionService, upcomingEventService), console.error);
+    const updateMatchesJob = new SimpleIntervalJob({ seconds: 500, runImmediately: true }, updateMatchesTask);
 
     const notifyTask = new AsyncTask('device notification job', () => runNotify(), console.error);
     const notifyJob = new SimpleIntervalJob({ minutes: 1 }, notifyTask);

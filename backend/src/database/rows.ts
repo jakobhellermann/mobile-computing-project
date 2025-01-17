@@ -35,6 +35,15 @@ export type SessionRow = {
     created_at: number;
 };
 
+export type UpcomingEventRow = {
+    matchId: string;
+
+    tournament: string;
+    team1: string;
+    team2: string;
+
+    timestamp: number;
+};
 
 // Define the types for knex.
 declare module 'knex/types/tables' {
@@ -46,6 +55,7 @@ declare module 'knex/types/tables' {
         users: Knex.CompositeTableType<UserRow, Omit<UserRow, 'id'>>;
         sessions: Knex.CompositeTableType<SessionRow, Omit<SessionRow, 'id'>>;
         subscriptions: Knex.CompositeTableType<SubscriptionRow, Omit<SubscriptionRow, 'id'>>;
+        upcomingEvents: Knex.CompositeTableType<UpcomingEventRow>;
     }
 }
 
