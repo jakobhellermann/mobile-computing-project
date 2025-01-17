@@ -64,13 +64,9 @@ export default class UpcomingEventService {
             team2: d.team2,
             timestamp: d.timestamp.getUTCMilliseconds(),
         }));
-        console.log(rows);
-        const res = await this.db('upcomingEvents')
+        await this.db('upcomingEvents')
             .insert(rows)
-            .onConflict(["type", "name"]).merge();
-
-        console.log(res);
-
+            .onConflict(["matchId"]).merge();
     }
 
 

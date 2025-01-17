@@ -10,10 +10,10 @@ import UpcomingEventService from "../services/upcomingEvent";
 
 export function notificationsPlugin(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): FastifyPluginAsync {
     const updateMatchesTask = new AsyncTask('keep subscription updated', () => runUpdateMatches(subscriptionService, upcomingEventService), console.error);
-    const updateMatchesJob = new SimpleIntervalJob({ seconds: 500, runImmediately: true }, updateMatchesTask);
+    const updateMatchesJob = new SimpleIntervalJob({ seconds: 60, runImmediately: true }, updateMatchesTask);
 
     const notifyTask = new AsyncTask('device notification job', () => runNotify(), console.error);
-    const notifyJob = new SimpleIntervalJob({ minutes: 1 }, notifyTask);
+    const notifyJob = new SimpleIntervalJob({ seconds: 30, runImmediately: true }, notifyTask);
 
     return async (fastify) => {
         fastify.register(fastifySchedule);

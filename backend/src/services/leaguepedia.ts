@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Tournament, Match, Team, Player } from 'shared';
-import { ApiNotFoundError } from '../errors/api';
+import { ApiNotFoundError, LeagueCargoError } from '../errors/api';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 
@@ -249,6 +249,17 @@ type CargoParams = {
     order_by?: string;
 };
 
+type CargoResponse<T> = {
+    cargoquery: { title: T; }[];
+    error: undefined;
+} | {
+    error: {
+        code: string;
+        info: string;
+        errorclass: string;
+    };
+};
+
 export async function cargoQuery<T = unknown>(data: CargoParams): Promise<T[]> {
     const params = {
         action: 'cargoquery',
@@ -258,9 +269,10 @@ export async function cargoQuery<T = unknown>(data: CargoParams): Promise<T[]> {
     };
 
     try {
-        const response = await axios.get<{
-            cargoquery: { title: T; }[];
-        }>(API_URL, { params });
+        const response = await axios.get<CargoResponse<T>>(API_URL, { params });
+        if (response.data.error) {
+            throw new LeagueCargoError(response.data.error.code);
+        }
         return response.data.cargoquery.map((item) => item.title);
     } catch (error) {
         console.error('Error fetching cargo query:', error);

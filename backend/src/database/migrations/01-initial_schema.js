@@ -35,6 +35,38 @@ const testSubscriptions = [
         "type": "tournament",
         "notifications": false,
         "timestamp": 1736862072752
+    },
+    {
+        "id": 3,
+        "user": 2,
+        "name": "Esports World Cup 2024",
+        "type": "tournament",
+        "notifications": true,
+        "timestamp": 1737119495011
+    },
+    {
+        "id": 4,
+        "user": 2,
+        "name": "Team Liquid",
+        "type": "team",
+        "notifications": true,
+        "timestamp": 1737119515106
+    },
+    {
+        "id": 5,
+        "user": 2,
+        "name": "NLC/2025 Season/Winter Seeding",
+        "type": "tournament",
+        "notifications": true,
+        "timestamp": 1737119543047
+    },
+    {
+        "id": 6,
+        "user": 2,
+        "name": "LDL/2025 Season/Split 1_Week 1_16",
+        "type": "match",
+        "notifications": false,
+        "timestamp": 1737119568019
     }
 ];
 

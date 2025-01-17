@@ -2,26 +2,38 @@ import SubscriptionService from "../services/subscription";
 import { cargoQuery } from "../services/leaguepedia";
 import UpcomingEventService from "../services/upcomingEvent";
 
+function buildQueryIn(column: string, inList: string[]) {
+    return `${column} in (${inList.map(x => `"${x.replaceAll('"', '\\"')}"`)})`;
+}
+function buildQueryOr(...subqueries: string[]) {
+    return subqueries.join(" OR ");
+}
+function dateCargoFormat(date: Date) {
+    return date.toISOString().substring(0, 19).replace("T", " ");
+}
+
 export async function runUpdateMatches(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): Promise<void> {
     let all = await subscriptionService.getAllSubscriptions();
     let byType = groupBy(all, x => x.type);
-    let tournaments = byType.tournament ?? [];
 
+    let tournamentIds = [...new Set((byType.tournament ?? []).map(x => x.name))];
+    let matchIds = [...new Set((byType.match ?? []).map(x => x.name))];
+    let teamIds = [...new Set((byType.team ?? []).map(x => x.name))];
 
-    let tournamentIds = [...new Set(tournaments.map(x => x.name))];
-
-    console.log(`Updating matches for ${tournaments.map(x => x.name).join(", ")}`);
-
-    let tournamentFilter = tournamentIds.map(x => `OverviewPage = "${x}"`).join(" OR ");
-
+    let queryInFuture = `DateTime_UTC > "${dateCargoFormat(new Date())}"`;
+    let where = buildQueryOr(
+        buildQueryIn("MatchId", matchIds),
+        buildQueryIn("OverviewPage", tournamentIds),
+        buildQueryIn("Team2", teamIds),
+        queryInFuture,
+    );
     let upcomingMatches = await cargoQuery<any>({
         tables: 'MatchSchedule',
         fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
-        where: `${tournamentFilter} AND Winner IS NULL`,
+        where,
         limit: 50,
         order_by: 'DateTime_UTC asc',
     });
-    console.log(upcomingMatches);
     let updates = upcomingMatches.map(match => ({
         matchId: match["MatchId"],
         tournament: match["OverviewPage"],
@@ -30,9 +42,10 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
         timestamp: new Date(match["DateTime UTC"] + 'Z'),
     }));
 
+
     await upcomingEventService.bulkUpsertUpcomingEvent(updates);
     let fetched = await upcomingEventService.getAll();
-    console.log(fetched);
+    console.log(`Updated ${updates.length} entries in to upcomingEvents table; new length ${fetched.length}`);
 
 }
 
