@@ -61,6 +61,7 @@ async function setup() {
             userService,
             subscriptionService,
             leagueService,
+            upcomingEventService,
         ),
         {
             prefix: '/api',

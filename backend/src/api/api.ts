@@ -24,9 +24,11 @@ import { updateSubscription } from './routes/subscription/updateSubscription';
 import * as leagueTournament from './routes/league/tournament';
 import * as leagueMatch from './routes/league/match';
 import * as leagueTeam from './routes/league/team';
+import * as upcomingEvents from './routes/upcomingEvents/upcomingEvents';
 import LeagueService from '../services/leaguepedia';
 import { ApiNotFoundError } from '../errors/api';
 import { deleteAllSubscriptions, deleteSubscription } from './routes/subscription/deleteSubscription';
+import UpcomingEventService from '../services/upcomingEvent';
 
 /**
  * Creates the API routes.
@@ -42,6 +44,7 @@ export function api(
     userService: UserService,
     subscriptionService: SubscriptionService,
     leagueService: LeagueService,
+    upcomingEventsService: UpcomingEventService,
 ): FastifyPluginAsync {
     return async (fastify) => {
         await fastify.register(fastifyAuth);
@@ -103,5 +106,7 @@ export function api(
         await fastify.register(updateSubscription(subscriptionService));
         await fastify.register(deleteSubscription(subscriptionService));
         await fastify.register(deleteAllSubscriptions(subscriptionService));
+
+        await fastify.register(upcomingEvents.getUpcomingEvents(upcomingEventsService));
     };
 }

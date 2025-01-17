@@ -70,6 +70,11 @@ export default class UpcomingEventService {
     }
 
 
+    public async getSubscribedUpcomingEvents(userId: number): Promise<UpcomingEventRow[]> {
+        return this.db('upcomingEvents')
+            .select();
+    }
+
     /**
      * Upsert many upcomingEvents, creating it if it didn't already.
      * @param type - Subscription Type.
