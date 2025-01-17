@@ -122,7 +122,7 @@ Storyboard Christian
 
 == UML-Anwendungsdiagramm
 
-#image("assets/UML/UML_NexTrack2.png")
+#image("assets/UML/UML_NexTrack.png")
 
 #let icon-link(icon, content) = align(
   stack(
