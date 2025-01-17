@@ -16,6 +16,7 @@ import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league'
 import { fetchApiImage } from '@/client/image_client';
 import { formatDate } from '../(tabs)';
 import { Linking } from 'react-native';
+import { SubscriptionConfigIcons } from './subscriptions_page';
 import { useNotifications } from '@/src/hooks/toast';
 
 export default function MatchOverviewPage() {
@@ -107,12 +108,15 @@ export default function MatchOverviewPage() {
           <Ionicons name="trophy" size={24} />
           <Text style={styles.tournamentName}>{match.tournament}</Text>
 
-          {/* Play Icon for Livestream */}
-          {match.stream && (
-            <TouchableOpacity style={styles.playIcon} onPress={() => handleOpenStream(match.stream)}>
-              <Ionicons name="logo-twitch" size={24} />
-            </TouchableOpacity>
-          )}
+          <View style={{ flexDirection: 'row', gap: 16 }}>
+            {/* Play Icon for Livestream */}
+            {match.stream && (
+              <TouchableOpacity onPress={() => handleOpenStream(match.stream)}>
+                <Ionicons name="logo-twitch" size={24} />
+              </TouchableOpacity>
+            )}
+            <SubscriptionConfigIcons type='match' name={entityName} />
+          </View>
 
         </View>
       </TouchableOpacity>
@@ -253,12 +257,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
-  playIcon: {
-    position: 'absolute',
-    right: 10,
-    top: '50%',
-    transform: [{ translateY: -12 }],
-  },
   iconImage: {
     width: 40,
     height: 40,
@@ -270,6 +268,7 @@ const styles = StyleSheet.create({
   },
   tournamentHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
   },
