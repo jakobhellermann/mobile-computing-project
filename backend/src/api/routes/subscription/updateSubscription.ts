@@ -1,6 +1,7 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import SubscriptionService from '../../../services/subscription';
 import { authenticated } from '../../prehandler/authenticated';
+import { SubscriptionType } from 'shared';
 
 const schema = {
     description: 'Register a new subscription',
@@ -44,7 +45,7 @@ export function updateSubscription(
 
                 await subscriptionService.updateSubscription(
                     request.user,
-                    request.params.type,
+                    request.params.type as SubscriptionType,
                     request.params.name,
                     request.body?.notifications,
                 );

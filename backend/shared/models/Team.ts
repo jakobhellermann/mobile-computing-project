@@ -1,4 +1,4 @@
-import type { Player } from './Player';
+import { Player } from './Player';
 
 export type Team = {
   name: string;

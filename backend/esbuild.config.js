@@ -1,15 +1,3 @@
-/*const fs = require('fs');
-
-let copyMigrations = {
-    name: 'copy-migrations',
-    setup(build) {
-        build.onEnd(() => {
-            // fs.cpSync('src/api/database/migrations', );
-            console.log(require('process').cwd());
-        });
-    }
-};*/
-
 require('esbuild').build({
     bundle: true,
     entryPoints: ['src/main.ts'],

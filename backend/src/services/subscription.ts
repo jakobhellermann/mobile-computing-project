@@ -78,6 +78,13 @@ export default class SubscriptionService {
         return toSubscription(row[0]);
     }
 
+    public async getAllSubscriptions(): Promise<(Subscription & { userId: number; })[]> {
+        const rows = await this.db('subscriptions')
+            .select();
+
+        return rows.map(row => ({ ...toSubscription(row), userId: row.user }));
+    }
+
 
 
     /**

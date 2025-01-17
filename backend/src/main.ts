@@ -3,18 +3,13 @@ import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 
 import { api } from './api/api';
-import ProductService from './services/product';
 import AuthService from './services/auth';
 import { connectDatabase } from './database';
-import RatingService from './services/ratings';
 import SessionService from './services/session';
 import UserService from './services/user';
-import OrderService from './services/order';
-import AddressService from './services/address';
-import CouponService from './services/coupon';
-import StatsService from './services/stats';
 import SubscriptionService from './services/subscription';
 import LeagueService from './services/leaguepedia';
+import { notificationsPlugin } from './notificationJob';
 
 const STATIC_FILES = process.env.SERVE_STATIC;
 
@@ -50,18 +45,7 @@ if (STATIC_FILES) {
         throw new Error('ARGON2_SECRET is not set');
     }
 
-    const productService = new ProductService(db);
     const sessionService = new SessionService(db);
-    const addressService = new AddressService(db);
-    const couponService = new CouponService(db);
-    const orderService = new OrderService(
-        productService,
-        addressService,
-        couponService,
-        db,
-    );
-    const ratingService = new RatingService(db, productService, orderService);
-    const subscriptionService = new SubscriptionService(db);
     const userService = new UserService(db);
     const authService = new AuthService(
         db,
@@ -69,28 +53,23 @@ if (STATIC_FILES) {
         userService,
         argon2Secret || 'supersecret',
     );
-    const statsService = new StatsService(db);
+    const subscriptionService = new SubscriptionService(db);
     const leagueService = new LeagueService();
 
     await fastify.register(cors, {});
     await fastify.register(
         api(
             authService,
-            productService,
-            ratingService,
-            subscriptionService,
             sessionService,
             userService,
-            orderService,
-            addressService,
-            couponService,
-            statsService,
+            subscriptionService,
             leagueService,
         ),
         {
             prefix: '/api',
         },
     );
+    await fastify.register(notificationsPlugin(subscriptionService));
 
     await db.migrate.latest();
 

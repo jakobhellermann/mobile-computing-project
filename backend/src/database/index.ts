@@ -18,7 +18,7 @@ export function connectDatabase(): Knex {
         },
         pool: {
             afterCreate: (
-                connection: { pragma(q: string): void },
+                connection: { pragma(q: string): void; },
                 cb: () => void,
             ) => {
                 connection.pragma('foreign_keys = ON');
