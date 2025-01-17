@@ -104,27 +104,28 @@ export default function MatchOverviewPage() {
       {/* Tournament Header */}
       <TouchableOpacity key={match.overviewPage} onPress={() => handleTournamentRouting(match.overviewPage)}>
         <View style={styles.tournamentHeader}>
-        <Ionicons name="trophy" size={24} />
-      <Text style={styles.tournamentName}>{match.tournament}</Text>
+          <Ionicons name="trophy" size={24} />
+          <Text style={styles.tournamentName}>{match.tournament}</Text>
 
-      {/* Play Icon for Livestream */}
-      {match.stream && (
-        <TouchableOpacity style={styles.playIcon} onPress={() => handleOpenStream(match.stream)}>
-          <Ionicons name="logo-twitch" size={24} />
-        </TouchableOpacity>
-      )}
-    </View>
+          {/* Play Icon for Livestream */}
+          {match.stream && (
+            <TouchableOpacity style={styles.playIcon} onPress={() => handleOpenStream(match.stream)}>
+              <Ionicons name="logo-twitch" size={24} />
+            </TouchableOpacity>
+          )}
+
+        </View>
       </TouchableOpacity>
 
       <View style={styles.dateContainer}>
         <Text style={styles.dateStyle}>{formatDate(match.dateTimeUTC)}</Text>
-        <Text style={styles.dateStyle}>{"Best of "+ match.bestOf}</Text>
+        <Text style={styles.dateStyle}>{"Best of " + match.bestOf}</Text>
       </View>
 
       {/* Teams */}
       <View style={styles.teamsContainer}>
-        
-      
+
+
         <View style={styles.team}>
           <TouchableOpacity onPress={() => handleTeamRouting(match.team1)}>
             <Image
@@ -151,7 +152,7 @@ export default function MatchOverviewPage() {
       {/* Players */}
       <Text style={styles.rosterTitle}>{match.team1 + " Roster"}</Text>
       <View style={styles.playersContainer}>
-        
+
         <View key={"Top"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
@@ -190,7 +191,7 @@ export default function MatchOverviewPage() {
       </View>
       <Text style={styles.rosterTitle}>{match.team2 + " Roster"}</Text>
       <View style={styles.playersContainer}>
-        
+
         <View key={"Top"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
@@ -255,8 +256,8 @@ const styles = StyleSheet.create({
   playIcon: {
     position: 'absolute',
     right: 10,
-    top: '50%', 
-    transform: [{ translateY: -12 }], 
+    top: '50%',
+    transform: [{ translateY: -12 }],
   },
   iconImage: {
     width: 40,
@@ -264,8 +265,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   dateContainer: {
-    alignItems: 'center', 
-    marginVertical: 10, 
+    alignItems: 'center',
+    marginVertical: 10,
   },
   tournamentHeader: {
     flexDirection: 'row',
