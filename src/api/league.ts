@@ -35,5 +35,5 @@ export function fetchTeamUpcomingMatches(teamId: string): Promise<Match[]> {
     return apiFetch(`/league/team/${encodeURIComponent(teamId)}/matches/upcoming`);
 }
 export function fetchUpcomingEvents(): Promise<UpcomingEvent[]> {
-    return apiFetch(`upcomingevents`);
+    return apiFetch(`/upcomingevents`);
 }

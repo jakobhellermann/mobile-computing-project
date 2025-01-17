@@ -1,5 +1,5 @@
 import SubscriptionService from "../services/subscription";
-import { cargoQuery } from "../services/leaguepedia";
+import { cargoQuery, getCurrentTime } from "../services/leaguepedia";
 import UpcomingEventService from "../services/upcomingEvent";
 
 function buildQueryIn(column: string, inList: string[]) {
@@ -9,7 +9,7 @@ function buildQueryOr(...subqueries: string[]) {
     return subqueries.join(" OR ");
 }
 function dateCargoFormat(date: Date) {
-    return date.toISOString().substring(0, 19).replace("T", " ");
+    return date.toISOString().substring(0, 10).replace("T", " ");
 }
 
 export async function runUpdateMatches(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): Promise<void> {
@@ -20,13 +20,16 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let matchIds = [...new Set((byType.match ?? []).map(x => x.name))];
     let teamIds = [...new Set((byType.team ?? []).map(x => x.name))];
 
-    let queryInFuture = `DateTime_UTC > "${dateCargoFormat(new Date())}"`;
-    let where = buildQueryOr(
+    // let queryInFuture = `DateTime_UTC >= "${dateCargoFormat(new Date())}"`;
+    let queryInFuture = `DateTime_UTC > '${getCurrentTime()}'`;
+    console.log(getCurrentTime());
+    let subscriptionFilter = buildQueryOr(
         buildQueryIn("MatchId", matchIds),
         buildQueryIn("OverviewPage", tournamentIds),
         buildQueryIn("Team2", teamIds),
-        queryInFuture,
     );
+    let where = `(${subscriptionFilter}) AND ${queryInFuture}`;
+    console.log(where);
     let upcomingMatches = await cargoQuery<any>({
         tables: 'MatchSchedule',
         fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
@@ -42,6 +45,7 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
         timestamp: new Date(match["DateTime UTC"] + 'Z'),
     }));
 
+    console.log(upcomingMatches);
 
     await upcomingEventService.bulkUpsertUpcomingEvent(updates);
     let fetched = await upcomingEventService.getAll();

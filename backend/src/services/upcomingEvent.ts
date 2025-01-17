@@ -62,7 +62,7 @@ export default class UpcomingEventService {
             tournament: d.tournament,
             team1: d.team1,
             team2: d.team2,
-            timestamp: d.timestamp.getUTCMilliseconds(),
+            timestamp: d.timestamp.getTime(),
         }));
         await this.db('upcomingEvents')
             .insert(rows)

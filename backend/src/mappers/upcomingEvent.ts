@@ -6,7 +6,9 @@ import { UpcomingEventRow } from '../database/rows';
  * @returns UpcomingEvent.
  */
 export function toUpcomingEvent(row: UpcomingEventRow): UpcomingEvent {
+    let { timestamp, ...rest } = row;
     return {
-        ...row
+        ...rest,
+        timestamp: new Date(timestamp).toISOString(),
     };
 }

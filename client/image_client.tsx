@@ -3,7 +3,6 @@ import axios from 'axios';
 const API_URL = 'https://lol.fandom.com/api.php';
 
 export async function fetchApiImage(filename: string): Promise<any> {
-  console.time("fetchApiImage");
   // Construct the CargoQuery API request
   const params = {
     action: 'query',
@@ -30,7 +29,5 @@ export async function fetchApiImage(filename: string): Promise<any> {
   } catch (error) {
     console.error('Error fetching tournament data:', error);
     throw error;
-  } finally {
-    console.timeEnd("fetchApiImage");
   }
 }

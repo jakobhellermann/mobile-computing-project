@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { Calendar } from 'react-native-calendars';
+import { fetchUpcomingEvents } from '@/src/api/league';
+import { UpcomingEvent } from 'shared';
+import { useNotifications } from '@/src/hooks/toast';
+import { DateData, MarkedDates, MarkingTypes } from 'react-native-calendars/src/types';
+import { groupBy } from '@/src/utils';
+import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 
-export default function HomeScreen() {
-  const handleDayPress = (day: { dateString: string; }) => {
-    console.log('Selected day:', day.dateString);
-    // TODO: Logic für die einzelnen Tage
+type CalendarDate = string;
+
+export default function CalendarScreen() {
+  const [upcomingEvents, setUpcomingEvents] = useState<Partial<Record<CalendarDate, UpcomingEvent[]>>>({});
+
+  const { showError } = useNotifications();
+
+  useEffect(() => {
+    fetchUpcomingEvents()
+      .then(upcomingEvents => {
+        let groups = groupBy(upcomingEvents, x => new Date(x.timestamp).toISOString().substring(0, 10));
+        setUpcomingEvents(groups);
+      })
+      .catch(showError);
+  }, []);
+
+  const markedDates = useMemo<MarkedDates>(() => {
+    return Object.fromEntries(Object.entries(upcomingEvents)
+      .map(([date, data]) => [date, {
+        marked: true,
+        dotColor: 'red',
+      } satisfies MarkingProps]));
+  }, [upcomingEvents]);
+
+  const handleDayPress = (data: DateData) => {
+    console.log('Selected day:', data.dateString);
+    const dayData = upcomingEvents[data.dateString];
+    console.log(dayData);
   };
 
   return (
@@ -15,10 +45,7 @@ export default function HomeScreen() {
       <View style={styles.calendarContainer}>
         <Calendar
           onDayPress={handleDayPress}
-          markedDates={{
-            '2025-01-10': { selected: true, marked: true, selectedColor: 'blue' },
-            '2025-01-15': { marked: true, dotColor: 'red' },
-          }}
+          markedDates={markedDates}
           theme={{
             backgroundColor: '#ffffff',
             calendarBackground: '#ffffff',

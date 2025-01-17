@@ -440,7 +440,7 @@ function unescapeHTML(str: string) {
     });
 };
 
-function getCurrentTime() {
+export function getCurrentTime() {
     const now = new Date();
 
     const year = now.getFullYear();

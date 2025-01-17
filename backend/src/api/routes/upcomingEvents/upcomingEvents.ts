@@ -22,7 +22,7 @@ export function getUpcomingEvents(
                                     tournament: { type: 'string' },
                                     team1: { type: 'string' },
                                     team2: { type: 'string' },
-                                    timestamp: { type: 'number' },
+                                    timestamp: { type: 'string' },
                                 },
                             },
                         }

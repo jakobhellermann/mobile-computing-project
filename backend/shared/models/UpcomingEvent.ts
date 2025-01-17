@@ -5,5 +5,5 @@ export type UpcomingEvent = {
     team1: string;
     team2: string;
 
-    timestamp: number;
+    timestamp: string;
 };
