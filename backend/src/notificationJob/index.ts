@@ -18,8 +18,8 @@ export function notificationsPlugin(subscriptionService: SubscriptionService): F
     return async (fastify) => {
         fastify.register(fastifySchedule);
         fastify.ready().then(() => {
-            fastify.scheduler.addSimpleIntervalJob(updateMatchesJob);
-            fastify.scheduler.addSimpleIntervalJob(notifyJob);
+            // fastify.scheduler.addSimpleIntervalJob(updateMatchesJob);
+            // fastify.scheduler.addSimpleIntervalJob(notifyJob);
         });
     };
 }

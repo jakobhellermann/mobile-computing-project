@@ -31,7 +31,6 @@ export default function TournamentPage() {
 
   const { entityName: tournamentId } = useLocalSearchParams<{ entityName: string; }>();
   const [tournament, setTournament] = useState<TournamentState | undefined>();
-  const [image, setImage] = useState<string | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
@@ -70,8 +69,6 @@ export default function TournamentPage() {
           fetchTournamentMatches(tournament.overviewPage),
         ]);
         setTournament({ ...tournament, teams, matches });
-
-        fetchTournamentLogo("SK_Gaming", "SK_Gaminglogo_square.png").then(setImage);
 
         navigation.setOptions({ title: tournament.name });
       } catch (error) {

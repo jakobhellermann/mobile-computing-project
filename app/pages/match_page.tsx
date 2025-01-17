@@ -44,6 +44,14 @@ export default function MatchOverviewPage() {
     });
   };
 
+  const handleTeamRouting = (teamName: string) => {
+    console.log('Item pressed, navigating to TeamPage with Name:', teamName);
+    router.push({
+      pathname: "/pages/team_page",
+      params: { entityName: teamName },
+    });
+  };
+
   const handleOpenStream = (streamLink: string) => {
     Linking.openURL(streamLink).catch((err) =>
       console.error('Failed to open stream:', err)
@@ -115,22 +123,27 @@ export default function MatchOverviewPage() {
 
       {/* Teams */}
       <View style={styles.teamsContainer}>
+        
       
         <View style={styles.team}>
-          <Image
-            source={{ uri: imageTeam1 }} // Replace with your image URL
-            style={styles.teamImage}
-          />
-          <Text style={styles.teamName}>{match.team1}</Text>
+          <TouchableOpacity onPress={() => handleTeamRouting(match.team1)}>
+            <Image
+              source={{ uri: imageTeam1 }} // Replace with your image URL
+              style={styles.teamImage}
+            />
+            <Text style={styles.teamName}>{match.team1}</Text>
+          </TouchableOpacity>
           <Text style={styles.vsText}>{match.team1Score || 0}</Text>
         </View>
         <Text style={styles.vsText}>VS</Text>
         <View style={styles.team}>
-          <Image
-            source={{ uri: imageTeam2 }} // Replace with your image URL
-            style={styles.teamImage}
-          />
-          <Text style={styles.teamName}>{match.team2}</Text>
+          <TouchableOpacity onPress={() => handleTeamRouting(match.team2)}>
+            <Image
+              source={{ uri: imageTeam2 }} // Replace with your image URL
+              style={styles.teamImage}
+            />
+            <Text style={styles.teamName}>{match.team2}</Text>
+          </TouchableOpacity>
           <Text style={styles.vsText}>{match.team2Score || 0}</Text>
         </View>
       </View>
