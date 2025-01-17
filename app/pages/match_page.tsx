@@ -16,6 +16,7 @@ import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league'
 import { fetchApiImage } from '@/client/image_client';
 import { formatDate } from '../(tabs)';
 import { Linking } from 'react-native';
+import { useNotifications } from '@/src/hooks/toast';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function MatchOverviewPage() {
   const [imageTeam2, setImage2] = useState<string | undefined>();
   const [hthMatches, setHthMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const { showError } = useNotifications();
 
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
@@ -64,17 +67,14 @@ export default function MatchOverviewPage() {
       try {
         console.log("Match page with Id", entityName);
         const match = await fetchMatch(entityName);
-        const hthMatches = await fetchHtHMatches(match.team1, match.team2);
-        const team1 = await fetchMatchRoster(match.overviewPage, match.team1);
-        const team2 = await fetchMatchRoster(match.overviewPage, match.team2);
+
         setMatch(match);
-        setTeam1(team1);
-        setTeam2(team2);
-        setHthMatches(hthMatches);
+        fetchHtHMatches(match.team1, match.team2).then(setHthMatches).catch(showError);
+        fetchMatchRoster(match.overviewPage, match.team1).then(setTeam1).catch(showError);
+        fetchMatchRoster(match.overviewPage, match.team2).then(setTeam2).catch(showError);
 
-        fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
-        fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
-
+        fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1).catch(showError);
+        fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2).catch(showError);
       } catch (error) {
         console.error(error);
       } finally {
