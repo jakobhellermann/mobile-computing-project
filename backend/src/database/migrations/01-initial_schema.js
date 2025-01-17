@@ -21,22 +21,6 @@ const testUsers = [
 
 const testSubscriptions = [
     {
-        "id": 1,
-        "user": 2,
-        "name": "Team 1",
-        "type": "team",
-        "notifications": true,
-        "timestamp": 1736862070238
-    },
-    {
-        "id": 2,
-        "user": 2,
-        "name": "Some tournament",
-        "type": "tournament",
-        "notifications": false,
-        "timestamp": 1736862072752
-    },
-    {
         "id": 3,
         "user": 2,
         "name": "Esports World Cup 2024",
@@ -84,6 +68,7 @@ async function up(knex) {
             t.string('first_name').notNullable();
             t.string('password_hash').notNullable();
             t.boolean('is_admin').notNullable();
+            t.string('push_token');
         })
         .createTable('sessions', (t) => {
             t.increments('id').primary();
@@ -110,8 +95,10 @@ async function up(knex) {
         .createTable('upcomingEvents', (t) => {
             t.string('matchId').primary();
             t.string('tournament').notNullable();
+            t.string('tournamentName').notNullable();
             t.string('team1').notNullable();
             t.string('team2').notNullable();
+            t.boolean('has_notified_start').defaultTo(false);
             t.integer('timestamp').notNullable();
         });
 

@@ -1,40 +1,61 @@
-
-export async function runNotify() {
-    console.log("notify!");
-}
-
-/*import { Expo } from 'expo-server-sdk';
+import SubscriptionService from "../services/subscription";
+import UpcomingEventService from "../services/upcomingEvent";
+import { Expo, ExpoPushMessage } from 'expo-server-sdk';
 
 let expo = new Expo({
     accessToken: "QOTD4i2lz5xiKsbXljypMCNYMYJPJU3np89sI5rY"
 });
 
-let pushToken = "ExponentPushToken[-_fD_eAIY5DuvSHlCQtrc7]";
+export async function runNotify(subscriptionService: SubscriptionService, upcomingEventsService: UpcomingEventService) {
+    console.log("Checking for notifications...");
 
+    let now = new Date();
+    // For testing: fake being in the f uture
+    // now.setDate(now.getDate() + 2);
 
+    let newlyHappened = await upcomingEventsService.getAll({ beforeDate: now, onlyUnnotified: true });
+    let notifications: ExpoPushMessage[] = [];
 
-async function run() {
+    for (const event of newlyHappened) {
+        let subscriptionsToEvent = await subscriptionService.getSubscribedUsers({
+            match: event.matchId,
+            teams: [event.team1, event.team2],
+            tournament: event.tournament,
+        }, true);
 
-    let messages = [{
-        to: pushToken,
-        sound: 'default',
-        body: 'This is a test notification',
-        data: { withSome: 'data' },
-    }];
-    let chunks = expo.chunkPushNotifications(messages);
-    for (let chunk of chunks) {
-        let tickets = await expo.sendPushNotificationsAsync(chunk);
-        console.log(tickets);
+        let pushTokens = subscriptionsToEvent
+            .filter(entry => {
+                if (!entry.pushToken) {
+                    console.warn(`WARNING: User ${entry.user} has no push token but wants to be notified!`);
+                    return false;
+                }
+                return true;
+            })
+            .map(x => x.pushToken) as string[];
+
+        notifications.push({
+            to: pushTokens,
+            sound: 'default',
+            title: `${event.tournamentName}`,
+            subtitle: 'subtitle',
+            body: `Now starting: ${event.team1} vs ${event.team2}`,
+            data: {
+                match: event.matchId,
+            }
+        });
     }
 
-    // var admin = require("firebase-admin");
-    // 
-    // var serviceAccount = require("mobile-computing-project-google-serviceaccount.json");
-    // 
-    // admin.initializeApp({
-    // credential: admin.credential.cert(serviceAccount)
-    // });
+    await upcomingEventsService.markNotified(newlyHappened);
 
+    if (notifications.length > 0) {
+        console.log("Sending notifications", notifications);
+        await sendNotifications(notifications);
+    }
 }
 
-run().catch(console.error);*/
+async function sendNotifications(messages: ExpoPushMessage[]) {
+    let chunks = expo.chunkPushNotifications(messages);
+    for (let chunk of chunks) {
+        await expo.sendPushNotificationsAsync(chunk);
+    }
+}

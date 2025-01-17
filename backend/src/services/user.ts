@@ -1,7 +1,8 @@
 import { Knex } from 'knex';
-import { Page, PageRequest, User, UserUpdate } from 'shared';
+import { User, UserUpdate } from 'shared';
 import { EmailAlreadyExistsError } from './auth';
 import { toUser } from '../mappers/user';
+import { UserRow } from '../database/rows';
 
 /**
  * Error thrown when user not found.
@@ -22,7 +23,7 @@ export default class UserService {
      * @param db - Knex instance.
      * @returns UserService instance.
      */
-    public constructor(private readonly db: Knex) {}
+    public constructor(private readonly db: Knex) { }
 
     /**
      * Get user by id.
@@ -66,10 +67,19 @@ export default class UserService {
             }
         }
 
+        let update: Partial<UserRow> = {};
+        if (user.email) {
+            update.email = user.email;
+        } if (user.pushToken) {
+            update.push_token = user.pushToken;
+        }
+
+        if (Object.keys(update).length === 0) {
+            return;
+        }
+
         const rowsAffected = await this.db('users')
-            .update({
-                email: user.email,
-            })
+            .update(update)
             .where({ id });
 
         if (rowsAffected === 0) {
@@ -92,61 +102,5 @@ export default class UserService {
             .where({ email })
             .first();
         return !!user && user.id !== userId;
-    }
-
-    /**
-     * Search users.
-     * @param query - Search query.
-     * @param page - Page request.
-     * @returns Page of users.
-     */
-    public async searchUsers(
-        query?: string,
-        page?: PageRequest,
-    ): Promise<Page<User>> {
-        const searchQuery = (builder: Knex.QueryBuilder) => {
-            if (query) {
-                query = `%${query}%`;
-
-                builder
-                    .where('users.email', 'like', query)
-                    .orWhere('users.name', 'like', query)
-                    .orWhere('users.first_name', 'like', query);
-            }
-        };
-
-        const count = await this.db('users')
-            .where(searchQuery)
-            .count({
-                count: 'users.id',
-            })
-            .first();
-
-        if (!count?.count) {
-            return {
-                total: 0,
-                data: [],
-                page: page?.page ?? 1,
-                pageSize: page?.pageSize ?? 20,
-            };
-        }
-
-        const pageQuery = (builder: Knex.QueryBuilder) => {
-            if (page?.page) builder.limit(page.pageSize);
-
-            if (page?.page && page.pageSize)
-                builder.offset((page.page - 1) * page.pageSize);
-        };
-
-        const users = await this.db('users')
-            .modify(pageQuery)
-            .where(searchQuery);
-
-        return {
-            total: count.count,
-            data: users.map(toUser),
-            page: page?.page ?? 1,
-            pageSize: page?.pageSize ?? 20,
-        };
     }
 }

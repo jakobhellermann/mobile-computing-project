@@ -16,30 +16,6 @@ export default class UpcomingEventService {
     ) { }
 
     /**
-     * Upsert upcomingEvent, creating it if it didn't already.
-     * @param type - Subscription Type.
-     * @param name - Name/id.
-     * @param timestamp - When the event occurs.
-     */
-    public async upsertUpcomingEvent(
-        matchId: string,
-        tournament: string,
-        team1: string,
-        team2: string,
-        timestamp: Date,
-    ): Promise<void> {
-        this.db('upcomingEvents')
-            .insert({
-                matchId,
-                tournament,
-                team1,
-                team2,
-                timestamp: timestamp.getUTCMilliseconds(),
-            })
-            .onConflict().merge();
-    }
-
-    /**
      * Upsert many upcomingEvents, creating it if it didn't already.
      * @param type - Subscription Type.
      * @param name - Name/id.
@@ -48,6 +24,7 @@ export default class UpcomingEventService {
     public async bulkUpsertUpcomingEvent(data: {
         matchId: string,
         tournament: string,
+        tournamentName: string,
         team1: string,
         team2: string,
         timestamp: Date,
@@ -60,6 +37,7 @@ export default class UpcomingEventService {
         let rows = data.map(d => ({
             matchId: d.matchId,
             tournament: d.tournament,
+            tournamentName: d.tournamentName,
             team1: d.team1,
             team2: d.team2,
             timestamp: d.timestamp.getTime(),
@@ -72,7 +50,6 @@ export default class UpcomingEventService {
 
     public async getSubscribedUpcomingEvents(userId: number, onlyNotifications: boolean = false): Promise<UpcomingEvent[]> {
         let notificationsFilter = onlyNotifications ? { notifications: true } : {};
-        console.log(notificationsFilter);
         const events = await this.db('upcomingEvents')
             .whereIn("matchId", this.db("subscriptions").where({ user: userId, "type": "match", ...notificationsFilter }).select('name'))
             .orWhereIn("team1", this.db("subscriptions").where({ user: userId, "type": "team", ...notificationsFilter }).select('name'))
@@ -88,9 +65,27 @@ export default class UpcomingEventService {
      * @param name - Name/id.
      * @param timestamp - When the event occurs.
      */
-    public async getAll(): Promise<UpcomingEvent[]> {
-        const events = await this.db('upcomingEvents')
-            .select();
+    public async getAll(options?: { beforeDate?: Date; onlyUnnotified?: boolean; }): Promise<UpcomingEvent[]> {
+        let beforeDate = options?.beforeDate;
+        let onlyUnnotified = options?.onlyUnnotified;
+
+        let query = this.db('upcomingEvents');
+        if (beforeDate) {
+            query = query.where("timestamp", "<", beforeDate.getTime());
+        }
+        if (onlyUnnotified) {
+            query = query.where({ "has_notified_start": false });
+        }
+        const events = await query.select();
         return events.map(toUpcomingEvent);
+    }
+
+    public async markNotified(eventsToMark: UpcomingEvent[]): Promise<void> {
+        let rowsAffected = await this.db('upcomingEvents')
+            .whereIn("matchId", eventsToMark.map(x => x.matchId))
+            .update({ "has_notified_start": true });
+        if (rowsAffected != eventsToMark.length) {
+            console.warn(`mismatch: ${rowsAffected} != ${eventsToMark.length}`);
+        }
     }
 }

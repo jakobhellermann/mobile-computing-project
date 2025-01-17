@@ -1,5 +1,4 @@
 import { Knex } from 'knex';
-import { SubscriptionType } from 'shared';
 
 /**
  * User row in the database.
@@ -9,6 +8,8 @@ export type UserRow = {
     email: string;
     password_hash: string;
     is_admin: number;
+
+    push_token: string | null;
 };
 
 /**
@@ -39,9 +40,11 @@ export type UpcomingEventRow = {
     matchId: string;
 
     tournament: string;
+    tournamentName: string;
     team1: string;
     team2: string;
 
+    has_notified_start?: boolean;
     timestamp: number;
 };
 

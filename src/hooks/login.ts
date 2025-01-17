@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../modules/auth/context';
 import { apiFetchUnauthorized, } from '../api/base';
 import { useNotifications } from './toast';
+import { registerForPushNotificationsAsync } from '../push_notifications';
 
 
 /**
@@ -13,9 +14,8 @@ import { useNotifications } from './toast';
  * @return {Function} return.login - The login function.
  */
 export const useLogin = () => {
-  const { setLoginToken } = useAuth();
+  const { setLoginToken, setPushToken } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const { showError } = useNotifications();
 
@@ -36,6 +36,13 @@ export const useLogin = () => {
       body: JSON.stringify({ email, password }),
     })
       .then((login) => setLoginToken(login.token))
+      .then(async () => {
+        let token = await registerForPushNotificationsAsync();
+        if (token) {
+          console.info(`Registering push token: ${token}`);
+          setPushToken(token);
+        }
+      })
       .catch((error) => {
         console.error(`Login error: ${error}`);
         if (error instanceof Response && error.status === 401) {
@@ -51,7 +58,6 @@ export const useLogin = () => {
 
   return {
     loading,
-    error,
     login,
   };
 };

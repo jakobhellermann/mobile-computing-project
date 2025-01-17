@@ -31,7 +31,7 @@ export function getUpcomingEvents(
                 preHandler: authenticated(fastify),
             },
             async (request, reply) => {
-                const upcomingEvents = await upcomingEventService.getSubscribedUpcomingEvents(request.user);
+                const upcomingEvents = await upcomingEventService.getSubscribedUpcomingEvents(request.user, true);
                 return reply.send(upcomingEvents);
             },
         );

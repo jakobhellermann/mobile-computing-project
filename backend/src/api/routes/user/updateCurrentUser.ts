@@ -10,10 +10,8 @@ const schema = {
         type: 'object',
         properties: {
             email: { type: 'string' },
-            name: { type: 'string' },
-            firstName: { type: 'string' },
+            pushToken: { type: 'string' },
         },
-        required: ['email', 'name', 'firstName'],
     },
     response: {
         204: {

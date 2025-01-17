@@ -7,6 +7,7 @@ import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
 import { User } from 'shared';
 import { useRouter } from 'expo-router';
+import { useNotifications } from '@/src/hooks/toast';
 
 export default function ProfileScreen() {
   const { user } = useAuth();
@@ -19,6 +20,8 @@ function LoggedInScreen({ user }: { user: User; }) {
   const { logout } = useAuth();
   const router = useRouter();
 
+  const { showError } = useNotifications();
+
   const handleNotificationRouting = () => {
     router.push({
       pathname: "/pages/subscriptions_page",
@@ -30,7 +33,7 @@ function LoggedInScreen({ user }: { user: User; }) {
 
     <View style={{ gap: 8 }}>
       <CustomButton title='Manage Subscriptions' onPress={handleNotificationRouting} />
-      <CustomButton title='Logout' onPress={logout} />
+      <CustomButton title='Logout' onPress={() => logout().catch(showError)} />
     </View>
   </View>;
 
@@ -41,7 +44,7 @@ const EXAMPLE_PASSWORD = "normalpwd";
 
 function LoginScreen() {
   const { register, error: registerError } = useRegister();
-  const { login, error: loginError } = useLogin();
+  const { login } = useLogin();
 
   const [email, setEmail] = useState(EXAMPLE_EMAIL);
   const [password, setPassword] = useState(EXAMPLE_PASSWORD);
@@ -82,8 +85,6 @@ function LoginScreen() {
         <CustomButton title="Sign Up"
           onPress={onPressRegister}
         />
-        <ThemedText type='default'>{loginError ?? registerError}</ThemedText>
-
       </Card>
     </ScrollView >
   );

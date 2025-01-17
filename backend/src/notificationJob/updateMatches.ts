@@ -20,16 +20,20 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let matchIds = [...new Set((byType.match ?? []).map(x => x.name))];
     let teamIds = [...new Set((byType.team ?? []).map(x => x.name))];
 
-    let queryInFuture = `DateTime_UTC > '${getCurrentTime()}'`;
+    let queryInFuture = `M.DateTime_UTC > '${getCurrentTime()}'`;
     let subscriptionFilter = buildQueryOr(
-        buildQueryIn("MatchId", matchIds),
-        buildQueryIn("OverviewPage", tournamentIds),
-        buildQueryIn("Team2", teamIds),
+        buildQueryIn("M.MatchId", matchIds),
+        buildQueryIn("M.OverviewPage", tournamentIds),
+        buildQueryIn("M.Team2", teamIds),
     );
     let where = `(${subscriptionFilter}) AND ${queryInFuture}`;
     let upcomingMatches = await cargoQuery<any>({
-        tables: 'MatchSchedule',
-        fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
+        // tables: 'MatchSchedule=M, Tournaments=T',
+        // fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
+        // join_on: "M.OverviewPage=T.OverviewPage",
+        tables: 'MatchSchedule=M, Tournaments=T',
+        fields: 'M.MatchId, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.Stream, T.Name=TournamentName',
+        join_on: 'M.OverviewPage=T.OverviewPage',
         where,
         limit: 50,
         order_by: 'DateTime_UTC asc',
@@ -37,6 +41,7 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let updates = upcomingMatches.map(match => ({
         matchId: match["MatchId"],
         tournament: match["OverviewPage"],
+        tournamentName: match["TournamentName"],
         team1: match["Team1"],
         team2: match["Team2"],
         timestamp: new Date(match["DateTime UTC"] + 'Z'),

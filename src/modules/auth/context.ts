@@ -8,6 +8,7 @@ export type AuthContextProps = {
   user: User | null;
   fetchUser: () => Promise<void>;
   setLoginToken: (token: string) => Promise<void>;
+  setPushToken: (pushToken: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -20,6 +21,9 @@ export const AuthContext = createContext<AuthContextProps>({
     throw new Error('missing AuthProvider');
   },
   setLoginToken: () => {
+    throw new Error('missing AuthProvider');
+  },
+  setPushToken: () => {
     throw new Error('missing AuthProvider');
   },
   logout: () => {

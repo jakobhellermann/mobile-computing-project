@@ -12,7 +12,7 @@ export function notificationsPlugin(subscriptionService: SubscriptionService, up
     const updateMatchesTask = new AsyncTask('keep subscription updated', () => runUpdateMatches(subscriptionService, upcomingEventService), console.error);
     const updateMatchesJob = new SimpleIntervalJob({ seconds: 60, runImmediately: true }, updateMatchesTask);
 
-    const notifyTask = new AsyncTask('device notification job', () => runNotify(), console.error);
+    const notifyTask = new AsyncTask('device notification job', () => runNotify(subscriptionService, upcomingEventService), console.error);
     const notifyJob = new SimpleIntervalJob({ seconds: 30, runImmediately: true }, notifyTask);
 
     return async (fastify) => {

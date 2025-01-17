@@ -98,6 +98,7 @@ export default function AuthProvider({
    */
   const logout = () => {
     return apiFetch("/logout", { method: "POST" })
+      .catch(console.error) // logout should never fail
       .then(() => storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN))
       .then(() => setUser(null));
   };
@@ -105,6 +106,17 @@ export default function AuthProvider({
   const setLoginToken = async (token: string) => {
     await storageUtil.setItem(SECURE_STORY_KEY_LOGIN_TOKEN, token);
     await fetchUser();
+  };
+
+
+  const setPushToken = async (pushToken: string) => {
+    await apiFetch(`/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ pushToken }),
+    });
   };
 
 
@@ -122,6 +134,7 @@ export default function AuthProvider({
         user,
         fetchUser,
         setLoginToken,
+        setPushToken,
         logout,
       }}
     >

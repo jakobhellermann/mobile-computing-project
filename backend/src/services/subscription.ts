@@ -86,6 +86,23 @@ export default class SubscriptionService {
     }
 
 
+    public async getSubscribedUsers(filter: { match: string, teams: [string, string], tournament: string; }, onlyNotifications: boolean): Promise<{ user: number; pushToken: string | null; }[]> {
+        let notificationsFilter = onlyNotifications ? { notifications: true } : {};
+
+        // these `as any` are necessary because typescript doesn't recognize the prefixed 'subscriptions.name',
+        // but without the prefix sqlite complains about ambiguous column names.
+        const rows = await this.db('subscriptions')
+            .where({ 'subscriptions.name': filter.match, type: "match", ...notificationsFilter } as any)
+            .orWhere({ 'subscriptions.name': filter.tournament, type: "tournament", ...notificationsFilter } as any)
+            .orWhere({ 'subscriptions.name': filter.teams[0], type: "team", ...notificationsFilter } as any)
+            .orWhere({ 'subscriptions.name': filter.teams[1], type: "team", ...notificationsFilter } as any)
+            .join("users", { "users.id": "subscriptions.user" })
+            .select(['user', 'users.push_token as pushToken']);
+
+        return rows.map(row => ({ user: row.user, pushToken: row.pushToken }));
+    }
+
+
 
     /**
      * Delete subscription.
