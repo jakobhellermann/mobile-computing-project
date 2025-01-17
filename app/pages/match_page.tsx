@@ -15,7 +15,7 @@ import { Match } from 'shared';
 import { fetchHtHMatches, fetchMatch, fetchMatchRoster } from '@/src/api/league';
 import { fetchApiImage } from '@/client/image_client';
 import { formatDate } from '../(tabs)';
-import { fetchMatchRosterTest, fetchMatchTest } from '@/client/tournament_client';
+import { Linking } from 'react-native';
 
 export default function MatchOverviewPage() {
   const router = useRouter();
@@ -36,49 +36,36 @@ export default function MatchOverviewPage() {
     });
   };
 
+  const handleTournamentRouting = (overviewPage: string) => {
+    console.log('Item pressed, navigating to TournamentPage with Name:', overviewPage);
+    router.replace({
+      pathname: "/pages/tournament_page",
+      params: { entityName: overviewPage },
+    });
+  };
+
+  const handleOpenStream = (streamLink: string) => {
+    Linking.openURL(streamLink).catch((err) =>
+      console.error('Failed to open stream:', err)
+    );
+  };
+
   //TODO Match Page
   useEffect(() => {
     const loadMatchData = async () => {
       try {
         console.log("Match page with Id", entityName);
         const match = await fetchMatch(entityName);
-        console.log("Match:", match);
         const hthMatches = await fetchHtHMatches(match.team1, match.team2);
-        const team1 = await fetchMatchRoster(match.matchId, match.team1);
-        const team2 = await fetchMatchRoster(match.matchId, match.team2);
-        console.log(entityName);
+        const team1 = await fetchMatchRoster(match.overviewPage, match.team1);
+        const team2 = await fetchMatchRoster(match.overviewPage, match.team2);
         setMatch(match);
-        console.log(team1);
-        console.log(team2);
         setTeam1(team1);
         setTeam2(team2);
         setHthMatches(hthMatches);
 
         fetchApiImage(match.team1.concat("logo_square.png")).then(setImage1);
         fetchApiImage(match.team2.concat("logo_square.png")).then(setImage2);
-
-        //   const params = {
-        //     action: 'cargoquery',
-        //     format: 'json',
-        //     origin: '*', // Required for CORS
-        //     limit: 10,
-        //     tables: 'ScoreboardTeams',
-        //     fields: 'Roster, GameId, Team',
-        //     where: `GameId LIKE "${entityName}_1" AND Team LIKE "${match.team1}"`,
-        // };
-
-        // try {
-        //     // Perform the API request
-        //     const response = await axios.get(API_URL, { params });
-
-        //     // Convert the team map to an array
-        //     console.log('API Response MatchRoster:', response.data.cargoquery[0].title.Roster);
-
-
-        // } catch (error) {
-        //     console.error('Error fetching tournament data:', error);
-        //     throw error;
-        // }
 
       } catch (error) {
         console.error(error);
@@ -107,21 +94,35 @@ export default function MatchOverviewPage() {
 
     <ScrollView style={styles.container}>
       {/* Tournament Header */}
-      <View style={styles.tournamentHeader}>
-        <Ionicons name="play-circle" size={24} />
-        <Text style={styles.tournamentName}>{match.tournament}</Text>
+      <TouchableOpacity key={match.overviewPage} onPress={() => handleTournamentRouting(match.overviewPage)}>
+        <View style={styles.tournamentHeader}>
+        <Ionicons name="trophy" size={24} />
+      <Text style={styles.tournamentName}>{match.tournament}</Text>
+
+      {/* Play Icon for Livestream */}
+      {match.stream && (
+        <TouchableOpacity style={styles.playIcon} onPress={() => handleOpenStream(match.stream)}>
+          <Ionicons name="logo-twitch" size={24} />
+        </TouchableOpacity>
+      )}
+    </View>
+      </TouchableOpacity>
+
+      <View style={styles.dateContainer}>
+        <Text style={styles.dateStyle}>{formatDate(match.dateTimeUTC)}</Text>
+        <Text style={styles.dateStyle}>{"Best of "+ match.bestOf}</Text>
       </View>
 
       {/* Teams */}
       <View style={styles.teamsContainer}>
-
+      
         <View style={styles.team}>
           <Image
             source={{ uri: imageTeam1 }} // Replace with your image URL
             style={styles.teamImage}
           />
           <Text style={styles.teamName}>{match.team1}</Text>
-          <Text style={styles.vsText}>{match.team1Score}</Text>
+          <Text style={styles.vsText}>{match.team1Score || 0}</Text>
         </View>
         <Text style={styles.vsText}>VS</Text>
         <View style={styles.team}>
@@ -130,90 +131,93 @@ export default function MatchOverviewPage() {
             style={styles.teamImage}
           />
           <Text style={styles.teamName}>{match.team2}</Text>
-          <Text style={styles.vsText}>{match.team2Score}</Text>
+          <Text style={styles.vsText}>{match.team2Score || 0}</Text>
         </View>
       </View>
 
       {/* Players */}
+      <Text style={styles.rosterTitle}>{match.team1 + " Roster"}</Text>
       <View style={styles.playersContainer}>
+        
         <View key={"Top"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team1[0] || ""}</Text>
+          <Text style={styles.playerName}> {team1[0] || "TBD"}</Text>
         </View>
         <View key={"Jungle"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Jungle_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team1[1] || ""}</Text>
+          <Text style={styles.playerName}> {team1[1] || "TBD"}</Text>
         </View>
         <View key={"Middle"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Middle_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team1[2] || ""}</Text>
+          <Text style={styles.playerName}> {team1[2] || "TBD"}</Text>
         </View>
         <View key={"Bottom"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Bottom_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team1[3] || ""}</Text>
+          <Text style={styles.playerName}> {team1[3] || "TBD"}</Text>
         </View>
         <View key={"Support"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Support_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team1[4] || ""}</Text>
+          <Text style={styles.playerName}> {team1[4] || "TBD"}</Text>
         </View>
       </View>
-
+      <Text style={styles.rosterTitle}>{match.team2 + " Roster"}</Text>
       <View style={styles.playersContainer}>
+        
         <View key={"Top"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Top_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team2[0] || ""}</Text>
+          <Text style={styles.playerName}> {team2[0] || "TBD"}</Text>
         </View>
         <View key={"Jungle"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Jungle_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team2[1] || ""}</Text>
+          <Text style={styles.playerName}> {team2[1] || "TBD"}</Text>
         </View>
         <View key={"Middle"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Middle_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team2[2] || ""}</Text>
+          <Text style={styles.playerName}> {team2[2] || "TBD"}</Text>
         </View>
         <View key={"Bottom"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Bottom_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team2[3] || ""}</Text>
+          <Text style={styles.playerName}> {team2[3] || "TBD"}</Text>
         </View>
         <View key={"Support"} style={styles.playerItem}>
           <Image
             source={require("../../assets/icons/Support_icon.png")} // Replace with your image URL
             style={styles.iconImage}
           />
-          <Text style={styles.playerName}> {team2[4] || ""}</Text>
+          <Text style={styles.playerName}> {team2[4] || "TBD"}</Text>
         </View>
       </View>
 
       {/* Head To Head Section */}
       <View>
-        <Text style={styles.sectionTitle}>Latest Results</Text>
+        <Text style={styles.sectionTitle}>Head-To-Head</Text>
         {hthMatches.map((match: Match) => (
           <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
@@ -235,10 +239,20 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
+  playIcon: {
+    position: 'absolute',
+    right: 10,
+    top: '50%', 
+    transform: [{ translateY: -12 }], 
+  },
   iconImage: {
     width: 40,
     height: 40,
     marginBottom: 8,
+  },
+  dateContainer: {
+    alignItems: 'center', 
+    marginVertical: 10, 
   },
   tournamentHeader: {
     flexDirection: 'row',
@@ -250,25 +264,31 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  dateStyle: {
+    marginLeft: 8,
+    fontSize: 13,
+    alignItems: "center",
+  },
   teamsContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 16, // Space above and below the container
+    marginVertical: 16,
   },
   team: {
-    alignItems: "center", // Center content vertically
-    marginHorizontal: 16, // Space between the teams
+    alignItems: "center",
+    marginHorizontal: 16,
   },
   teamLogo: {
     width: 50,
     height: 50,
-    marginBottom: 8, // Space between the logo and name
+    marginBottom: 8,
+    resizeMode: 'contain'
   },
   teamName: {
     fontSize: 14,
     textAlign: "center",
-    marginBottom: 4, // Space between the name and score
+    marginBottom: 4,
   },
   teamScore: {
     fontSize: 16,
@@ -278,17 +298,17 @@ const styles = StyleSheet.create({
   vsText: {
     fontSize: 18,
     fontWeight: "bold",
-    marginHorizontal: 8, // Space around the "VS" text
+    marginHorizontal: 8,
   },
   teamImage: {
     width: 70,
     height: 70,
-    marginBottom: 8, // Space between image and text
+    marginBottom: 8,
   },
   scoreText: {
     fontSize: 30,
     fontWeight: 'bold',
-    marginTop: 16, // Space between "VS" and teams
+    marginTop: 16,
     textAlign: 'center',
   },
   sectionTitle: {
@@ -296,20 +316,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 8,
   },
+  rosterTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginVertical: 8,
+  },
   playersContainer: {
-    flexDirection: "row",
-    justifyContent: "center", // Center the grid
-    gap: 12, // Add spacing between items
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginVertical: 10,
   },
   playerItem: {
-    alignItems: "center", // Center icon and text
-    margin: 8, // Space around each player item
-    width: 40, // Ensure uniform width for all items
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginHorizontal: 10,
   },
   playerName: {
-    textAlign: "center", // Center text under the image
     fontSize: 12,
-    flexWrap: "wrap", // Allow text to wrap
+    color: '#000',
+    textAlign: 'center',
+    maxWidth: 80,
   },
   card: {
     padding: 16,

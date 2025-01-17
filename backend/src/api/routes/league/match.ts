@@ -41,7 +41,7 @@ export function getMatchRoster(
             '/league/match/:id/:team/roster',
             {
                 schema: {
-                    description: 'Get the roster of a match by matchId and Team',
+                    description: 'Get the roster of a match by TournamentId and Team',
                     tags: ['league'],
                     params: {
                         type: 'object',

@@ -11,7 +11,7 @@ export default class LeagueService {
         const response = await cargoQuery<any>({
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `M.MatchId LIKE "${matchId}"`,
         });
@@ -23,31 +23,40 @@ export default class LeagueService {
         return matches[0];
     }
 
-    public async fetchMatchRoster(matchId: string, team: string): Promise<string[]> {
-        const response = await cargoQuery<{ Roster: string; }>({
+    public async fetchMatchRoster(overviewPage: string, team: string): Promise<string[]> {
+        const response = await cargoQuery<any>({
             limit: 10,
             tables: 'ScoreboardTeams',
-            fields: 'Roster, GameId, Team',
-            where: `GameId LIKE "${matchId}_1" AND Team LIKE "${team}"`,
+            fields: 'Team, Player, TeamOrder, N_PlayerInTeam, OverviewPage, Role',
+            where: `OverviewPage LIKE "${overviewPage}" AND Team Like "${team}"`,
+
         });
 
-        if (response.length === 0) {
-            throw new ApiNotFoundError(`roster ${matchId} ${team}`);
-        }
-        let result = response[0].Roster.split(",");
+        // Filter and organize players by role
+        const roles = ["Top", "Jungle", "Mid", "Bot", "Support"];
+        const roster: string[] = [];
 
-        if (result.length < 1) {
-            result = result[0].split(",");
+        for (const role of roles) {
+            const playersByRole = response.filter((player: any) => player.Role === role);
+            if (playersByRole.length > 0) {
+                const firstPlayer = playersByRole.reduce((prev: any, curr: any) => {
+                    return Number(prev.N_PlayerInTeam) < Number(curr.N_PlayerInTeam) ? prev : curr;
+                });
+                roster.push(firstPlayer.Player.split("(")[0]);
+            } else {
+                roster.push("");
+            }
         }
 
-        return result;
+
+        return roster;
     };
 
     public async fetchHtHMatches(team1: string, team2: string): Promise<Match[]> {
         const response = await cargoQuery({
             limit: 50,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `(M.Team1 LIKE "%${team1}%" AND M.Team2 LIKE "%${team2}%") OR (M.Team1 LIKE "%${team2}%" AND M.Team2 LIKE "%${team1}%") AND M.Winner IS NOT NULL`,
             order_by: 'DateTime_UTC desc',
@@ -138,8 +147,8 @@ export default class LeagueService {
     public async fetchTournamentMatches(overviewpage: string): Promise<Match[]> {
         const response = await cargoQuery({
             tables: 'MatchSchedule',
-            fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
-            where: `OverviewPage LIKE "%${overviewpage}%"`
+            fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage, BestOf, Stream',
+            where: `OverviewPage LIKE "%${overviewpage}%"`,
         });
         return response.map(mapToMatch);
     }
@@ -165,7 +174,7 @@ export default class LeagueService {
         const response = await cargoQuery({
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
             where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NOT NULL`,
             order_by: 'DateTime_UTC desc',
@@ -177,9 +186,9 @@ export default class LeagueService {
         const response = await cargoQuery({
             limit: 3,
             tables: 'MatchSchedule=M, Tournaments=T',
-            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, T.Name=Tournament',
+            fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.BestOf, M.Stream, T.Name=Tournament',
             join_on: 'M.OverviewPage=T.OverviewPage',
-            where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NULL`,
+            where: `(M.Team1 LIKE "%${team}%" OR M.Team2 LIKE "%${team}%") AND M.Winner IS NULL AND M.DateTime_UTC IS NOT NULL AND M.DateTime_UTC >= '${getCurrentTime()}'`,
             order_by: 'DateTime_UTC asc',
         });
         return response.map(mapToMatch);
@@ -229,7 +238,6 @@ export default class LeagueService {
         }
     };
     // #endregion
-
 }
 
 type CargoParams = {
@@ -287,6 +295,8 @@ function mapToMatch(apiResponse: any): Match {
         team2Score: parseInt(apiResponse.Team2Score), // Convert to number
         matchDay: parseInt(apiResponse.MatchDay), // Convert to number
         dateTimeUTC: apiResponse['DateTime UTC'],
+        bestOf: apiResponse.BestOf,
+        stream: apiResponse.Stream || "TBD",
         overviewPage: apiResponse.OverviewPage,
         tournament: apiResponse.Tournament || apiResponse.OverviewPage
     };
@@ -417,3 +427,16 @@ function unescapeHTML(str: string) {
         }
     });
 };
+
+function getCurrentTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}

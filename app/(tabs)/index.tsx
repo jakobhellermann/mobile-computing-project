@@ -22,6 +22,7 @@ export default function HomeScreen() {
       try {
         fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
         fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
+
       } catch (error) {
         console.error(error);
       } finally {
