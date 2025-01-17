@@ -44,7 +44,8 @@ export function updateCurrentUser(
                     return reply.status(204).send();
                 } catch (err) {
                     if (err instanceof EmailAlreadyExistsError) {
-                        return reply.status(409).send({ message: err.message });
+                        reply.status(409);
+                        return reply.send({ statusCode: 409, error: "Conflict", message: err.message });
                     }
 
                     throw err;

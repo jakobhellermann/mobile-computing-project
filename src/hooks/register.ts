@@ -37,17 +37,17 @@ export const useRegister = () => {
       },
       body: JSON.stringify({ email, password }),
     })
-      .then(fetchUser)
-      .catch(async (error) => {
-        if (error instanceof Response && error.status === 409) {
-          showError('Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.');
+      .catch(async (error: Error) => {
+        if (error.cause instanceof Response && error.cause.status === 409) {
+          showError('Email-Addresse bereits vergeben.');
         } else {
-          let message = (error instanceof Response) ? await error.text() : "";
+          let message = (error.cause instanceof Response) ? await error.cause.text() : "";
           showError(
-            'Ein unerwarteter Fehler ist aufgetreten. Versuche es erneut.\n' + message
+            'Ein unerwarteter Fehler ist aufgetreten.\nVersuche es erneut.\n' + message
           );
         };
       })
+      .then(fetchUser)
       .finally(() => setLoading(false));
   };
 

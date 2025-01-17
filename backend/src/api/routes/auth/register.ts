@@ -47,7 +47,8 @@ export function register(
                     .send({ token });
             } catch (err) {
                 if (err instanceof EmailAlreadyExistsError) {
-                    return reply.status(409).send(err.message);
+                    reply.status(409);
+                    return reply.send({ statusCode: 409, error: "Conflict", message: err.message });
                 } else {
                     throw err;
                 }
