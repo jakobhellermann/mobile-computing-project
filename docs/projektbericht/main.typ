@@ -21,8 +21,6 @@
 
 = Projektbericht
 
-#todo
-
 == Projektvision
 
 Die App "NexTrack" soll die zentrale Anlaufstelle für League of Legends Esports-Fans werden. Sie ermöglicht es den Nutzern, Turniere, Teams und Spiele einfach zu entdecken, zu verfolgen und im persönlichen Kalender zu organisieren. Mit einem nutzerzentrierten Ansatz und einer intuitiven Benutzeroberfläche verbindet die App Fans mit ihrer Leidenschaft für Esports. Dabei ist sie nicht nur für erfahrene Nutzer gedacht, sondern soll auch neu Interessierten dabei helfen, einen Einstieg in die eSports-Welt zu finden.
@@ -69,7 +67,7 @@ Schnelle Ladezeiten: Er schätzt eine App, die schnell lädt und ihm die Infos s
 
 / Alter: 21 Jahre
 / Beruf: SHK im Lehramtsstudium
-/ Interessen: Zeichnen, Casual Gaming,
+/ Interessen: Zeichnen, Casual Gaming
 / Bevorzugte Plattformen: iPad, Mobile, Laptop
 
 *Portrait*
