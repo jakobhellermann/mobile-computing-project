@@ -3,8 +3,8 @@
 #let todo = text(red)[TODO]
 
 #let abstract = [
-  NexTrack ist eine App, um seine eSports-Interessen auf einen Klick
-  am Handy verfolgen zu können. #todo
+  NexTrack ist eine App, mit der man seine eSports-Interessen auf einen Klick
+  am Handy verfolgen kann, und durch Erinnerungen für Matches, Teams und Tournaments einrichten nie wieder ein Spiel ausversehen verpasst.
 ]
 
 #show: it => basic-report(
@@ -25,19 +25,21 @@
 
 == Projektvision
 
-Die App "NexTrack" soll die zentrale Anlaufstelle für League of Legends Esports-Fans werden. Sie ermöglicht es den Nutzern, Turniere, Teams und Spiele einfach zu entdecken, zu verfolgen und im persönlichen Kalender zu organisieren. Mit einem nutzerzentrierten Ansatz und einer intuitiven Benutzeroberfläche verbindet die App Fans mit ihrer Leidenschaft für Esports und bietet ihnen eine personalisierte, interaktive Erfahrung.
+Die App "NexTrack" soll die zentrale Anlaufstelle für League of Legends Esports-Fans werden. Sie ermöglicht es den Nutzern, Turniere, Teams und Spiele einfach zu entdecken, zu verfolgen und im persönlichen Kalender zu organisieren. Mit einem nutzerzentrierten Ansatz und einer intuitiven Benutzeroberfläche verbindet die App Fans mit ihrer Leidenschaft für Esports. Dabei ist sie nicht nur für erfahrene Nutzer gedacht, sondern soll auch neu Interessierten dabei helfen, einen Einstieg in die eSports-Welt zu finden.
 
 == Zielgruppe
 
 Die App richtet sich an League of Legends Esports-Fans aller Altersgruppen, die ihre Lieblingsteams und Turniere verfolgen möchten. Sie bietet sowohl Gelegenheitsspielern als auch langjährige Esports-Fans eine Plattform, um stets, in einer intuitiven Umgebung, informiert zu bleiben und keine Matches zu verpassen.
 
+Um ein spezifisches Bild einer Nutzergruppe vor Augen zu haben, haben zwei stellvertretene Personas ausdefiniert:
+
 === Personas
 
 ==== Christian Müller
 
-#image("assets/personas/personaChristian2.png")
+#image("assets/personas/personaChristian.png")
 
-Alter: 25 Jahre
+/ Alter: 25 Jahre
 / Beruf: Student und eSports-Fan
 / Interessen: eSports-Events, Profi-Teams, Statistiken
 / Bevorzugte Plattformen: PC und Mobile (App für schnelle Infos unterwegs)
@@ -46,8 +48,8 @@ Alter: 25 Jahre
 Christian ist seit Jahren begeistert von eSports und hat ein Faible für professionelle Gaming-Turniere, besonders in Spielen wie Dota 2, League of Legends und Counter-Strike 2.
 Er verfolgt die größten Events und kennt die Namen einiger Top-Spieler und Teams.
 Als Student nutzt er gelegentlich seine Freizeit, um in diesem Feld auf dem Laufenden zu bleiben.
-Dies passiert auch gerne im Zug oder in den kurzen Pausen zwischen den Vorlesungen.
-Er nutzt Seiten wie z.B. Liquipedia oder Lol.fandom, um aktuelle Spielstände, Turnierinformationen oder Statistiken zu finden.
+Dies passiert auch gerne im Zug oder mit einem Blick in den kurzen Pausen zwischen den Vorlesungen.
+Er nutzt Seiten wie z.B. Liquipedia oder lol.fandom, um aktuelle Spielstände, Turnierinformationen oder Statistiken zu finden.
 
 *Motivation und Ziele:*
 
@@ -63,7 +65,7 @@ Schnelle Ladezeiten: Er schätzt eine App, die schnell lädt und ihm die Infos s
 
 ==== Lisa Kühne
 
-#image("assets/personas/personaLisa2.png")
+#image("assets/personas/personaLisa.png")
 
 / Alter: 21 Jahre
 / Beruf: SHK im Lehramtsstudium
@@ -91,11 +93,12 @@ Lisa wünscht sich, den Einstieg in ihr neues Hobby zu vereinfachen. Dafür hät
 
 Lisa ist an einem Samstagnachmittag gelangweilt an ihrem iPad und überlegt sich, was sie machen will.
 Da fällt ihr ein, dass sie sich mal die E-Sports Szene von League of Legends angucken wollte und sich dafür eine App heruntergeladen hatte.
-Sie öffnet die App auf dem iPad, um herauszufinden, was für Turniere anstehen. Im Discover-Feed sieht sie direkt einen Abschnitt mit der Überschrift: "Heute live: Worlds 2024 – Halbfinale!" Darunter findet sie die Startzeit in ihrer Zeitzone (heute Abend), eine Kurzbeschreibung des Matches und die Teams, die gegeneinander antreten.
+Sie öffnet die App auf dem iPad, um herauszufinden, was für Turniere anstehen. Im Discover-Feed sieht sie direkt einen Abschnitt mit der Überschrift: "Heute live: Worlds 2024 – Halbfinale!". Darunter findet sie die Startzeit in ihrer Zeitzone (heute Abend), eine Kurzbeschreibung des Matches und die Teams, die gegeneinander antreten.
 
-Mit einem Klick auf das Ergebnis kommt sie zur Detailansicht, die ihr die Möglichkeit bietet, direkt den Stream auf Twitch zu öffnen, oder eine Erinnerung für später zu erstellen. Sie richtet sich eine Erinnerung ein, und klickt dann weiter auf "Worlds 2024" um Infos zum Tournament zu sehen.
+Mit einem Klick auf das Ergebnis kommt sie zur Detailansicht, die ihr die Möglichkeit bietet, eine Erinnerung für später zu erstellen. Sie richtet sich eine Erinnerung ein, und klickt dann weiter auf "Worlds 2024" um Infos zum Tournament zu sehen.
+Sie ist gespannt auf das Match später und schließt die App, um bis dahin noch spazieren zu gehen und das Wetter zu genießen.
 
-Am Abend bekommt sie eine Benachrichtigung am Handy, dass das Match nun beginnt. Sie öffnet die App und beginnt den Stream anzugucken.
+Am Abend bekommt sie eine Benachrichtigung am Handy, dass das Match nun beginnt. Sie öffnet die App und beginnt den Stream über den Link in der Benachrichtigung anzugucken.
 
 === Christian
 
