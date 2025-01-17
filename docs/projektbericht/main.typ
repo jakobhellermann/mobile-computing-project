@@ -4,7 +4,7 @@
 
 #let abstract = [
   NexTrack ist eine App, mit der man seine eSports-Interessen auf einen Klick
-  am Handy verfolgen kann, und durch Erinnerungen für Matches, Teams und Tournaments einrichten nie wieder ein Spiel ausversehen verpasst.
+  am Handy verfolgen kann, und durch Erinnerungen für Matches, Teams und Tournaments nie wieder ein Spiel ausversehen verpasst.
 ]
 
 #show: it => basic-report(
@@ -124,19 +124,38 @@ Storyboard Christian
 
 #image("assets/UML/UML_NexTrack2.png")
 
-= Figma Export
+#let icon-link(icon, content) = align(
+  stack(
+    dir: ltr,
+    spacing: 0.3em,
+    image(icon, height: 1em),
+    content,
+  ),
+)
+
+= Externe Links
+== Figma Export
 
 Der Prototyp der NexTrack-App ist ein Low-Fidelity Prototyp. Dieser wurde in der früheren Entwicklungsphase erstellt und nur zu geringen Ausmaßen angepasst. Einige Frames zeigen größtenteils Platzhalterdaten an, da sich die Daten bei jedem Aufruf dieses Frames ändern könnten.
 
-Figma dev Link: https://www.figma.com/design/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&m=dev&t=BbwUVtRJfw0UotXN-1
 
-Figma Prototyp Link: https://www.figma.com/proto/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&t=BbwUVtRJfw0UotXN-1
+- #icon-link(
+    "assets/icons/figma.svg",
+    link("https://www.figma.com/proto/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&t=BbwUVtRJfw0UotXN-1")[Figma Prototyp Link],
+  )
+- #icon-link(
+    "assets/icons/figma.svg",
+    link("https://www.figma.com/design/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&p=f&t=uaRbAOG3pE64i5hg-0")[Figma Design Link],
+  )
 
-= Git Repo
+== Git Repo
 
-#import "@preview/iconic-salmon-svg:1.0.0": github-info
-
-#github-info(
-  "jakobhellermann/mobile-computing-project",
-  url: "https://github.com/jakobhellermann/mobile-computing-project",
+#icon-link(
+  "assets/icons/github.svg",
+  link("https://github.com/jakobhellermann/mobile-computing-project")[jakobhellermann/mobile-computing-project],
 )
+
+*Fallback-URLs*
+- https://github.com/jakobhellermann/mobile-computing-project
+- https://www.figma.com/proto/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&t=BbwUVtRJfw0UotXN-1
+- https://www.figma.com/design/422llWKXK0jlMsGU3w9Hap/Mobile-Computing-App?node-id=0-1&p=f&t=uaRbAOG3pE64i5hg-0
