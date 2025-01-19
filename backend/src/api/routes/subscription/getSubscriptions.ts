@@ -1,7 +1,6 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { authenticated } from '../../prehandler/authenticated';
 import SubscriptionService from '../../../services/subscription';
-import { ApiNotFoundError } from '../../../errors/api';
 
 export function getSubscription(
     subscriptionService: SubscriptionService,

@@ -55,7 +55,7 @@ export default function TeamProfilePage() {
     };
 
     loadTeamData();
-  }, []);
+  }, [entityName, navigation]);
 
   if (loading) {
     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;

@@ -84,7 +84,7 @@ export default function MatchOverviewPage() {
     };
 
     loadMatchData();
-  }, []);
+  }, [entityName]);
 
   if (loading) {
     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
@@ -404,6 +404,6 @@ const styles = StyleSheet.create({
 });
 
 export function matchHeaderText(match: Match) {
-  let team = (name: string, score?: number) => score != null ? `${name} (${score})` : name;
+  let team = (name: string, score?: number) => score !== null ? `${name} (${score})` : name;
   return `${team(match.team1, match.team1Score)} vs ${team(match.team2, match.team2Score)}`;
 };

@@ -19,7 +19,6 @@ const SEARCHTYPE = Object.freeze({
 export default function HomeScreen() {
   const router = useRouter();
   const searchRef = useRef<CustomAutocompleteDropdownItem>(null);
-  const [loading, setLoading] = useState(false);
   const [suggestionsList, setSuggestionsList] = useState<AutocompleteDropdownItem[]>([]);
 
   const getSuggestions = useCallback(async (term: string) => {
@@ -29,10 +28,9 @@ export default function HomeScreen() {
     }
 
     try {
-      setLoading(true);
       const tournaments = await searchTournaments(term); // Fetch tournaments
       const teams = await searchTeams(term);
-      console.log("Found Teams",teams);
+      console.log("Found Teams", teams);
       const formattedSuggestions: CustomAutocompleteDropdownItem[] = tournaments.map((tournament, index) => ({
         id: index.toString(),
         title: tournament.name,
@@ -49,39 +47,33 @@ export default function HomeScreen() {
     } catch (error) {
       console.error('Error fetching search data:', error);
       setSuggestionsList([]);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
   const onSelectItem = useCallback((item: CustomAutocompleteDropdownItem | null) => {
     console.log(item);
     if (item) {
-      
-      if(item.type == SEARCHTYPE.TOURNAMENT){
+
+      if (item.type === SEARCHTYPE.TOURNAMENT) {
         router.push({
           pathname: "/pages/tournament_page",
           params: { entityName: item.searchParam },
         });
-      } else{
+      } else {
         router.push({
           pathname: "/pages/team_page",
           params: { entityName: item.searchParam },
         });
       }
-      
+
     }
   }, [router]);
 
   useEffect(() => {
     getSuggestions("");
-  }, []);
+  }, [getSuggestions]);
 
-  const onClearPress = useCallback(() => {
-    setLoading(true);
-    setSuggestionsList([]);
-    setLoading(false);
-  }, []);
+  const onClearPress = () => setSuggestionsList([]);
 
   return (
     <ScrollView style={styles.container}>
@@ -110,12 +102,12 @@ export default function HomeScreen() {
         suggestionsListContainerStyle={{
           backgroundColor: '#ece6f0',
         }}
-        renderItem={(item: CustomAutocompleteDropdownItem, text) => 
-                    <View style={{ padding: 15 }}>
-                      <Text style={{ color: 'black', fontSize: 16 }}>{item.title}</Text>
-                      <Text style={{ color: '#7d7d7d', fontSize: 12 }}>{item.type}</Text>
-                    </View>
-                  }
+        renderItem={(item: CustomAutocompleteDropdownItem, text) =>
+          <View style={{ padding: 15 }}>
+            <Text style={{ color: 'black', fontSize: 16 }}>{item.title}</Text>
+            <Text style={{ color: '#7d7d7d', fontSize: 12 }}>{item.type}</Text>
+          </View>
+        }
       />
     </ScrollView >
   );

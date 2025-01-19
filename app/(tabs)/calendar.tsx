@@ -5,7 +5,7 @@ import { Calendar } from 'react-native-calendars';
 import { fetchUpcomingEvents } from '@/src/api/league';
 import { UpcomingEvent } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
-import { DateData, MarkedDates, MarkingTypes } from 'react-native-calendars/src/types';
+import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import { groupBy } from '@/src/utils';
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 

@@ -17,7 +17,7 @@ export default class LeagueService {
         });
 
         let matches = response.map(mapToMatch);
-        if (matches.length != 1) {
+        if (matches.length !== 1) {
             throw new Error(`Expected to get 1 match for ${matchId}, fround ${matches.length}`);
         }
         return matches[0];
@@ -91,7 +91,7 @@ export default class LeagueService {
             where: `OverviewPage LIKE "${name}"`,
         });
         const tournaments = response.map(mapToTournament);
-        if (tournaments.length != 1) {
+        if (tournaments.length !== 1) {
             throw new Error(`Expected to get 1 match for ${name}, fround ${tournaments.length}`);
         }
 
@@ -365,8 +365,7 @@ export function mapToTeam(rawTeams: any[]): Team | undefined {
     // Group players by team
     const teamMap: Record<string, Team> = {};
 
-    'ID, Name, Player, Team, Role, OverviewPage';
-
+    // 'ID, Name, Player, Team, Role, OverviewPage';
     rawTeams.forEach((item: any) => {
         const { ID: playerID, Name: name, Player: playerName, Team: teamName, Role: playerRole, OverviewPage: overviewPage } = item;
 

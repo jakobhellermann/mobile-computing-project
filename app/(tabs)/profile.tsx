@@ -43,7 +43,7 @@ const EXAMPLE_EMAIL = "testuser-normal@example.de";
 const EXAMPLE_PASSWORD = "normalpwd";
 
 function LoginScreen() {
-  const { register, error: registerError } = useRegister();
+  const { register } = useRegister();
   const { login } = useLogin();
 
   const [email, setEmail] = useState(EXAMPLE_EMAIL);

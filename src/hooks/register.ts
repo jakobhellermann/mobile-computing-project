@@ -14,7 +14,6 @@ import { apiFetchUnauthorized } from '../api/base';
 export const useRegister = () => {
   const { fetchUser } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const { showError } = useNotifications();
 
@@ -49,7 +48,6 @@ export const useRegister = () => {
 
   return {
     loading,
-    error,
     register,
   };
 };

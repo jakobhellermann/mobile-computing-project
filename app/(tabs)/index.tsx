@@ -13,21 +13,13 @@ export default function HomeScreen() {
   const router = useRouter();
   const [latestMatches, setLatestMatches] = useState<Match[]>([]);
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const { showError } = useNotifications();
 
   useEffect(() => {
-    const loadTeamData = async () => {
-      try {
-        fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
-        fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
-
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+    const loadTeamData = () => {
+      fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
+      fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
     };
 
     loadTeamData();

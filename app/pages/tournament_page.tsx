@@ -5,18 +5,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   ActivityIndicator,
   TouchableOpacity
 } from 'react-native';
 import { Card } from '@/components/Card';
 import { Collapsible } from '@/components/Collapsible';
-import { fetchTournament, fetchTournamentMatches, fetchTournamentTeams, searchTournaments } from '@/src/api/league';
-import { fetchTournamentLogo, fetchTournamentTest } from '@/client/tournament_client';
+import { fetchTournament, fetchTournamentMatches, fetchTournamentTeams } from '@/src/api/league';
 import { Tournament, Team, Match, Player } from 'shared';
 import { useNotifications } from '@/src/hooks/toast';
 import { IconButton } from '@/components/IconButton';
-import { useSubscription } from '@/src/hooks/subscriptions';
 import { matchHeaderText } from './match_page';
 import { formatDate } from '../(tabs)';
 import { SubscriptionConfigIcons } from './subscriptions_page';
@@ -79,7 +76,7 @@ export default function TournamentPage() {
     };
 
     loadTournamentData();
-  }, [tournamentId]);
+  }, [tournamentId, navigation]);
 
   if (loading) {
     return <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />;
@@ -99,7 +96,7 @@ export default function TournamentPage() {
       <View style={styles.profileHeader}>
         <View style={styles.profileInfo}>
           <Ionicons name="trophy" size={30} />
-          <Text style={styles.profileName}>{" " +tournament.name}</Text>
+          <Text style={styles.profileName}>{" " + tournament.name}</Text>
         </View>
         <SubscriptionConfigIcons type='tournament' name={tournamentId} />
       </View>

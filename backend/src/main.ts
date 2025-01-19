@@ -1,6 +1,5 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
-import fastifyStatic from '@fastify/static';
 
 import { api } from './api/api';
 import AuthService from './services/auth';

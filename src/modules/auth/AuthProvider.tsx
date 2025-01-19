@@ -50,7 +50,6 @@ export default function AuthProvider({
   children,
 }: PropsWithChildren<unknown>): ReactElement {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   /**
    * Fetch user.
@@ -66,7 +65,6 @@ export default function AuthProvider({
       return;
     }
 
-    setIsLoading(true);
     apiFetch<User>("/user", {
       headers: {
         "Authorization": `Bearer ${token}`
@@ -79,7 +77,7 @@ export default function AuthProvider({
       .catch(async (e: Error) => {
         console.error(e);
         if (e.cause instanceof Response) {
-          if (e.cause.status == 401) {
+          if (e.cause.status === 401) {
             console.warn("saved token is not authorized anymore");
             await storageUtil.deleteItem(SECURE_STORY_KEY_LOGIN_TOKEN);
             setUser(null);

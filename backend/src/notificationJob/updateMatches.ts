@@ -8,9 +8,6 @@ function buildQueryIn(column: string, inList: string[]) {
 function buildQueryOr(...subqueries: string[]) {
     return subqueries.join(" OR ");
 }
-function dateCargoFormat(date: Date) {
-    return date.toISOString().substring(0, 10).replace("T", " ");
-}
 
 export async function runUpdateMatches(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): Promise<void> {
     let all = await subscriptionService.getAllSubscriptions();

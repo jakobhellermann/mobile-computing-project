@@ -30,7 +30,7 @@ export default class UpcomingEventService {
         timestamp: Date,
     }[]
     ): Promise<void> {
-        if (data.length == 0) {
+        if (data.length === 0) {
             return;
         };
 
@@ -84,8 +84,8 @@ export default class UpcomingEventService {
         let rowsAffected = await this.db('upcomingEvents')
             .whereIn("matchId", eventsToMark.map(x => x.matchId))
             .update({ "has_notified_start": true });
-        if (rowsAffected != eventsToMark.length) {
-            console.warn(`mismatch: ${rowsAffected} != ${eventsToMark.length}`);
+        if (rowsAffected !== eventsToMark.length) {
+            console.warn(`mismatch: ${rowsAffected} !== ${eventsToMark.length}`);
         }
     }
 }

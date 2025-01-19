@@ -7,7 +7,6 @@ import { usePushNotifications } from '@/src/push_notifications';
 import { SWRConfig } from 'swr';
 import { apiFetch } from '@/src/api/base';
 import { useNotifications } from '@/src/hooks/toast';
-import { useAuth } from '@/src/modules/auth/context';
 import { LogBox } from 'react-native';
 
 // We are using our own Popup Notifications for errors
@@ -22,10 +21,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutInner() {
-  const auth = useAuth();
-  const { expoPushToken, lastNotification } = usePushNotifications({
+  usePushNotifications({
     onNotificationResponse: (res) => console.log(`got push notification`, res),
-    onPushTokenSet: (pushToken) => { }
   });
   const { showError } = useNotifications();
 
