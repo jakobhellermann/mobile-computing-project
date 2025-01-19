@@ -61,7 +61,9 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
         });
     }
 
-    if (!Device.isDevice || Platform.OS === "web") {
+
+    if (Platform.OS === "web") {
+        console.log("Not a real device!")
         return null;
     }
 

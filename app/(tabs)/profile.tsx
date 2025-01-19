@@ -31,8 +31,6 @@ function LoggedInScreen({ user }: { user: User; }) {
   return <View style={styles.loggedIncontainer}>
     <ThemedText style={{ fontSize: 20 }} >
       Welcome back, <ThemedText style={{ fontSize: 20 }} type='defaultSemiBold'>{user.email}</ThemedText>!
-      <br />
-      <br />
       Check out the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Calendar</Link> tab for your upcoming matches; or visit
       the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Feed</Link> to find out what's happening!
     </ThemedText>
