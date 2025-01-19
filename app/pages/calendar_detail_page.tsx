@@ -35,7 +35,7 @@ export default function CalendarDetailPage() {
 
     function handleMatchRouting(matchId: string): void {
         router.push({
-            pathname: "/pages/calendar_detail_page",
+            pathname: "/pages/match_page",
             params: { entityName: matchId },
         });
     }

@@ -22,7 +22,7 @@ export default function CalendarScreen() {
   const handleCalendarDetailRouting = (date: string) => {
     console.log('Item pressed, navigating to calendar detail view with date:', date);
     router.push({
-      pathname: "/pages/match_page",
+      pathname: "/pages/calendar_detail_page",
       params: { entityName: date },
     });
   };
