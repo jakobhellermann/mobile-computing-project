@@ -5,8 +5,8 @@ import UpcomingEventService from "../services/upcomingEvent";
 function buildQueryIn(column: string, inList: string[]) {
     return `${column} in (${inList.map(x => `"${x.replaceAll('"', '\\"')}"`)})`;
 }
-function buildQueryOr(...subqueries: string[]) {
-    return subqueries.join(" OR ");
+function buildQueryOr(...subqueries: (string | null)[]) {
+    return subqueries.filter(x => x != undefined).join(" OR ");
 }
 
 export async function runUpdateMatches(subscriptionService: SubscriptionService, upcomingEventService: UpcomingEventService): Promise<void> {
@@ -19,15 +19,13 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
 
     let queryInFuture = `M.DateTime_UTC > '${getCurrentTime()}'`;
     let subscriptionFilter = buildQueryOr(
-        buildQueryIn("M.MatchId", matchIds),
-        buildQueryIn("M.OverviewPage", tournamentIds),
-        buildQueryIn("M.Team2", teamIds),
+        matchIds.length > 0 ? buildQueryIn("M.MatchId", matchIds) : null,
+        tournamentIds.length > 0 ? buildQueryIn("M.OverviewPage", tournamentIds) : null,
+        teamIds.length > 0 ? buildQueryIn("M.Team1", teamIds) : null,
+        teamIds.length > 0 ? buildQueryIn("M.Team2", teamIds) : null,
     );
     let where = `(${subscriptionFilter}) AND ${queryInFuture}`;
     let upcomingMatches = await cargoQuery<any>({
-        // tables: 'MatchSchedule=M, Tournaments=T',
-        // fields: 'MatchId, Tab, Team1, Team2, Winner, Team1Score, Team2Score, MatchDay, DateTime_UTC, OverviewPage',
-        // join_on: "M.OverviewPage=T.OverviewPage",
         tables: 'MatchSchedule=M, Tournaments=T',
         fields: 'M.MatchId, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.Stream, T.Name=TournamentName',
         join_on: 'M.OverviewPage=T.OverviewPage',

@@ -6,7 +6,7 @@ export type UpcomingEvent = {
     team1: string;
     team2: string;
 
-    has_notified_start: string;
+    has_notified_start: boolean;
 
     timestamp: string;
 };

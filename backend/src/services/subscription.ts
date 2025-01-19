@@ -29,7 +29,6 @@ export default class SubscriptionService {
     ): Promise<void> {
         let existing = (await this.db('subscriptions').where({ user: userId, name, type }).select());
         console.log(`updating subscription ${type}/${name} (did exist: ${existing.length > 0})`);
-        console.log(existing);
         if (existing.length === 0) {
             await this.db('subscriptions').insert({
                 user: userId,

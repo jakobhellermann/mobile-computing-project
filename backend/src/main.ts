@@ -24,7 +24,7 @@ const envToLogger = {
     test: false,
 };
 
-let env = "development" as const;
+let env = "production" as const;
 
 const fastify = Fastify({
     logger: envToLogger[env],

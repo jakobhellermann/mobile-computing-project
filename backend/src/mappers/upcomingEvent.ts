@@ -6,9 +6,10 @@ import { UpcomingEventRow } from '../database/rows';
  * @returns UpcomingEvent.
  */
 export function toUpcomingEvent(row: UpcomingEventRow): UpcomingEvent {
-    let { timestamp, ...rest } = row;
+    let { timestamp, has_notified_start, ...rest } = row;
     return {
         ...rest,
+        has_notified_start: has_notified_start ?? false,
         timestamp: new Date(timestamp).toISOString(),
     };
 }

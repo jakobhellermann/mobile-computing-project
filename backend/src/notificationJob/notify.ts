@@ -37,7 +37,6 @@ export async function runNotify(subscriptionService: SubscriptionService, upcomi
             to: pushTokens,
             sound: 'default',
             title: `${event.tournamentName}`,
-            subtitle: 'subtitle',
             body: `Now starting: ${event.team1} vs ${event.team2}`,
             data: {
                 match: event.matchId,

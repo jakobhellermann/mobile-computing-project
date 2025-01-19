@@ -5,8 +5,6 @@ const testUsers = [
         password_hash:
             '$argon2id$v=19$m=19456,t=2,p=1$3DXNY3ps4eAq4aOUJbQW/Q$8nJaTGIFjjfZ+Geb/8YZeIzenlsmee6iYw86m751co4',
         is_admin: true,
-        name: 'Some',
-        first_name: 'Admin',
     },
     {
         id: 2,
@@ -14,8 +12,6 @@ const testUsers = [
         password_hash:
             '$argon2id$v=19$m=19456,t=2,p=1$9ZHgWistHtoP5XW1r4JaEw$3LaPbmh5W3Q4t0ka8CisNJMoSYN1i1m2u9jmWjz1+8o',
         is_admin: false,
-        name: 'Some',
-        first_name: 'Customer',
     },
 ];
 
@@ -64,8 +60,6 @@ async function up(knex) {
         .createTable('users', (t) => {
             t.increments('id').primary();
             t.string('email').notNullable().unique();
-            t.string('name').notNullable();
-            t.string('first_name').notNullable();
             t.string('password_hash').notNullable();
             t.boolean('is_admin').notNullable();
             t.string('push_token');

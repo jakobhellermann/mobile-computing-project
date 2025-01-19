@@ -131,6 +131,7 @@ export default class AuthService {
         const [id] = await this.db('users').insert({
             email,
             password_hash,
+            push_token: null,
             is_admin: 0,
         });
 
