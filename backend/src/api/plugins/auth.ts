@@ -47,18 +47,15 @@ export function authPlugin(sessionService: SessionService) {
  * @returns Session token or undefined.
  */
 function extractSessionToken(request: FastifyRequest): string | undefined {
-    const cookies = request.headers.cookie;
-
-    if (cookies) {
-        return cookie.parse(cookies)['session'];
-    }
-
-
     let authorization = request.headers.authorization;
     if (!authorization) return undefined;
 
-    if (!authorization.toLowerCase().startsWith("bearer")) {
-        return;
+    if (authorization.toLowerCase().startsWith("bearer")) {
+        return authorization.substring("bearer ".length);
     }
-    return authorization.substring("bearer ".length);
+
+    const cookies = request.headers.cookie;
+    if (cookies) {
+        return cookie.parse(cookies)['session'];
+    }
 }
