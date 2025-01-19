@@ -8,7 +8,7 @@ import { useNotifications } from '@/src/hooks/toast';
 import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import { groupBy } from '@/src/utils';
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
 
 type CalendarDate = string;

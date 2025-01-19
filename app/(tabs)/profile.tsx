@@ -1,7 +1,7 @@
 import { Card } from '@/components/Card';
 import { ThemedText } from '@/components/ThemedText';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import { ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
@@ -29,11 +29,14 @@ function LoggedInScreen({ user }: { user: User; }) {
   };
 
   return <View style={styles.loggedIncontainer}>
-    <ThemedText style={{ fontSize: 20 }} >
-      Welcome back, <ThemedText style={{ fontSize: 20 }} type='defaultSemiBold'>{user.email}</ThemedText>!
-      Check out the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Calendar</Link> tab for your upcoming matches; or visit
-      the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Feed</Link> to find out what's happening!
-    </ThemedText>
+    <View>
+      <Text style={{ fontSize: 20 }}>Welcome back,</Text>
+      <ThemedText style={{ fontSize: 20 }} type='defaultSemiBold'>{user.email}</ThemedText>
+      <Text style={{ fontSize: 20 }}>
+        Check out the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Calendar</Link> tab for your upcoming matches; or visit
+        the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Feed</Link> to find out what's happening!
+      </Text>
+    </View>
 
     <View style={styles.buttons}>
       <CustomButton title='Manage Subscriptions' onPress={handleNotificationRouting} />
@@ -82,7 +85,6 @@ function LoginScreen() {
             style={styles.input}
           />
         </View>
-        <ThemedText type='link'>Forgot password?</ThemedText>
         <CustomButton title="Sign in"
           onPress={onPressLogin}
         />
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     padding: 8,
-    width: "50%",
+    width: "70%",
     gap: 8,
     alignSelf: "flex-end",
   }
