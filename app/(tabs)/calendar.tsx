@@ -9,11 +9,13 @@ import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import { groupBy } from '@/src/utils';
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
 import { useRouter } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
 
 type CalendarDate = string;
 
 export default function CalendarScreen() {
   const [upcomingEvents, setUpcomingEvents] = useState<Partial<Record<CalendarDate, UpcomingEvent[]>>>({});
+  const isFocused = useIsFocused();
 
   const router = useRouter();
   const { showError } = useNotifications();
@@ -34,7 +36,7 @@ export default function CalendarScreen() {
         setUpcomingEvents(groups);
       })
       .catch(showError);
-  }, []);
+  }, [isFocused]);
 
   const markedDates = useMemo<MarkedDates>(() => {
     return Object.fromEntries(Object.entries(upcomingEvents)
