@@ -17,6 +17,10 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let matchIds = [...new Set((byType.match ?? []).map(x => x.name))];
     let teamIds = [...new Set((byType.team ?? []).map(x => x.name))];
 
+    if (tournamentIds.length === 0 && matchIds.length === 0 && teamIds.length === 0) {
+        return;
+    }
+
     let queryInFuture = `M.DateTime_UTC > '${getCurrentTime()}'`;
     let subscriptionFilter = buildQueryOr(
         matchIds.length > 0 ? buildQueryIn("M.MatchId", matchIds) : null,
