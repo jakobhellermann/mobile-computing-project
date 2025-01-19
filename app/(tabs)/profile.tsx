@@ -28,7 +28,7 @@ function LoggedInScreen({ user }: { user: User; }) {
     });
   };
 
-  return <View style={styles.container}>
+  return <View style={styles.loggedIncontainer}>
     <ThemedText style={{ fontSize: 20 }} >
       Welcome back, <ThemedText style={{ fontSize: 20 }} type='defaultSemiBold'>{user.email}</ThemedText>!
       <br />
@@ -126,11 +126,15 @@ const styles = StyleSheet.create({
     borderColor: "#cecece",
     borderRadius: 4,
   },
-  container: {
+  loggedIncontainer: {
     padding: 16,
     justifyContent: "space-between",
     flexDirection: "column",
     height: "100%",
+  },
+  container: {
+    padding: 16,
+    flexDirection: "column",
   },
   cardList: {
     gap: 8,
