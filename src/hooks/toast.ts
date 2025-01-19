@@ -15,7 +15,7 @@ export const useNotifications = () => {
             console.error(message);
             if (message instanceof Error) {
                 console.log(message.message);
-                if (message.message.includes('NetworkError')) {
+                if (message.message.includes('NetworkError')|| message.message.includes('Network request failed')) {
                     notify({ message: "No network connectivity!", subtext: "Please make sure you have service and try again.", type: "error" });
                 } else {
                     notify({ message: "Unexpected error occured!", subtext: "Please try again.", type: "error" });

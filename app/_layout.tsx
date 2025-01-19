@@ -8,6 +8,10 @@ import { SWRConfig } from 'swr';
 import { apiFetch } from '@/src/api/base';
 import { useNotifications } from '@/src/hooks/toast';
 import { useAuth } from '@/src/modules/auth/context';
+import { LogBox } from 'react-native';
+
+// We are using our own Popup Notifications for errors
+LogBox.ignoreAllLogs();
 
 export default function RootLayout() {
   return <AuthProvider>
