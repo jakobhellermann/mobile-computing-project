@@ -10,8 +10,8 @@ export async function runNotify(subscriptionService: SubscriptionService, upcomi
     console.log("Checking for notifications...");
 
     let now = new Date();
-    // For testing: fake being in the f uture
-    // now.setDate(now.getDate() + 2);
+    // For testing: fake being in the future
+    // now.setDate(now.getDate() + 10);
 
     let newlyHappened = await upcomingEventsService.getAll({ beforeDate: now, onlyUnnotified: true });
     let notifications: ExpoPushMessage[] = [];

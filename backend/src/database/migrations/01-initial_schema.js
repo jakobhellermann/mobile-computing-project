@@ -107,7 +107,7 @@ async function up(knex) {
  */
 const seedTestData = async (db) => {
     await db('users').insert(testUsers);
-    await db('subscriptions').insert(testSubscriptions);
+   // await db('subscriptions').insert(testSubscriptions);
 };
 
 /**
