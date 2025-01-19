@@ -1,6 +1,6 @@
 export type Match = {
   matchId: string;          // Unique identifier for the match
-  tab: string;
+  tab: string;              // Round of the tournament
   team1: string;            // Name of the first team
   team2: string;            // Name of the second team
   winner: string;           // Name of the winning team
@@ -8,9 +8,9 @@ export type Match = {
   team2Score?: number;      // Points scored by Team2
   matchDay: number;         // The match day (e.g., 1, 2, 3)
   dateTimeUTC: string;      // Date and time in UTC format
-  bestOf: string;
-  stream: string;
-  overviewPage: string;     // URL or reference to the match overview page
-  tournament: string;
+  bestOf: string;           // Best of x games wins
+  stream: string;           // Stream Link
+  overviewPage: string;     // Tournament overview page
+  tournament: string;       // Tournament Name
 }
 

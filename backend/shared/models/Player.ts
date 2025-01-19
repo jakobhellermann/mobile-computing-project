@@ -1,7 +1,7 @@
 export type Player = {
-  id: string;
-  name: string;
-  playerName: string;
-  role: string;
+  id: string;           //id
+  name: string;         //RL name
+  playerName: string;   //Gamertag
+  role: string;         //Role in League of Legends
 }
 

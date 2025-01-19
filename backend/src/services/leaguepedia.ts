@@ -7,6 +7,12 @@ const API_URL = 'https://lol.fandom.com/api.php';
 export default class LeagueService {
 
     // #region Matches
+
+    /**
+     * Fetch a Match by matchId
+     * @param matchId 
+     * @returns 
+     */
     public async fetchMatch(matchId: string): Promise<Match> {
         const response = await cargoQuery<any>({
             limit: 3,
@@ -23,6 +29,12 @@ export default class LeagueService {
         return matches[0];
     }
 
+    /**
+     * Fetch a Match Roster by the Tournament overviewPage and the team
+     * @param overviewPage 
+     * @param team 
+     * @returns 
+     */
     public async fetchMatchRoster(overviewPage: string, team: string): Promise<string[]> {
         const response = await cargoQuery<any>({
             limit: 50,
@@ -52,6 +64,12 @@ export default class LeagueService {
         return roster;
     };
 
+    /**
+     * Fetch Head-to-Head Matches of 2 Teams
+     * @param team1 
+     * @param team2 
+     * @returns 
+     */
     public async fetchHtHMatches(team1: string, team2: string): Promise<Match[]> {
         const response = await cargoQuery({
             limit: 50,
@@ -68,8 +86,9 @@ export default class LeagueService {
     // #region Tournaments
 
     /**
-     * Fetch tournament data from the Tournaments table.
-     * @returns {Promise<Tournament[]>} 
+     * Fetch Tournaments by Tournament name
+     * @param name 
+     * @returns {Promise<Tournament[]>}
      */
     public async fetchTournamentSearch(name: string): Promise<Tournament[]> {
         const response = await cargoQuery({
@@ -82,6 +101,7 @@ export default class LeagueService {
 
     /**
  * Fetch tournament data from the Tournaments table.
+ * @param name -> overviewPage
  * @returns {Promise<Tournament>} 
  */
     public async fetchTournamentData(name: string): Promise<Tournament> {
@@ -99,6 +119,12 @@ export default class LeagueService {
     }
 
 
+    /**
+     * Fetch a Logo Image
+     * @param team 
+     * @param filename 
+     * @returns {Promise<any>}
+     */
     public async fetchTournamentLogo(team: string, filename: string): Promise<any> {
         // Construct the CargoQuery API request
         const params = {
@@ -129,6 +155,11 @@ export default class LeagueService {
         }
     }
 
+    /**
+     * Fetch all Teams participating in the a tournament
+     * @param overviewpage 
+     * @returns {Promise<Team[]>}
+     */
     public async fetchTournamentTeams(overviewpage: string): Promise<Team[]> {
         // Construct the CargoQuery API request
         //let tournamentFields = 'T.Name,T.DateStart,T.Date,T.Region,T.League,T.Prizepool,T.OverviewPage,T.Organizers,T.Rulebook,T.EventType,T.Region,T.Country'
@@ -157,6 +188,11 @@ export default class LeagueService {
 
     // #region Teams
 
+    /**
+     * Fetch Team Data by the Team Name
+     * @param teamname 
+     * @returns {Promise<Team>}
+     */
     public async fetchTeamData(teamname: string): Promise<Team> {
         const response = await cargoQuery({
             tables: 'Players',
@@ -170,6 +206,11 @@ export default class LeagueService {
         return team;
     }
 
+    /**
+     * Fetch the latest Matches(Results) of a team
+     * @param team 
+     * @returns {Promise<Match[]>}
+     */
     public async fetchLatestTeamMatches(team: string): Promise<Match[]> {
         const response = await cargoQuery({
             limit: 3,
@@ -182,6 +223,11 @@ export default class LeagueService {
         return response.map(mapToMatch);
     }
 
+    /**
+     * Fetch upcoming Matches of a team
+     * @param team 
+     * @returns {Promise<Match[]>}
+     */
     public async fetchUpcomingTeamMatches(team: string): Promise<Match[]> {
         const response = await cargoQuery({
             limit: 3,
@@ -194,6 +240,11 @@ export default class LeagueService {
         return response.map(mapToMatch);
     };
 
+    /**
+     * Search Teams by name
+     * @param name 
+     * @returns {Promise<string[]>}
+     */
     public async fetchTeamSearch(name: string): Promise<string[]> {
         console.log('Search Param:', name);
         const response = await cargoQuery<{ Name: string; }>({
@@ -208,6 +259,11 @@ export default class LeagueService {
 
     // #region Images
 
+    /**
+     * Fetch an Image from the API
+     * @param filename 
+     * @returns {Promise<any>}
+     */
     public async fetchApiImage(filename: string): Promise<any> {
         // Construct the CargoQuery API request
         const params = {
@@ -259,7 +315,11 @@ type CargoResponse<T> = {
         errorclass: string;
     };
 };
-
+/**
+ * Builds the query and sends the request
+ * @param data 
+ * @returns {Promise<T[]>}
+ */
 export async function cargoQuery<T = unknown>(data: CargoParams): Promise<T[]> {
     const params = {
         action: 'cargoquery',
@@ -280,7 +340,11 @@ export async function cargoQuery<T = unknown>(data: CargoParams): Promise<T[]> {
     }
 }
 
-
+/**
+ * Maps the apiResponse to a Tournament
+ * @param apiResponse 
+ * @returns {Tournament}
+ */
 function mapToTournament(apiResponse: any): Tournament {
     return {
         name: apiResponse.Name ? unescapeHTML(apiResponse.Name) : apiResponse.Name,
@@ -296,6 +360,12 @@ function mapToTournament(apiResponse: any): Tournament {
         overviewPage: apiResponse.OverviewPage,
     };
 }
+
+/**
+ * Maps the apiResponse to a Match
+ * @param apiResponse 
+ * @returns {Match}
+ */
 function mapToMatch(apiResponse: any): Match {
     return {
         matchId: apiResponse.MatchId,
@@ -314,7 +384,9 @@ function mapToMatch(apiResponse: any): Match {
     };
 }
 
-
+/**
+ * Role Priority for display
+ */
 const ROLE_PRIORITY: Record<string, number> = {
     Top: 1,
     Jungle: 2,
@@ -325,6 +397,11 @@ const ROLE_PRIORITY: Record<string, number> = {
     // Any other roles default to a higher number (lower priority)
 };
 
+/**
+ * Maps the apiResponse to a Team for the Tournament Page
+ * @param rawTeams 
+ * @returns {Team[]}
+ */
 export function mapToTournamentTeam(rawTeams: any[]): Team[] {
 
     // Group players by team
@@ -360,7 +437,11 @@ export function mapToTournamentTeam(rawTeams: any[]): Team[] {
     return teams;
 
 }
-
+/**
+ * Maps the apiResponse to a Team for the Team Page
+ * @param rawTeams 
+ * @returns {Team[]}
+ */
 export function mapToTeam(rawTeams: any[]): Team | undefined {
     // Group players by team
     const teamMap: Record<string, Team> = {};
@@ -398,7 +479,11 @@ export function mapToTeam(rawTeams: any[]): Team | undefined {
 }
 
 
-
+/**
+ * Sorts Players by the ROLE_PRIORITY
+ * @param players 
+ * @returns {Player[]}
+ */
 function sortPlayersByRole(players: Player[]): Player[] {
     return players.sort((a, b) => {
         const roleA = ROLE_PRIORITY[a.role] ?? 99;

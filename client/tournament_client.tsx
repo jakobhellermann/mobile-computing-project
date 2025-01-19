@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const API_URL = 'https://lol.fandom.com/api.php';
 
+//Frontend API class for testing
+
 export async function fetchTournamentLogo(team: string, filename: string): Promise<string> {
   // Construct the CargoQuery API request
   const params = {
