@@ -50,6 +50,11 @@ export default class UpcomingEventService {
     }
 
 
+    /**
+     * Fetch upcoming events according to the users notification preferences
+     * @param userId The user whose subscriptions are respected
+     * @param onlyNotifications When true, only subscriptions with enabled notifications will be counted
+     */
     public async getSubscribedUpcomingEvents(userId: number, onlyNotifications: boolean = false): Promise<UpcomingEvent[]> {
         let notificationsFilter = onlyNotifications ? { notifications: true } : {};
         const events = await this.db('upcomingEvents')
@@ -82,6 +87,10 @@ export default class UpcomingEventService {
         return events.map(toUpcomingEvent);
     }
 
+    /**
+     * Mark some upcoming events as having been notified
+     * @param eventsToMark The events which were notified
+     */
     public async markNotified(eventsToMark: UpcomingEvent[]): Promise<void> {
         let rowsAffected = await this.db('upcomingEvents')
             .whereIn("matchId", eventsToMark.map(x => x.matchId))
