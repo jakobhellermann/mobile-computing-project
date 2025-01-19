@@ -46,6 +46,7 @@ function RootLayoutInner() {
       <Stack.Screen name="pages/team_page" options={{ title: "Team" }} />
       <Stack.Screen name="pages/match_page" options={{ title: "Match" }} />
       <Stack.Screen name="pages/subscriptions_page" options={{ title: "Subscriptions" }} />
+      <Stack.Screen name="pages/calendar_detail_page" options={{ title: "" }} />
       <Stack.Screen name="+not-found" />
     </Stack>
     <Toast />

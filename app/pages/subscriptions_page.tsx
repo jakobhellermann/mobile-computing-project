@@ -33,7 +33,7 @@ export default function SubscriptionsPage() {
                         {typeSubscriptions.map(subscription => {
 
                             return <View key={subscription.name} style={subStyles.container}>
-                                <ThemedText style={{ flexShrink: 1 }}>{subscription.name}</ThemedText>
+                                <ThemedText style={{ flexShrink: 1 }}>{subscription.name.replaceAll(/[_\/]/g, " ")}</ThemedText>
 
                                 <SubscriptionConfigIcons type={subscription.type} name={subscription.name} />
                             </View>;

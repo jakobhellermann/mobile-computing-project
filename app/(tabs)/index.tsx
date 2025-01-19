@@ -209,3 +209,17 @@ export function formatDate(date: Date | string | null, onNull: string = "TBD"): 
     minute: '2-digit',
   });
 }
+export function formatDateOnly(date: Date | string | null, onNull: string = "TBD"): string {
+  if (date === null) {
+    return onNull;
+  }
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
+
+  return date.toLocaleDateString(["de-DE"], {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}

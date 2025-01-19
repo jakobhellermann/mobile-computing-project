@@ -90,6 +90,7 @@ async function up(knex) {
             t.string('matchId').primary();
             t.string('tournament').notNullable();
             t.string('tournamentName').notNullable();
+            t.string('tab').notNullable();
             t.string('team1').notNullable();
             t.string('team2').notNullable();
             t.boolean('has_notified_start').defaultTo(false);

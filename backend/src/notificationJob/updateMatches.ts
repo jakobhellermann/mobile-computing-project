@@ -27,7 +27,7 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     let where = `(${subscriptionFilter}) AND ${queryInFuture}`;
     let upcomingMatches = await cargoQuery<any>({
         tables: 'MatchSchedule=M, Tournaments=T',
-        fields: 'M.MatchId, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.Stream, T.Name=TournamentName',
+        fields: 'M.MatchId, M.Tab, M.Team1, M.Team2, M.Winner, M.Team1Score, M.Team2Score, M.MatchDay, M.DateTime_UTC, M.OverviewPage, M.Stream, T.Name=TournamentName',
         join_on: 'M.OverviewPage=T.OverviewPage',
         where,
         limit: 50,
@@ -35,6 +35,7 @@ export async function runUpdateMatches(subscriptionService: SubscriptionService,
     });
     let updates = upcomingMatches.map(match => ({
         matchId: match["MatchId"],
+        tab: match["Tab"],
         tournament: match["OverviewPage"],
         tournamentName: match["TournamentName"],
         team1: match["Team1"],

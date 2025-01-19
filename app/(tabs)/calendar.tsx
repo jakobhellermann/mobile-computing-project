@@ -8,13 +8,24 @@ import { useNotifications } from '@/src/hooks/toast';
 import { DateData, MarkedDates } from 'react-native-calendars/src/types';
 import { groupBy } from '@/src/utils';
 import { MarkingProps } from 'react-native-calendars/src/calendar/day/marking';
+import { useRouter } from 'expo-router';
 
 type CalendarDate = string;
 
 export default function CalendarScreen() {
   const [upcomingEvents, setUpcomingEvents] = useState<Partial<Record<CalendarDate, UpcomingEvent[]>>>({});
 
+  const router = useRouter();
   const { showError } = useNotifications();
+
+
+  const handleCalendarDetailRouting = (date: string) => {
+    console.log('Item pressed, navigating to calendar detail view with date:', date);
+    router.push({
+      pathname: "/pages/calendar_detail_page",
+      params: { entityName: date },
+    });
+  };
 
   useEffect(() => {
     fetchUpcomingEvents()
@@ -36,7 +47,7 @@ export default function CalendarScreen() {
   const handleDayPress = (data: DateData) => {
     console.log('Selected day:', data.dateString);
     const dayData = upcomingEvents[data.dateString];
-    console.log(dayData);
+    handleCalendarDetailRouting(data.dateString);
   };
 
   return (

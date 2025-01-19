@@ -20,6 +20,8 @@ export function getUpcomingEvents(
                                 properties: {
                                     matchId: { type: 'string' },
                                     tournament: { type: 'string' },
+                                    tournamentName: { type: 'string' },
+                                    tab: { type: 'string' },
                                     team1: { type: 'string' },
                                     team2: { type: 'string' },
                                     timestamp: { type: 'string' },
@@ -31,7 +33,7 @@ export function getUpcomingEvents(
                 preHandler: authenticated(fastify),
             },
             async (request, reply) => {
-                const upcomingEvents = await upcomingEventService.getSubscribedUpcomingEvents(request.user, true);
+                const upcomingEvents = await upcomingEventService.getSubscribedUpcomingEvents(request.user, false);
                 return reply.send(upcomingEvents);
             },
         );

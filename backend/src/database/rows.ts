@@ -41,6 +41,7 @@ export type UpcomingEventRow = {
 
     tournament: string;
     tournamentName: string;
+    tab: string;
     team1: string;
     team2: string;
 

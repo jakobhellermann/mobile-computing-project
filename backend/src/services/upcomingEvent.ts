@@ -23,6 +23,7 @@ export default class UpcomingEventService {
      */
     public async bulkUpsertUpcomingEvent(data: {
         matchId: string,
+        tab: string,
         tournament: string,
         tournamentName: string,
         team1: string,
@@ -38,6 +39,7 @@ export default class UpcomingEventService {
             matchId: d.matchId,
             tournament: d.tournament,
             tournamentName: d.tournamentName,
+            tab: d.tab,
             team1: d.team1,
             team2: d.team2,
             timestamp: d.timestamp.getTime(),
