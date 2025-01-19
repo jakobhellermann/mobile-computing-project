@@ -2,6 +2,8 @@ import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-sc
 import SubscriptionService from '../../../services/subscription';
 import { authenticated } from '../../prehandler/authenticated';
 import { SubscriptionType } from 'shared';
+import { runUpdateMatches } from '../../../notificationJob/updateMatches';
+import UpcomingEventService from '../../../services/upcomingEvent';
 
 const schema = {
     description: 'Register a new subscription',
@@ -32,6 +34,7 @@ const schema = {
 
 export function updateSubscription(
     subscriptionService: SubscriptionService,
+    upcomingEventService: UpcomingEventService,
 ): FastifyPluginAsyncJsonSchemaToTs {
     return async (fastify) => {
         fastify.put(
@@ -49,6 +52,8 @@ export function updateSubscription(
                     request.params.name,
                     request.body?.notifications,
                 );
+
+                runUpdateMatches(subscriptionService, upcomingEventService).catch(console.error);
 
                 return reply.status(204).send();
             },

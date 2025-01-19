@@ -103,7 +103,7 @@ export function api(
 
         await fastify.register(getSubscription(subscriptionService));
         await fastify.register(getSubscriptions(subscriptionService));
-        await fastify.register(updateSubscription(subscriptionService));
+        await fastify.register(updateSubscription(subscriptionService, upcomingEventsService));
         await fastify.register(deleteSubscription(subscriptionService));
         await fastify.register(deleteAllSubscriptions(subscriptionService));
 
