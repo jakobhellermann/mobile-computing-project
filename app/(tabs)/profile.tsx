@@ -6,7 +6,7 @@ import { useRegister } from '@/src/hooks/register';
 import { useLogin } from '@/src/hooks/login';
 import { useAuth } from '@/src/modules/auth/context';
 import { User } from 'shared';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useNotifications } from '@/src/hooks/toast';
 
 export default function ProfileScreen() {
@@ -29,9 +29,15 @@ function LoggedInScreen({ user }: { user: User; }) {
   };
 
   return <View style={styles.container}>
-    <ThemedText>Logged in as {user.email}</ThemedText>
+    <ThemedText style={{ fontSize: 20 }} >
+      Welcome back, <ThemedText style={{ fontSize: 20 }} type='defaultSemiBold'>{user.email}</ThemedText>!
+      <br />
+      <br />
+      Check out the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Calendar</Link> tab for your upcoming matches; or visit
+      the <Link style={{ color: "#636298", fontWeight: "500" }} href={"/(tabs)/calendar"}>Feed</Link> to find out what's happening!
+    </ThemedText>
 
-    <View style={{ gap: 8 }}>
+    <View style={styles.buttons}>
       <CustomButton title='Manage Subscriptions' onPress={handleNotificationRouting} />
       <CustomButton title='Logout' onPress={() => logout().catch(showError)} />
     </View>
@@ -122,8 +128,17 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
+    justifyContent: "space-between",
+    flexDirection: "column",
+    height: "100%",
   },
   cardList: {
     gap: 8,
   },
+  buttons: {
+    padding: 8,
+    width: "50%",
+    gap: 8,
+    alignSelf: "flex-end",
+  }
 });
