@@ -142,7 +142,7 @@ export default function TournamentPage() {
 
       {/* Matches Section */}
       <View>
-        <Text style={styles.sectionTitle}>Latest Results</Text>
+        <Text style={styles.sectionTitle}>Tournament Matches</Text>
         {tournament.matches.map((match: Match) => (
           <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
             <Card style={styles.matchCard}>
