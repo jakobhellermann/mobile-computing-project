@@ -1,4 +1,3 @@
-import 'expo-dev-client';
 import { Stack } from "expo-router";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import AuthProvider from "../src/modules/auth/AuthProvider";
