@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Card } from '@/components/Card';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
 import { useRouter } from "expo-router";
 import { Match } from '@/backend/shared';
 import { fetchTeamLatestMatches, fetchTeamUpcomingMatches } from '@/src/api/league';
@@ -13,17 +13,30 @@ export default function HomeScreen() {
   const router = useRouter();
   const [latestMatches, setLatestMatches] = useState<Match[]>([]);
   const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
+  const [isLoadingLatest, setIsLoadingLatest] = useState(true);
+  const [isLoadingUpcoming, setIsLoadingUpcoming] = useState(true);
 
   const { showError } = useNotifications();
 
   useEffect(() => {
     const loadTeamData = () => {
-      fetchTeamLatestMatches("%").then(setLatestMatches).catch(showError);
-      fetchTeamUpcomingMatches("%").then(setUpcomingMatches).catch(showError);
+      setIsLoadingLatest(true);
+      setIsLoadingUpcoming(true);
+  
+      fetchTeamLatestMatches("%")
+        .then(setLatestMatches)
+        .catch(showError)
+        .finally(() => setIsLoadingLatest(false));
+  
+      fetchTeamUpcomingMatches("%")
+        .then(setUpcomingMatches)
+        .catch(showError)
+        .finally(() => setIsLoadingUpcoming(false));
     };
-
+  
     loadTeamData();
   }, []);
+  
 
   const handleMatchRouting = (matchId: string) => {
     console.log('Item pressed, navigating to TeamPage with Name:', matchId);
@@ -39,36 +52,49 @@ export default function HomeScreen() {
       {/* Latest Results */}
       <View>
         <Text style={styles.sectionTitle}>Latest Results</Text>
-        {latestMatches.map((match: Match) => (
-          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
-            <Card style={styles.matchCard}>
-              <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
-                <Text style={styles.matchSubtitle}>{match.tab + "\t" + match.tournament || 'Tournament Info'}</Text>
-              </View>
-              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
-            </Card>
-          </TouchableOpacity>
-        ))}
+        {isLoadingLatest ? ( // Show spinner if loading
+          <View style={styles.loader}>
+            <ActivityIndicator size="small" color="#0000ff" />
+          </View>
+        ) : (
+          latestMatches.map((match: Match) => (
+            <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
+              <Card style={styles.matchCard}>
+                <View style={styles.matchInfo}>
+                  <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                  <Text style={styles.matchSubtitle}>
+                    {match.tab + "\t" + match.tournament || 'Tournament Info'}
+                  </Text>
+                </View>
+                <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
+              </Card>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
       {/* Upcoming Matches */}
       <View>
         <Text style={styles.sectionTitle}>Upcoming Matches</Text>
-        {upcomingMatches.map((match: Match) => (
-          <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
-            <Card style={styles.matchCard}>
-              <View style={styles.matchInfo}>
-                <Text style={styles.matchTitle}>
-                  <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
-                </Text>
-                <Text style={styles.matchSubtitle}>{match.tab + "\t\t" + match.tournament || 'Tournament Info'}</Text>
-              </View>
-              <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
-            </Card>
-          </TouchableOpacity>
-        ))}
+        {isLoadingUpcoming ? ( // Show spinner if loading
+          <View style={styles.loader}>
+            <ActivityIndicator size="small" color="#0000ff" />
+          </View>
+        ) : (
+          upcomingMatches.map((match: Match) => (
+            <TouchableOpacity key={match.matchId} onPress={() => handleMatchRouting(match.matchId)}>
+              <Card style={styles.matchCard}>
+                <View style={styles.matchInfo}>
+                  <Text style={styles.matchTitle}>
+                    <Text style={styles.matchTitle}>{matchHeaderText(match)}</Text>
+                  </Text>
+                  <Text style={styles.matchSubtitle}>{match.tab + "\t\t" + match.tournament || 'Tournament Info'}</Text>
+                </View>
+                <Text style={styles.matchTime}>{formatDate(match.dateTimeUTC)}</Text>
+              </Card>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
-
     </ScrollView >
   );
 }
